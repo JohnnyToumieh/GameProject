@@ -4,46 +4,47 @@
 
 SignUp::SignUp()
 {
-    passChecked=false;
-    firstName = new QLabel("FirstName");
-    lastName = new QLabel("LastName");
-    email = new QLabel("Email");
-    userName = new QLabel("Username");
-    password = new QLabel("Password");
-    confirmPassword = new QLabel("Confirm Password");
-    empty = new QLabel();
+    verticalLayout = new QVBoxLayout();
+    gridLayout = new QGridLayout();
 
-    fn = new QLineEdit();
-    ln = new QLineEdit();
-    e = new QLineEdit();
-    un = new QLineEdit();
-    pass = new QLineEdit();
-    cpass = new QLineEdit();
+    firstNameL = new QLabel("First Name:");
+    lastNameL = new QLabel("Last Name:");
+    emailL = new QLabel("Email:");
+    usernameL = new QLabel("Username:");
+    passwordL = new QLabel("Password:");
+    passwordConfirmL = new QLabel("Confirm Password:");
+    ageL = new QLabel("Age");
+    genderL = new QLabel("Gender");
+    emptyL = new QLabel("");
 
-    submit = new QPushButton("Submit");
-    checkPassword = new QPushButton("Check Password");
-    back = new QPushButton("Back to home");
+    firstName = new QLineEdit();
+    lastName = new QLineEdit();
+    email = new QLineEdit();
+    username = new QLineEdit();
+    password = new QLineEdit();
+    password->setEchoMode(QLineEdit::Password);
+    passwordConfirm = new QLineEdit();
+    passwordConfirm->setEchoMode(QLineEdit::Password);
 
     age = new QSpinBox();
-    male = new QRadioButton("Male");
-    female = new QRadioButton("Female");
 
+    genderMale = new QRadioButton("Male");
+    genderFemale = new QRadioButton("Female");
+    genderVL = new QVBoxLayout();
+    genderVL->addWidget(genderMale);
+    genderVL->addWidget(genderFemale);
+    genderGB = new QGroupBox();
+    genderGB->setLayout(genderVL);
 
-    VerticalL = new QVBoxLayout();
-    VLayout = new  QVBoxLayout();
-    Grid = new QGridLayout();
-    group = new QGroupBox();
-
-    VLayout->addWidget(male);
-    VLayout->addWidget(female);
-    group->setLayout(VLayout);
-    pass->setEchoMode(QLineEdit::Password);
-    cpass->setEchoMode(QLineEdit::Password);
+    checkPassword = new QPushButton("Check Password");
+    submit = new QPushButton("Submit");
+    submit->setEnabled(false);
+    back = new QPushButton("Back to home");
 
     setVerticalLayout();
     setGridLayout();
-    setLayout(VerticalL);
-    submit->setDisabled(true);
+
+    setLayout(verticalLayout);
 
     QObject::connect(checkPassword, SIGNAL(clicked()), SLOT(checkPassClicked()));
     QObject::connect(back, SIGNAL(clicked()), SLOT(backToHomeClicked()));
@@ -51,49 +52,52 @@ SignUp::SignUp()
 }
 
 
-void SignUp::setVerticalLayout(){
-    VerticalL->addItem(Grid);
-    VerticalL->addWidget(checkPassword);
-    VerticalL->addWidget(empty);
-    VerticalL->addWidget(back);
-    VerticalL->addWidget(submit);
+void SignUp::setVerticalLayout()
+{
+    verticalLayout->addItem(gridLayout);
+    verticalLayout->addWidget(checkPassword);
+    verticalLayout->addWidget(emptyL);
+    verticalLayout->addWidget(back);
+    verticalLayout->addWidget(submit);
 }
 
-void SignUp::setGridLayout(){
-    Grid->addWidget(firstName,0,0);
-    Grid->addWidget(fn,0,1);
-    Grid->addWidget(lastName,1,0);
-    Grid->addWidget(ln,1,1);
-    Grid->addWidget(email,2,0);
-    Grid->addWidget(e,2,1);
-    Grid->addWidget(userName,3,0);
-    Grid->addWidget(un,3,1);
-    Grid->addWidget(password,4,0);
-    Grid->addWidget(pass,4,1);
-    Grid->addWidget(confirmPassword,5,0);
-    Grid->addWidget(cpass,5,1);
-    Grid->addWidget(age,6,0);
-    Grid->addWidget(group,6,1);
-
+void SignUp::setGridLayout()
+{
+    gridLayout->addWidget(firstNameL, 0, 0);
+    gridLayout->addWidget(firstName, 0, 1);
+    gridLayout->addWidget(lastNameL, 1, 0);
+    gridLayout->addWidget(lastName, 1, 1);
+    gridLayout->addWidget(emailL, 2, 0);
+    gridLayout->addWidget(email, 2, 1);
+    gridLayout->addWidget(usernameL, 3, 0);
+    gridLayout->addWidget(username, 3, 1);
+    gridLayout->addWidget(passwordL, 4, 0);
+    gridLayout->addWidget(password, 4, 1);
+    gridLayout->addWidget(passwordConfirmL, 5, 0);
+    gridLayout->addWidget(passwordConfirm, 5, 1);
+    gridLayout->addWidget(ageL, 6, 0);
+    gridLayout->addWidget(genderL, 6, 1);
+    gridLayout->addWidget(age, 7, 0);
+    gridLayout->addWidget(genderGB, 7, 1);
 }
 
 void SignUp::checkPassClicked(){
-    if(pass->text() == NULL || pass->text() == ""){
-        empty->setText("Empty Password");
+    if(password->text() == NULL || password->text() == ""){
+        emptyL->setText("Empty Password");
         submit->setDisabled(true);
     }
-    else if(cpass->text() == NULL || cpass->text() == ""){
-        empty->setText("Empty Password");
+    else if(passwordConfirm->text() == NULL || passwordConfirm->text() == ""){
+        emptyL->setText("Empty Confirmed Password");
         submit->setDisabled(true);
         passChecked == false;
     }
-    else if(pass->text()!=cpass->text()){
-        empty->setText("Passwords don't match");
+    else if(password->text()!=passwordConfirm->text()){
+        emptyL->setText("Passwords don't match");
         submit->setDisabled(true);
         passChecked == false;
     }
     else{
-        empty->setText("Passwords match");
+        emptyL->setText("Passwords match");
         submit->setEnabled(true);
         passChecked == true;
     }
@@ -101,10 +105,10 @@ void SignUp::checkPassClicked(){
 }
 
 void SignUp::submitClicked(){
-    if(fn->text() == NULL || fn->text() == ""
-       || ln->text() == NULL || ln->text() == ""
-       || e->text() == NULL ||  e->text() == ""
-       || un->text() == NULL ||  un->text() == ""
+    if(firstName->text() == NULL || firstName->text() == ""
+       || lastName->text() == NULL || lastName->text() == ""
+       || email->text() == NULL ||  email->text() == ""
+       || username->text() == NULL ||  username->text() == ""
        || passChecked == false){
         Message *msg = new Message("Some Fields are empty! Please Fill");
         msg->show();

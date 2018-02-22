@@ -12,34 +12,37 @@ public:
     explicit SignUp();
 
     bool passChecked;
-    QLabel *firstName;
-    QLabel *lastName;
-    QLabel *email;
-    QLabel *userName;
-    QLabel *password;
-    QLabel *confirmPassword;
-    QLabel *empty;
 
-    QLineEdit *fn;
-    QLineEdit *ln;
-    QLineEdit *e;
-    QLineEdit *un;
-    QLineEdit *pass;
-    QLineEdit *cpass;
+    QVBoxLayout* verticalLayout;
+    QGridLayout* gridLayout;
 
-    QPushButton *submit;
-    QPushButton *checkPassword;
-    QPushButton *back;
+    QLabel* firstNameL;
+    QLabel* lastNameL;
+    QLabel* emailL;
+    QLabel* usernameL;
+    QLabel* passwordL;
+    QLabel* passwordConfirmL;
+    QLabel* ageL;
+    QLabel* genderL;
+    QLabel* emptyL;
 
-    QRadioButton *male;
-    QRadioButton *female;
-    QSpinBox *age;
+    QLineEdit* firstName;
+    QLineEdit* lastName;
+    QLineEdit* email;
+    QLineEdit* username;
+    QLineEdit* password;
+    QLineEdit* passwordConfirm;
 
-    QVBoxLayout *VerticalL;
-    QGridLayout *Grid;
-    QVBoxLayout *VLayout;
-    QGroupBox *group;
+    QSpinBox* age;
 
+    QRadioButton* genderMale;
+    QRadioButton* genderFemale;
+    QVBoxLayout* genderVL;
+    QGroupBox* genderGB;
+
+    QPushButton* checkPassword;
+    QPushButton* submit;
+    QPushButton* back;
 
 private:
     void setVerticalLayout();
