@@ -4,9 +4,11 @@ SOURCES += \
     main.cpp \
     Message.cpp \
     SignUp.cpp \
-    HomePage.cpp
+    HomePage.cpp \
+    User.cpp
 
 HEADERS += \
     HomePage.h \
     Message.h \
-    SignUp.h
+    SignUp.h \
+    User.h
