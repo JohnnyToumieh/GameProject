@@ -6,6 +6,7 @@ SignUp::SignUp()
 {
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
+    gridLayout1= new QGridLayout();
 
     firstNameL = new QLabel("First Name:");
     lastNameL = new QLabel("Last Name:");
@@ -16,6 +17,15 @@ SignUp::SignUp()
     ageL = new QLabel("Age");
     genderL = new QLabel("Gender");
     emptyL = new QLabel("");
+    profilePictureL = new QLabel("");
+
+    profilePictureL->setFixedHeight(100);
+    profilePictureL->setFixedWidth(100);
+    QPixmap profilePicture;
+    profilePicture.load(QDir::currentPath()+"/user_photos/profilepicture.png");
+    profilePicture.scaled( 100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+    profilePictureL->setPixmap(profilePicture);
+    profilePictureL->setScaledContents(true);
 
     firstName = new QLineEdit();
     lastName = new QLineEdit();
@@ -40,6 +50,9 @@ SignUp::SignUp()
     submit = new QPushButton("Submit");
     submit->setEnabled(false);
     back = new QPushButton("Back to home");
+    choosePicture = new QPushButton("Browse");
+    choosePicture->setFixedHeight(30);
+    choosePicture->setFixedWidth(100);
 
     setVerticalLayout();
     setGridLayout();
@@ -49,11 +62,19 @@ SignUp::SignUp()
     QObject::connect(checkPassword, SIGNAL(clicked()), SLOT(checkPassClicked()));
     QObject::connect(back, SIGNAL(clicked()), SLOT(backToHomeClicked()));
     QObject::connect(submit, SIGNAL(clicked()), SLOT(submitClicked()));
+    QObject::connect(choosePicture, SIGNAL(clicked()), SLOT(choosePictureClicked()));
 }
 
 
 void SignUp::setVerticalLayout()
 {
+    gridLayout1->addWidget(profilePictureL,0,0);
+    gridLayout1->addWidget(new QLabel(""),0,1);
+    gridLayout1->addWidget(new QLabel(""),0,2);
+    gridLayout1->addWidget(choosePicture,1,0);
+    gridLayout1->addWidget(new QLabel(""),1,1);
+    gridLayout1->addWidget(new QLabel(""),1,2);
+    verticalLayout->addItem(gridLayout1);
     verticalLayout->addItem(gridLayout);
     verticalLayout->addWidget(checkPassword);
     verticalLayout->addWidget(emptyL);
@@ -124,4 +145,20 @@ void SignUp::backToHomeClicked(){
     VerticalLayout->addWidget(homepage);
     qDeleteAll(this->children());
     setLayout(VerticalLayout);
+}
+
+void SignUp::choosePictureClicked(){
+    QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
+
+    if(QString::compare(fileName,QString())!=0){
+        QPixmap profilePicture;
+        bool valid = profilePicture.load(fileName);
+        if(valid){
+            profilePicture.scaled(100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+            profilePictureL->setPixmap(profilePicture);
+            profilePictureL->setScaledContents(true);
+            profilePicture.save(QDir::currentPath()+"/user_photos/user","png");
+        }
+
+    }
 }
