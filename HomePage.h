@@ -1,15 +1,16 @@
 #ifndef HOMEPAGE_H
 #define HOMEPAGE_H
 
-#include "signUp.h"
+#include "SignUp.h"
 #include <QWidget>
 #include <QObject>
 #include <QtWidgets>
-class homePage : public QWidget
+class HomePage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit homePage(QWidget *parent = nullptr);
+    explicit HomePage();
+
     QPushButton *signInButton;
     QPushButton *signUpButton;
     QPushButton *guestButton;

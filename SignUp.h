@@ -5,11 +5,12 @@
 #include <QObject>
 #include <QtWidgets>
 
-class signUp : public QWidget
+class SignUp : public QWidget
 {
     Q_OBJECT
 public:
-    explicit signUp(QWidget *parent = nullptr);
+    explicit SignUp();
+
     bool passChecked;
     QLabel *firstName;
     QLabel *lastName;

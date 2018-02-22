@@ -2,11 +2,11 @@ QT+= widgets
 
 SOURCES += \
     main.cpp \
-    homePage.cpp \
-    signUp.cpp \
-    message.cpp
+    Message.cpp \
+    SignUp.cpp \
+    HomePage.cpp
 
 HEADERS += \
-    homePage.h \
-    signUp.h \
-    message.h
+    HomePage.h \
+    Message.h \
+    SignUp.h

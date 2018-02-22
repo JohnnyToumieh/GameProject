@@ -1,7 +1,8 @@
-#include "signUp.h"
-#include "homePage.h"
-#include "message.h"
-signUp::signUp(QWidget *parent) : QWidget(parent)
+#include "SignUp.h"
+#include "HomePage.h"
+#include "Message.h"
+
+SignUp::SignUp()
 {
     passChecked=false;
     firstName = new QLabel("FirstName");
@@ -50,7 +51,7 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
 }
 
 
-void signUp::setVerticalLayout(){
+void SignUp::setVerticalLayout(){
     VerticalL->addItem(Grid);
     VerticalL->addWidget(checkPassword);
     VerticalL->addWidget(empty);
@@ -58,7 +59,7 @@ void signUp::setVerticalLayout(){
     VerticalL->addWidget(submit);
 }
 
-void signUp::setGridLayout(){
+void SignUp::setGridLayout(){
     Grid->addWidget(firstName,0,0);
     Grid->addWidget(fn,0,1);
     Grid->addWidget(lastName,1,0);
@@ -76,7 +77,7 @@ void signUp::setGridLayout(){
 
 }
 
-void signUp::checkPassClicked(){
+void SignUp::checkPassClicked(){
     if(pass->text() == NULL || pass->text() == ""){
         empty->setText("Empty Password");
         submit->setDisabled(true);
@@ -99,13 +100,13 @@ void signUp::checkPassClicked(){
 
 }
 
-void signUp::submitClicked(){
+void SignUp::submitClicked(){
     if(fn->text() == NULL || fn->text() == ""
        || ln->text() == NULL || ln->text() == ""
        || e->text() == NULL ||  e->text() == ""
        || un->text() == NULL ||  un->text() == ""
        || passChecked == false){
-        message *msg = new message("Some Fields are empty! Please Fill");
+        Message *msg = new Message("Some Fields are empty! Please Fill");
         msg->show();
     }
     else{
@@ -113,8 +114,8 @@ void signUp::submitClicked(){
     }
 }
 
-void signUp::backToHomeClicked(){
-    homePage *homepage = new homePage();
+void SignUp::backToHomeClicked(){
+    HomePage *homepage = new HomePage();
     QVBoxLayout *VerticalLayout = new QVBoxLayout();
     VerticalLayout->addWidget(homepage);
     qDeleteAll(this->children());

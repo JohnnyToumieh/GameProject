@@ -1,13 +1,13 @@
 #include <QApplication>
 #include <QtWidgets>
-#include "homePage.h"
+#include "HomePage.h"
 int main(int argc, char **argv)
 {
     QApplication app (argc, argv);
     //QPushButton button ("Hello world !");
     //button.show();
 
-    homePage homepage;
+    HomePage homepage;
     homepage.show();
     return app.exec();
 }

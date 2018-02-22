@@ -1,7 +1,7 @@
-#include "homePage.h"
+#include "HomePage.h"
 #include <QtWidgets>
-#include "signUp.h"
-homePage::homePage(QWidget *parent) : QWidget(parent)
+#include "SignUp.h"
+HomePage::HomePage()
 {
     signInButton = new QPushButton("SignIn");
     signUpButton = new QPushButton("SignUp");
@@ -22,15 +22,15 @@ homePage::homePage(QWidget *parent) : QWidget(parent)
 }
 
 
-void homePage::setVerticalLayout(){
+void HomePage::setVerticalLayout(){
     VerticalL->addWidget(imageLabel);
     VerticalL->addWidget(signInButton);
     VerticalL->addWidget(signUpButton);
     VerticalL->addWidget(guestButton);
 }
 
-void homePage::signupClicked(){
-    signUp *signup = new signUp();
+void HomePage::signupClicked(){
+    SignUp *signup = new SignUp();
     QVBoxLayout *VerticalLayout = new QVBoxLayout();
     VerticalLayout->addWidget(signup);
     qDeleteAll(this->children());

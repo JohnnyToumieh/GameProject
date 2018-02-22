@@ -3,12 +3,13 @@
 
 #include <QWidget>
 #include <QtWidgets>
-class message : public QWidget
+class Message : public QWidget
 {
     Q_OBJECT
 public:
-    explicit message(QWidget *parent = nullptr);
-    message(QString m);
+    explicit Message();
+    Message(QString m);
+
     QLabel *msg;
     QVBoxLayout *VerticalL;
 

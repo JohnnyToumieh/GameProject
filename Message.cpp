@@ -1,11 +1,11 @@
-#include "message.h"
+#include "Message.h"
 
-message::message(QWidget *parent) : QWidget(parent)
+Message::Message()
 {
 
 }
 
-message::message(QString m)
+Message::Message(QString m)
 {
     msg = new QLabel(m);
     VerticalL = new QVBoxLayout();
