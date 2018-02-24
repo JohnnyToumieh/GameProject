@@ -1,6 +1,5 @@
 #ifndef HOMEPAGE_H
 #define HOMEPAGE_H
-
 #include "SignUp.h"
 #include <QWidget>
 #include <QObject>
@@ -29,7 +28,9 @@ private:
     void setVerticalLayout();
     void RemoveLayout (QWidget* widget);
 public slots:
-    void signupClicked();
+    void signUpClicked();
+    void signInClicked();
+    void playAsGuestClicked();
 };
 
 #endif // HOMEPAGE_H

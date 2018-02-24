@@ -1,6 +1,9 @@
 #include "HomePage.h"
 #include <QtWidgets>
 #include "SignUp.h"
+#include "ChooseGamePage.h"
+#include "SignIn.h"
+
 HomePage::HomePage(QWidget *widget)
 {
     this->widget=widget;
@@ -18,7 +21,9 @@ HomePage::HomePage(QWidget *widget)
 
     VerticalL = new QVBoxLayout();
 
-    QObject::connect(signUpButton, SIGNAL(clicked()), SLOT(signupClicked()));
+    QObject::connect(signUpButton, SIGNAL(clicked()), SLOT(signUpClicked()));
+    QObject::connect(signInButton, SIGNAL(clicked()), SLOT(signInClicked()));
+    QObject::connect(guestButton, SIGNAL(clicked()), SLOT(playAsGuestClicked()));
 
     setVerticalLayout();
 
@@ -46,8 +51,18 @@ void HomePage::setVerticalLayout(){
     VerticalL->addWidget(new QLabel(""));
 }
 
-void HomePage::signupClicked(){
+void HomePage::signUpClicked(){
     qDeleteAll(widget->children());
     SignUp *signup = new SignUp(widget);
+}
+
+void HomePage::signInClicked(){
+    qDeleteAll(widget->children());
+    SignIn *signIn = new SignIn(widget);
+}
+
+void HomePage::playAsGuestClicked(){
+    qDeleteAll(widget->children());
+    ChooseGamePage *choosegamePage = new ChooseGamePage(widget);
 }
 
