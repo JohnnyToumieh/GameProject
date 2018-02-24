@@ -49,6 +49,8 @@ SignUp::SignUp()
     QObject::connect(checkPassword, SIGNAL(clicked()), SLOT(checkPassClicked()));
     QObject::connect(back, SIGNAL(clicked()), SLOT(backToHomeClicked()));
     QObject::connect(submit, SIGNAL(clicked()), SLOT(submitClicked()));
+
+    user = new User();
 }
 
 
@@ -85,21 +87,22 @@ void SignUp::checkPassClicked(){
     if(password->text() == NULL || password->text() == ""){
         emptyL->setText("Empty Password");
         submit->setDisabled(true);
+        passChecked = false;
     }
     else if(passwordConfirm->text() == NULL || passwordConfirm->text() == ""){
         emptyL->setText("Empty Confirmed Password");
         submit->setDisabled(true);
-        passChecked == false;
+        passChecked = false;
     }
     else if(password->text()!=passwordConfirm->text()){
         emptyL->setText("Passwords don't match");
         submit->setDisabled(true);
-        passChecked == false;
+        passChecked = false;
     }
     else{
         emptyL->setText("Passwords match");
         submit->setEnabled(true);
-        passChecked == true;
+        passChecked = true;
     }
 
 }
@@ -112,9 +115,23 @@ void SignUp::submitClicked(){
        || passChecked == false){
         Message *msg = new Message("Some Fields are empty! Please Fill");
         msg->show();
-    }
-    else{
+    } else {
+        user->username = username->text();
+        user->password = password->text();
 
+        user->firstName = firstName->text();
+        user->lastName = lastName->text();
+
+        user->write(usersFile);
+
+        QFile saveFile(QStringLiteral("Users.json"));
+
+        if (!saveFile.open(QIODevice::WriteOnly)) {
+            qWarning("Couldn't open save file.");
+        }
+
+        QJsonDocument saveDoc(usersFile);
+        saveFile.write(saveDoc.toJson());
     }
 }
 

@@ -2,6 +2,7 @@
 #define USER_H
 
 #include <QJsonObject>
+#include <QJsonArray>
 
 class User
 {

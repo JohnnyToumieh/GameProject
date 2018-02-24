@@ -4,6 +4,10 @@
 #include <QWidget>
 #include <QObject>
 #include <QtWidgets>
+#include <QFile>
+#include <QIODevice>
+
+#include "User.h"
 
 class SignUp : public QWidget
 {
@@ -43,6 +47,9 @@ public:
     QPushButton* checkPassword;
     QPushButton* submit;
     QPushButton* back;
+
+    User* user;
+    QJsonObject usersFile;
 
 private:
     void setVerticalLayout();

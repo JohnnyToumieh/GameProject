@@ -57,6 +57,7 @@ bool User::write(QJsonObject &json) const
         json["users"] = userArray;
         return true;
     }
+    return false;
 }
 
 void User::writeHelper(QJsonObject &userObject) const
