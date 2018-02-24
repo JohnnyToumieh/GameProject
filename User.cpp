@@ -32,13 +32,36 @@ bool User::write(QJsonObject &json) const
 {
     if (json.contains("users") && json["users"].isArray()) {
         QJsonArray userArray = json["users"].toArray();
+
+        // If user has already been created, update fields
         for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
             QJsonObject userObject = userArray[userIndex].toObject();
             if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->username) {
-                userObject["firstName"] = this->firstName;
-                userObject["lastName"] = this->lastName;
+                User::writeHelper(userObject);
                 return true;
             }
         }
+
+        // If user has never been created before, create him
+        QJsonObject userObject;
+        User::writeHelper(userObject);
+        userArray.append(userObject);
+        return true;
+    } else {
+        // If no users have ever been created before, create new list and create the user
+        QJsonArray userArray;
+        QJsonObject userObject;
+        User::writeHelper(userObject);
+        userArray.append(userObject);
+        json["users"] = userArray;
+        return true;
     }
+}
+
+void User::writeHelper(QJsonObject &userObject) const
+{
+    userObject["username"] = this->username;
+    userObject["password"] = this->password;
+    userObject["firstName"] = this->firstName;
+    userObject["lastName"] = this->lastName;
 }

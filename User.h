@@ -16,6 +16,9 @@ public:
 
     QString firstName;
     QString lastName;
+
+private:
+    void writeHelper(QJsonObject &json) const;
 };
 
 #endif // USER_H
