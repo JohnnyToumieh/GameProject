@@ -11,4 +11,14 @@ Message::Message(QString m)
     VerticalL = new QVBoxLayout();
     VerticalL->addWidget(msg);
     setLayout(VerticalL);
+    setFixedSize(300,80);
+    setGeometry(
+        QStyle::alignedRect(
+            Qt::LeftToRight,
+            Qt::AlignCenter,
+            size(),
+            qApp->desktop()->availableGeometry()
+        ));
+
+
 }

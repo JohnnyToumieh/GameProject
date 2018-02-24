@@ -5,17 +5,21 @@
 #include <QObject>
 #include <QtWidgets>
 
-class SignUp : public QWidget
+class SignUp : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit SignUp();
+    explicit SignUp(QWidget *widget);
 
     bool passChecked;
-
+    QWidget *widget;
     QVBoxLayout* verticalLayout;
     QGridLayout* gridLayout;
     QGridLayout* gridLayout1;
+
+    QComboBox *day;
+    QComboBox *month;
+    QComboBox *year;
 
     QLabel* firstNameL;
     QLabel* lastNameL;
@@ -27,6 +31,7 @@ public:
     QLabel* genderL;
     QLabel* emptyL;
     QLabel* profilePictureL;
+    QLabel* dateOfBirthL;
 
     QLineEdit* firstName;
     QLineEdit* lastName;
