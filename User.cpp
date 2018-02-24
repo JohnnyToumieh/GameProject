@@ -14,7 +14,8 @@ bool User::read(const QJsonObject &json)
         QJsonArray userArray = json["users"].toArray();
         for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
             QJsonObject userObject = userArray[userIndex].toObject();
-            if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->username) {
+            if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->username
+                    && userObject.contains("password") && userObject["password"].isString() && userObject["password"] == this->password) {
                 if (userObject.contains("firstName") && userObject["firstName"].isString()) {
                     this->firstName = userObject["firstName"].toString();
                 }
@@ -62,6 +63,7 @@ void User::writeHelper(QJsonObject &userObject) const
 {
     userObject["username"] = this->username;
     userObject["password"] = this->password;
+
     userObject["firstName"] = this->firstName;
     userObject["lastName"] = this->lastName;
 }
