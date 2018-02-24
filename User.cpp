@@ -39,6 +39,8 @@ bool User::write(QJsonObject &json) const
             QJsonObject userObject = userArray[userIndex].toObject();
             if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->username) {
                 User::writeHelper(userObject);
+                userArray[userIndex] = userObject;
+                json["users"] = userArray;
                 return true;
             }
         }
@@ -47,6 +49,7 @@ bool User::write(QJsonObject &json) const
         QJsonObject userObject;
         User::writeHelper(userObject);
         userArray.append(userObject);
+        json["users"] = userArray;
         return true;
     } else {
         // If no users have ever been created before, create new list and create the user

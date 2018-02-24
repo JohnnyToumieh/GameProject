@@ -51,6 +51,19 @@ SignUp::SignUp()
     QObject::connect(submit, SIGNAL(clicked()), SLOT(submitClicked()));
 
     user = new User();
+
+    QFile loadFile(QStringLiteral("Users.json"));
+
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        Message *msg = new Message("Couldn't open save file.");
+        msg->show();
+    }
+
+    QByteArray saveData = loadFile.readAll();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+
+    usersFile = loadDoc.object();
 }
 
 
@@ -127,11 +140,15 @@ void SignUp::submitClicked(){
         QFile saveFile(QStringLiteral("Users.json"));
 
         if (!saveFile.open(QIODevice::WriteOnly)) {
-            qWarning("Couldn't open save file.");
+            Message *msg = new Message("Couldn't open save file.");
+            msg->show();
         }
 
         QJsonDocument saveDoc(usersFile);
         saveFile.write(saveDoc.toJson());
+
+        Message *msg = new Message("Done.");
+        msg->show();
     }
 }
 
