@@ -4,10 +4,8 @@
 int main(int argc, char **argv)
 {
     QApplication app (argc, argv);
-    //QPushButton button ("Hello world !");
-    //button.show();
-
-    HomePage homepage;
-    homepage.show();
+    QWidget *widget= new QWidget();
+    HomePage *homepage = new HomePage(widget);
+    widget->show();
     return app.exec();
 }
