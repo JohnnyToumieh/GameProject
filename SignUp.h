@@ -15,6 +15,7 @@ public:
 
     QVBoxLayout* verticalLayout;
     QGridLayout* gridLayout;
+    QGridLayout* gridLayout1;
 
     QLabel* firstNameL;
     QLabel* lastNameL;
@@ -25,6 +26,7 @@ public:
     QLabel* ageL;
     QLabel* genderL;
     QLabel* emptyL;
+    QLabel* profilePictureL;
 
     QLineEdit* firstName;
     QLineEdit* lastName;
@@ -43,6 +45,7 @@ public:
     QPushButton* checkPassword;
     QPushButton* submit;
     QPushButton* back;
+    QPushButton* choosePicture;
 
 private:
     void setVerticalLayout();
@@ -54,6 +57,7 @@ public slots:
     void checkPassClicked();
     void backToHomeClicked();
     void submitClicked();
+    void choosePictureClicked();
 };
 
 #endif // SIGNUP_H
