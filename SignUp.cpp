@@ -2,10 +2,12 @@
 #include "HomePage.h"
 #include "Message.h"
 
-SignUp::SignUp()
+SignUp::SignUp(QWidget *widget)
 {
+    this->widget=widget;
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
+    gridLayout1= new QGridLayout();
 
     firstNameL = new QLabel("First Name:");
     lastNameL = new QLabel("Last Name:");
@@ -16,6 +18,16 @@ SignUp::SignUp()
     ageL = new QLabel("Age");
     genderL = new QLabel("Gender");
     emptyL = new QLabel("");
+    profilePictureL = new QLabel("");
+    dateOfBirthL = new QLabel("Date of birth:");
+
+    profilePictureL->setFixedHeight(100);
+    profilePictureL->setFixedWidth(100);
+    QPixmap profilePicture;
+    profilePicture.load(QDir::currentPath()+"/user_photos/profilepicture.png");
+    profilePicture.scaled( 100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+    profilePictureL->setPixmap(profilePicture);
+    profilePictureL->setScaledContents(true);
 
     firstName = new QLineEdit();
     lastName = new QLineEdit();
@@ -40,15 +52,44 @@ SignUp::SignUp()
     submit = new QPushButton("Submit");
     submit->setEnabled(false);
     back = new QPushButton("Back to home");
+    choosePicture = new QPushButton("Browse");
+    choosePicture->setFixedHeight(30);
+    choosePicture->setFixedWidth(100);
+
+    day = new QComboBox;
+    year = new QComboBox;
+    month = new QComboBox;
+
+    QStringList years;
+    years.append("Year");
+    for(int i=1970;i<=2017;i++){
+        years.append(QString::number(i));
+    }
+    year->addItems(years);
+
+    QStringList months;
+    months.append("Month");
+    for(int i=1;i<=12;i++){
+        months.append(QString::number(i));
+    }
+    month->addItems(months);
+
+    QStringList days;
+    days.append("Day");
+    for(int i=1;i<=30;i++){
+        days.append(QString::number(i));
+    }
+    day->addItems(days);
 
     setVerticalLayout();
     setGridLayout();
 
-    setLayout(verticalLayout);
+    widget->setLayout(verticalLayout);
 
     QObject::connect(checkPassword, SIGNAL(clicked()), SLOT(checkPassClicked()));
     QObject::connect(back, SIGNAL(clicked()), SLOT(backToHomeClicked()));
     QObject::connect(submit, SIGNAL(clicked()), SLOT(submitClicked()));
+    QObject::connect(choosePicture, SIGNAL(clicked()), SLOT(choosePictureClicked()));
 
     user = new User();
 
@@ -69,6 +110,20 @@ SignUp::SignUp()
 
 void SignUp::setVerticalLayout()
 {
+    gridLayout1->addWidget(profilePictureL,0,0);
+    gridLayout1->addWidget(new QLabel(""),0,1);
+    gridLayout1->addWidget(new QLabel(""),0,2);
+    gridLayout1->addWidget(choosePicture,1,0);
+    gridLayout1->addWidget(new QLabel(""),1,1);
+    gridLayout1->addWidget(new QLabel(""),1,2);
+    gridLayout1->addWidget(dateOfBirthL,2,0);
+    gridLayout1->addWidget(new QLabel(""),2,1);
+    gridLayout1->addWidget(day,2,2);
+    gridLayout1->addWidget(new QLabel(""),2,3);
+    gridLayout1->addWidget(month,2,4);
+    gridLayout1->addWidget(new QLabel(""),2,5);
+    gridLayout1->addWidget(year,2,6);
+    verticalLayout->addItem(gridLayout1);
     verticalLayout->addItem(gridLayout);
     verticalLayout->addWidget(checkPassword);
     verticalLayout->addWidget(emptyL);
@@ -125,7 +180,8 @@ void SignUp::submitClicked(){
        || lastName->text() == NULL || lastName->text() == ""
        || email->text() == NULL ||  email->text() == ""
        || username->text() == NULL ||  username->text() == ""
-       || passChecked == false){
+       || passChecked == false || day->currentText()=="Day"
+       || month->currentText()=="Month" || year->currentText()=="Year"){
         Message *msg = new Message("Some Fields are empty! Please Fill");
         msg->show();
     } else {
@@ -153,9 +209,23 @@ void SignUp::submitClicked(){
 }
 
 void SignUp::backToHomeClicked(){
-    HomePage *homepage = new HomePage();
-    QVBoxLayout *VerticalLayout = new QVBoxLayout();
-    VerticalLayout->addWidget(homepage);
-    qDeleteAll(this->children());
-    setLayout(VerticalLayout);
+    qDeleteAll(widget->children());
+    HomePage *homepage = new HomePage(widget);
+
+}
+
+void SignUp::choosePictureClicked(){
+    QString fileName = QFileDialog::getOpenFileName(widget,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
+
+    if(QString::compare(fileName,QString())!=0){
+        QPixmap profilePicture;
+        bool valid = profilePicture.load(fileName);
+        if(valid){
+            profilePicture.scaled(100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+            profilePictureL->setPixmap(profilePicture);
+            profilePictureL->setScaledContents(true);
+            profilePicture.save(QDir::currentPath()+"/user_photos/user","png");
+        }
+
+    }
 }

@@ -1,21 +1,24 @@
 #ifndef HOMEPAGE_H
 #define HOMEPAGE_H
-
 #include "SignUp.h"
 #include <QWidget>
 #include <QObject>
 #include <QtWidgets>
-class HomePage : public QWidget
+class HomePage : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit HomePage();
+    explicit HomePage(QWidget *widget);
+
+    QWidget *widget;
 
     QPushButton *signInButton;
     QPushButton *signUpButton;
     QPushButton *guestButton;
+
     QLabel *imageLabel;
-    //QPixmap *logo;
+    QLabel *doneByL;
+
     QVBoxLayout *VerticalL;
 
 
@@ -25,7 +28,9 @@ private:
     void setVerticalLayout();
     void RemoveLayout (QWidget* widget);
 public slots:
-    void signupClicked();
+    void signUpClicked();
+    void signInClicked();
+    void playAsGuestClicked();
 };
 
 #endif // HOMEPAGE_H
