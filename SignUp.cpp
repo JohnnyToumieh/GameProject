@@ -188,8 +188,21 @@ void SignUp::submitClicked(){
         user->username = username->text();
         user->password = password->text();
 
+        if (user->read(usersFile)) {
+            Message *msg = new Message("Username already exist!");
+            msg->show();
+            return;
+        }
+
         user->firstName = firstName->text();
         user->lastName = lastName->text();
+        user->email = email->text();
+        if (profilePicturePath != NULL) {
+            user->picture = profilePicturePath;
+        }
+        user->DoBday = day->currentText();
+        user->DoBmonth = month->currentText();
+        user->DoByear = year->currentText();
 
         user->write(usersFile);
 
@@ -221,6 +234,7 @@ void SignUp::choosePictureClicked(){
         QPixmap profilePicture;
         bool valid = profilePicture.load(fileName);
         if(valid){
+            profilePicturePath = fileName;
             profilePicture.scaled(100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
             profilePictureL->setPixmap(profilePicture);
             profilePictureL->setScaledContents(true);

@@ -17,6 +17,13 @@ public:
 
     QString firstName;
     QString lastName;
+    QString email;
+    QString picture;
+    //int age; how to store/retrieve an int from json?
+    //qint16 gender; what type is it?
+    QString DoBday;
+    QString DoBmonth;
+    QString DoByear;
 
 private:
     void writeHelper(QJsonObject &json) const;

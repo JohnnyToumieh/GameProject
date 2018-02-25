@@ -56,6 +56,8 @@ public:
     QPushButton* back;
     QPushButton* choosePicture;
 
+    QString profilePicturePath;
+
     User* user;
     QJsonObject usersFile;
 
