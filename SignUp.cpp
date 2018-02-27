@@ -6,6 +6,9 @@
 SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
 {
     this->widget=widget;
+    this->user = user;
+    this->usersFile = usersFile;
+
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
     gridLayout1= new QGridLayout();
@@ -91,9 +94,6 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
     QObject::connect(back, SIGNAL(clicked()), SLOT(backToHomeClicked()));
     QObject::connect(submit, SIGNAL(clicked()), SLOT(submitClicked()));
     QObject::connect(choosePicture, SIGNAL(clicked()), SLOT(choosePictureClicked()));
-
-    this->user = user;
-    this->usersFile = usersFile;
 }
 
 

@@ -6,6 +6,8 @@
 SignIn::SignIn(QWidget *widget, User* user, QJsonObject usersFile)
 {
     this->widget=widget;
+    this->user = user;
+    this->usersFile = usersFile;
 
     verticalLayout = new QVBoxLayout();
 
@@ -25,9 +27,6 @@ SignIn::SignIn(QWidget *widget, User* user, QJsonObject usersFile)
 
     QObject::connect(submit, SIGNAL(clicked()), SLOT(submitClicked()));
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
-
-    this->user = user;
-    this->usersFile = usersFile;
 }
 
 void SignIn::setVerticalLayout()
