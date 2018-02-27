@@ -13,7 +13,7 @@ class SignUp : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit SignUp(QWidget *widget);
+    explicit SignUp(QWidget *widget, User* user, QJsonObject usersFile);
 
     bool passChecked;
     QWidget *widget;
@@ -55,8 +55,6 @@ public:
     QPushButton* submit;
     QPushButton* back;
     QPushButton* choosePicture;
-
-    QString profilePicturePath;
 
     User* user;
     QJsonObject usersFile;

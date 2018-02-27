@@ -1,8 +1,9 @@
 #include "SignUp.h"
 #include "HomePage.h"
 #include "Message.h"
+#include "ChooseGamePage.h"
 
-SignUp::SignUp(QWidget *widget)
+SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
 {
     this->widget=widget;
     verticalLayout = new QVBoxLayout();
@@ -91,20 +92,8 @@ SignUp::SignUp(QWidget *widget)
     QObject::connect(submit, SIGNAL(clicked()), SLOT(submitClicked()));
     QObject::connect(choosePicture, SIGNAL(clicked()), SLOT(choosePictureClicked()));
 
-    user = new User();
-
-    QFile loadFile(QStringLiteral("Users.json"));
-
-    if (!loadFile.open(QIODevice::ReadOnly)) {
-        Message *msg = new Message("Couldn't open save file.");
-        msg->show();
-    }
-
-    QByteArray saveData = loadFile.readAll();
-
-    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-
-    usersFile = loadDoc.object();
+    this->user = user;
+    this->usersFile = usersFile;
 }
 
 
@@ -197,9 +186,6 @@ void SignUp::submitClicked(){
         user->firstName = firstName->text();
         user->lastName = lastName->text();
         user->email = email->text();
-        if (profilePicturePath != NULL) {
-            user->picture = profilePicturePath;
-        }
         user->DoBday = day->currentText();
         user->DoBmonth = month->currentText();
         user->DoByear = year->currentText();
@@ -216,8 +202,8 @@ void SignUp::submitClicked(){
         QJsonDocument saveDoc(usersFile);
         saveFile.write(saveDoc.toJson());
 
-        Message *msg = new Message("Done.");
-        msg->show();
+        qDeleteAll(widget->children());
+        ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user);
     }
 }
 
@@ -234,7 +220,6 @@ void SignUp::choosePictureClicked(){
         QPixmap profilePicture;
         bool valid = profilePicture.load(fileName);
         if(valid){
-            profilePicturePath = fileName;
             profilePicture.scaled(100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
             profilePictureL->setPixmap(profilePicture);
             profilePictureL->setScaledContents(true);

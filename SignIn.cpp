@@ -2,7 +2,7 @@
 #include "Message.h"
 #include "ChooseGamePage.h"
 
-SignIn::SignIn(QWidget *widget)
+SignIn::SignIn(QWidget *widget, User* user, QJsonObject usersFile)
 {
     this->widget=widget;
 
@@ -23,6 +23,8 @@ SignIn::SignIn(QWidget *widget)
 
     QObject::connect(submit, SIGNAL(clicked()), SLOT(submitClicked()));
 
+    this->user = user;
+    this->usersFile = usersFile;
 }
 
 void SignIn::setVerticalLayout()
@@ -43,7 +45,16 @@ void SignIn::submitClicked(){
         msg->show();
     }
     else{
-        qDeleteAll(widget->children());
-        ChooseGamePage *choosegamePage = new ChooseGamePage(widget);
+        user->username = username->text();
+        user->password = password->text();
+
+        if (user->read(usersFile)) {
+            qDeleteAll(widget->children());
+            ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user);
+        } else {
+            Message *msg = new Message("Username/Password combination does not match.");
+            msg->show();
+            user->clear();
+        }
     }
 }

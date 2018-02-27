@@ -12,13 +12,14 @@ public:
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
 
+    void clear();
+
     QString username;
     QString password;
 
     QString firstName;
     QString lastName;
     QString email;
-    QString picture;
     //int age; how to store/retrieve an int from json?
     //qint16 gender; what type is it?
     QString DoBday;

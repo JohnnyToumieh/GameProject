@@ -25,9 +25,6 @@ bool User::read(const QJsonObject &json)
                 if (userObject.contains("email") && userObject["email"].isString()) {
                     this->email = userObject["email"].toString();
                 }
-                if (userObject.contains("picture") && userObject["picture"].isString()) {
-                    this->picture = userObject["picture"].toString();
-                }
                 if (userObject.contains("DoBday") && userObject["DoBday"].isString()) {
                     this->DoBday = userObject["DoBday"].toString();
                 }
@@ -78,6 +75,18 @@ bool User::write(QJsonObject &json) const
     return false;
 }
 
+void User::clear() {
+    this->username = QString();
+    this->password = QString();
+
+    this->firstName = QString();
+    this->lastName = QString();
+    this->email = QString();
+    this->DoBday = QString();
+    this->DoBmonth = QString();
+    this->DoByear = QString();
+}
+
 void User::writeHelper(QJsonObject &userObject) const
 {
     userObject["username"] = this->username;
@@ -86,7 +95,6 @@ void User::writeHelper(QJsonObject &userObject) const
     userObject["firstName"] = this->firstName;
     userObject["lastName"] = this->lastName;
     userObject["email"] = this->email;
-    userObject["picture"] = this->picture;
     userObject["DoBday"] = this->DoBday;
     userObject["DoBmonth"] = this->DoBmonth;
     userObject["DoByear"] = this->DoByear;

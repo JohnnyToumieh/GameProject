@@ -4,12 +4,13 @@
 #include <QWidget>
 #include <QtWidgets>
 #include <QObject>
+#include "User.h"
 
 class GameOnePage : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit GameOnePage(QWidget *widget);
+    explicit GameOnePage(QWidget *widget, User* user);
     QVBoxLayout* verticalLayout;
     QGridLayout* gridLayout;
     QGridLayout *grid;
@@ -24,6 +25,8 @@ public:
 
     QLabel* profilePictureL;
     QLabel* nameL;
+
+    User* user;
 signals:
 
 private:

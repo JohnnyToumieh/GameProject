@@ -2,7 +2,7 @@
 #include "HomePage.h"
 #include "GameOnePage.h"
 
-ChooseGamePage::ChooseGamePage(QWidget *widget)
+ChooseGamePage::ChooseGamePage(QWidget *widget, User* user)
 {
     this->widget=widget;
 
@@ -36,6 +36,7 @@ ChooseGamePage::ChooseGamePage(QWidget *widget)
     QObject::connect(game1, SIGNAL(clicked()), SLOT(game1Clicked()));
     QObject::connect(game2, SIGNAL(clicked()), SLOT(game2Clicked()));
 
+    this->user = user;
 }
 
 void ChooseGamePage::backToHomeClicked(){
@@ -46,13 +47,13 @@ void ChooseGamePage::backToHomeClicked(){
 
 void ChooseGamePage::game1Clicked(){
     qDeleteAll(widget->children());
-    GameOnePage *gameOnePage = new GameOnePage(widget);
+    GameOnePage *gameOnePage = new GameOnePage(widget, user);
 
 }
 
 void ChooseGamePage::game2Clicked(){
     qDeleteAll(widget->children());
-    GameOnePage *gameOnePage = new GameOnePage(widget);
+    GameOnePage *gameOnePage = new GameOnePage(widget, user);
 
 }
 

@@ -1,7 +1,7 @@
 #include "GameOnePage.h"
 #include "ChooseGamePage.h"
 
-GameOnePage::GameOnePage(QWidget *widget)
+GameOnePage::GameOnePage(QWidget *widget, User* user)
 {
     this->widget=widget;
 
@@ -39,11 +39,12 @@ GameOnePage::GameOnePage(QWidget *widget)
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
 
+    this->user = user;
 }
 
 void GameOnePage::backClicked(){
     qDeleteAll(widget->children());
-    ChooseGamePage *chooseGamePage = new ChooseGamePage(widget);
+    ChooseGamePage *chooseGamePage = new ChooseGamePage(widget, user);
 
 }
 
