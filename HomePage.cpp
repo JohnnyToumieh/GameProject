@@ -42,7 +42,7 @@ HomePage::HomePage(QWidget *widget)
 
     QFile loadFile(QStringLiteral("Users.json"));
 
-    if (!loadFile.open(QIODevice::ReadOnly)) {
+    if (!loadFile.open(QIODevice::ReadWrite)) {
         Message *msg = new Message("Couldn't open users file to load.");
         msg->show();
     }
