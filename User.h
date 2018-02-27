@@ -20,8 +20,8 @@ public:
     QString firstName;
     QString lastName;
     QString email;
-    //int age; how to store/retrieve an int from json?
-    //qint16 gender; what type is it?
+    QString age;
+    QString gender;
     QString DoBday;
     QString DoBmonth;
     QString DoByear;

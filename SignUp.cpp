@@ -186,6 +186,15 @@ void SignUp::submitClicked(){
         user->firstName = firstName->text();
         user->lastName = lastName->text();
         user->email = email->text();
+        user->age = age->text();
+        QButtonGroup group;
+        QList<QRadioButton *> allButtons = genderGB->findChildren<QRadioButton *>();
+        for(int i = 0; i < allButtons.size(); ++i) {
+            group.addButton(allButtons[i],i);
+        }
+        if (allButtons.size() > 0 && group.checkedId() >= 0) {
+            user->gender = group.checkedButton()->text();
+        }
         user->DoBday = day->currentText();
         user->DoBmonth = month->currentText();
         user->DoByear = year->currentText();
