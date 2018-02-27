@@ -165,12 +165,19 @@ void SignUp::checkPassClicked(){
 }
 
 void SignUp::submitClicked(){
+    QButtonGroup group;
+    QList<QRadioButton *> allButtons = genderGB->findChildren<QRadioButton *>();
+    for(int i = 0; i < allButtons.size(); ++i) {
+        group.addButton(allButtons[i],i);
+    }
+
     if(firstName->text() == NULL || firstName->text() == ""
        || lastName->text() == NULL || lastName->text() == ""
        || email->text() == NULL ||  email->text() == ""
        || username->text() == NULL ||  username->text() == ""
        || passChecked == false || day->currentText()=="Day"
-       || month->currentText()=="Month" || year->currentText()=="Year"){
+       || month->currentText()=="Month" || year->currentText()=="Year"
+       || allButtons.size() == 0 || group.checkedId() < 0){
         Message *msg = new Message("Some Fields are empty! Please Fill");
         msg->show();
     } else {
@@ -187,14 +194,7 @@ void SignUp::submitClicked(){
         user->lastName = lastName->text();
         user->email = email->text();
         user->age = age->text();
-        QButtonGroup group;
-        QList<QRadioButton *> allButtons = genderGB->findChildren<QRadioButton *>();
-        for(int i = 0; i < allButtons.size(); ++i) {
-            group.addButton(allButtons[i],i);
-        }
-        if (allButtons.size() > 0 && group.checkedId() >= 0) {
-            user->gender = group.checkedButton()->text();
-        }
+        user->gender = group.checkedButton()->text();
         user->DoBday = day->currentText();
         user->DoBmonth = month->currentText();
         user->DoByear = year->currentText();
