@@ -4,6 +4,7 @@
 GameOnePage::GameOnePage(QWidget *widget, User* user)
 {
     this->widget=widget;
+    this->user = user;
 
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
@@ -21,25 +22,22 @@ GameOnePage::GameOnePage(QWidget *widget, User* user)
 
     profilePictureL = new QLabel();
 
-    //TODO: get specific user's image according to his username
     profilePictureL->setFixedHeight(100);
     profilePictureL->setFixedWidth(100);
     QPixmap profilePicture;
-    profilePicture.load(QDir::currentPath()+"/user_photos/profilepicture.png");
+    profilePicture.load(QDir::currentPath() + "/user_photos/" + user->username + ".png");
     profilePicture.scaled(100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
     profilePictureL->setPixmap(profilePicture);
     profilePictureL->setScaledContents(true);
 
 
-    nameL= new QLabel("     username"); // user actual username KEEP spaces
+    nameL= new QLabel("     " + user->username);
 
     setVerticalLayout();
     widget->setFixedSize(500,300);
     widget->setLayout(verticalLayout);
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
-
-    this->user = user;
 }
 
 void GameOnePage::backClicked(){

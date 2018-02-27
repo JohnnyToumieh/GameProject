@@ -75,6 +75,8 @@ void HomePage::signInClicked(){
 }
 
 void HomePage::playAsGuestClicked(){
+    user->username = "Guest";
+
     qDeleteAll(widget->children());
     ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user);
 }
