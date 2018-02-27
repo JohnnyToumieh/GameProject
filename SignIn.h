@@ -16,6 +16,7 @@ public:
     QVBoxLayout *verticalLayout;
 
     QPushButton* submit;
+    QPushButton* back;
 
     QLineEdit* username;
     QLineEdit* password;
@@ -32,6 +33,7 @@ private:
 
 public slots:
     void submitClicked();
+    void backClicked();
 };
 
 #endif // SIGNIN_H

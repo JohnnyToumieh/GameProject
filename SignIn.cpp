@@ -1,6 +1,7 @@
 #include "SignIn.h"
 #include "Message.h"
 #include "ChooseGamePage.h"
+#include "HomePage.h"
 
 SignIn::SignIn(QWidget *widget, User* user, QJsonObject usersFile)
 {
@@ -9,6 +10,7 @@ SignIn::SignIn(QWidget *widget, User* user, QJsonObject usersFile)
     verticalLayout = new QVBoxLayout();
 
     submit = new QPushButton("Submit");
+    back = new QPushButton("Back");
 
     username = new QLineEdit();
     password = new QLineEdit();
@@ -22,6 +24,7 @@ SignIn::SignIn(QWidget *widget, User* user, QJsonObject usersFile)
     widget->setLayout(verticalLayout);
 
     QObject::connect(submit, SIGNAL(clicked()), SLOT(submitClicked()));
+    QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
 
     this->user = user;
     this->usersFile = usersFile;
@@ -36,6 +39,10 @@ void SignIn::setVerticalLayout()
     verticalLayout->addWidget(password);
     verticalLayout->addWidget(new QLabel(""));
     verticalLayout->addWidget(submit);
+    verticalLayout->addWidget(back);
+    verticalLayout->addWidget(new QLabel(""));
+    verticalLayout->addWidget(new QLabel(""));
+    verticalLayout->addWidget(new QLabel(""));
 }
 
 void SignIn::submitClicked(){
@@ -57,4 +64,10 @@ void SignIn::submitClicked(){
             user->clear();
         }
     }
+}
+
+void SignIn::backClicked(){
+    qDeleteAll(widget->children());
+    HomePage *homePage = new HomePage(widget);
+
 }
