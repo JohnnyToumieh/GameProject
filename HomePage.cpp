@@ -43,7 +43,7 @@ HomePage::HomePage(QWidget *widget)
     QFile loadFile(QStringLiteral("Users.json"));
 
     if (!loadFile.open(QIODevice::ReadOnly)) {
-        Message *msg = new Message("Couldn't open save file.");
+        Message *msg = new Message("Couldn't open users file to load.");
         msg->show();
     }
 

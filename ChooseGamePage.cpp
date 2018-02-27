@@ -5,6 +5,7 @@
 ChooseGamePage::ChooseGamePage(QWidget *widget, User* user)
 {
     this->widget=widget;
+    this->user = user;
 
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
@@ -16,17 +17,16 @@ ChooseGamePage::ChooseGamePage(QWidget *widget, User* user)
 
     profilePictureL = new QLabel();
 
-    //TODO: get specific user's image according to his username
     profilePictureL->setFixedHeight(100);
     profilePictureL->setFixedWidth(100);
     QPixmap profilePicture;
-    profilePicture.load(QDir::currentPath()+"/user_photos/profilepicture.png");
+    profilePicture.load(QDir::currentPath() + "/user_photos/" + user->username + ".png");
     profilePicture.scaled(100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
     profilePictureL->setPixmap(profilePicture);
     profilePictureL->setScaledContents(true);
 
 
-    nameL= new QLabel("     username"); // user actual username KEEP spaces
+    nameL= new QLabel("     " + user->username);
 
     setVerticalLayout();
     widget->setFixedSize(500,300);
@@ -35,8 +35,6 @@ ChooseGamePage::ChooseGamePage(QWidget *widget, User* user)
     QObject::connect(back, SIGNAL(clicked()), SLOT(backToHomeClicked()));
     QObject::connect(game1, SIGNAL(clicked()), SLOT(game1Clicked()));
     QObject::connect(game2, SIGNAL(clicked()), SLOT(game2Clicked()));
-
-    this->user = user;
 }
 
 void ChooseGamePage::backToHomeClicked(){
