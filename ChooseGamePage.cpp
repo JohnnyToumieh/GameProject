@@ -1,6 +1,9 @@
 #include "ChooseGamePage.h"
 #include "HomePage.h"
 #include "GameOnePage.h"
+#include "Message.h"
+
+#include <ctime>
 
 ChooseGamePage::ChooseGamePage(QWidget *widget, User* user)
 {
@@ -35,6 +38,15 @@ ChooseGamePage::ChooseGamePage(QWidget *widget, User* user)
     QObject::connect(back, SIGNAL(clicked()), SLOT(backToHomeClicked()));
     QObject::connect(game1, SIGNAL(clicked()), SLOT(game1Clicked()));
     QObject::connect(game2, SIGNAL(clicked()), SLOT(game2Clicked()));
+
+    time_t t = time(0);   // get time now
+    struct tm * now = localtime(&t);
+
+    if (user->DoBday == QString::number(now->tm_mday)
+            && user->DoBmonth == QString::number(now->tm_mon + 1)) {
+        Message *msg = new Message("Happy birthday " + user->firstName + "!");
+        msg->show();
+    }
 }
 
 void ChooseGamePage::backToHomeClicked(){

@@ -80,7 +80,7 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
 
     QStringList days;
     days.append("Day");
-    for(int i=1;i<=30;i++){
+    for(int i=1;i<=31;i++){
         days.append(QString::number(i));
     }
     day->addItems(days);
