@@ -16,9 +16,15 @@ public:
 
     int gameNumber;
 
+    QListWidget *scores;
+
     QString topUser;
     QString topScore;
     QString* top10Scores;
+
+    QLabel *top10ScoresL;
+    QLabel *topUserL;
+    QLabel *topScoreL;
 
     QWidget *widget;
 

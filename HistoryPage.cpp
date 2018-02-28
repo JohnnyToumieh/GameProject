@@ -8,15 +8,28 @@ HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObjec
     this->user = user;
     this->usersFile = usersFile;
 
+    top10ScoresL = new QLabel("Your top 10 scores are:");
+    scores = new QListWidget();
+    scores->setFixedSize(100,200);
+
     verticalLayout = new QVBoxLayout();
 
     back = new QPushButton("Back");
 
+    top10Scores = new QString[10]();
+
+    read(usersFile);
+    for(int i=0;i<10;i++){
+        QListWidgetItem *item = new QListWidgetItem(top10Scores[i]);
+         scores->addItem(item);
+    }
+
+    topScoreL = new QLabel("Top score in the game is: \n" + topScore);
+    topUserL = new QLabel("And its is the score of: \n" + topUser);
+
     setVerticalLayout();
     widget->setFixedSize(500,350);
     widget->setLayout(verticalLayout);
-
-    top10Scores = new QString[10]();
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
 }
@@ -28,6 +41,11 @@ void HistoryPage::backClicked(){
 
 void HistoryPage::setVerticalLayout()
 {
+    verticalLayout->addWidget(top10ScoresL);
+    verticalLayout->addWidget(scores);
+    verticalLayout->addWidget(new QLabel(""));
+    verticalLayout->addWidget(topScoreL);
+    verticalLayout->addWidget(topUserL);
     verticalLayout->addWidget(back);
 }
 
@@ -35,7 +53,7 @@ bool HistoryPage::read(const QJsonObject &json)
 {
     if (json.contains("games") && json["games"].isArray()) {
         QJsonArray games = json["games"].toArray();
-        if (games.contains(this->gameNumber - 1) && games[this->gameNumber - 1].isObject()) {
+        if (games.size() > this->gameNumber - 1 && games[this->gameNumber - 1].isObject()) {
             QJsonObject gameData = games[this->gameNumber - 1].toObject();
             if (gameData.contains("users_score") && gameData["users_score"].isArray()) {
                 QJsonArray userArray = gameData["users_score"].toArray();
