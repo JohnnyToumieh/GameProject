@@ -10,15 +10,10 @@ class GameOnePage : public QVBoxLayout
 {
     Q_OBJECT
 public:
-<<<<<<< HEAD
-    explicit GameOnePage(QWidget *widget,int gameNumber);
-    int gameNumber;
-=======
     explicit GameOnePage(QWidget *widget, int gameNumber, User* user);
 
     int gameNumber;
     
->>>>>>> master
     QVBoxLayout* verticalLayout;
     QGridLayout* gridLayout;
     QGridLayout *grid;
