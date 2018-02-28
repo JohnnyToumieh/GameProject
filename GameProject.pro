@@ -8,11 +8,8 @@ SOURCES += \
     ChooseGamePage.cpp \
     GameOnePage.cpp \
     SignIn.cpp \
-<<<<<<< HEAD
-    HistoryPage.cpp
-=======
-    User.cpp
->>>>>>> 9f3b0b6a4ea5daf6455971da15365bf670434f64
+    HistoryPage.cpp \
+    User.cpp \
 
 HEADERS += \
     HomePage.h \
@@ -21,8 +18,5 @@ HEADERS += \
     ChooseGamePage.h \
     GameOnePage.h \
     SignIn.h \
-<<<<<<< HEAD
-    HistoryPage.h
-=======
-    User.h
->>>>>>> 9f3b0b6a4ea5daf6455971da15365bf670434f64
+    HistoryPage.h \
+    User.h \
