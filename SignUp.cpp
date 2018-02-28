@@ -52,7 +52,7 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
     genderGB = new QGroupBox();
     genderGB->setLayout(genderVL);
 
-    checkPassword = new QPushButton("Check Password");
+    checkPassword = new QPushButton("Check password");
     submit = new QPushButton("Submit");
     submit->setEnabled(false);
     back = new QPushButton("Back to home");
@@ -142,12 +142,12 @@ void SignUp::setGridLayout()
 
 void SignUp::checkPassClicked(){
     if(password->text() == NULL || password->text() == ""){
-        emptyL->setText("Empty Password");
+        emptyL->setText("Empty password");
         submit->setDisabled(true);
         passChecked = false;
     }
     else if(passwordConfirm->text() == NULL || passwordConfirm->text() == ""){
-        emptyL->setText("Empty Confirmed Password");
+        emptyL->setText("Empty confirmed password");
         submit->setDisabled(true);
         passChecked = false;
     }
@@ -178,7 +178,7 @@ void SignUp::submitClicked(){
        || passChecked == false || day->currentText()=="Day"
        || month->currentText()=="Month" || year->currentText()=="Year"
        || allButtons.size() == 0 || group.checkedId() < 0){
-        Message *msg = new Message("Some Fields are empty! Please Fill");
+        Message *msg = new Message("Some fields are empty! Please fill.");
         msg->show();
     } else {
         user->username = username->text();

@@ -9,11 +9,11 @@ HomePage::HomePage(QWidget *widget)
 {
     this->widget=widget;
 
-    signInButton = new QPushButton("SignIn");
-    signUpButton = new QPushButton("SignUp");
+    signInButton = new QPushButton("Sign in");
+    signUpButton = new QPushButton("Sign up");
     guestButton = new QPushButton("Play as guest");
 
-    doneByL = new QLabel("\t\t\tGaming Platform\n\t\t\t       Done by \n\t\t\tHassan & Jhonny");
+    doneByL = new QLabel("\t\t\tGaming Platform\n\t\t\t       Done by \n\t\t\tHassan & Johnny");
 
     QPixmap logo;
     logo.load("logo2.JPG");

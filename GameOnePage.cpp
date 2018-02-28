@@ -18,7 +18,7 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user)
     description = new QPushButton("Description");
 
     selectLevel = new QComboBox();
-    selectLevel->addItem("Select Level");
+    selectLevel->addItem("Select level");
     selectLevel->addItem("Easy");
     selectLevel->addItem("Medium");
     selectLevel->addItem("Hard");

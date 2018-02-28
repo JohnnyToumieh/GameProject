@@ -5,9 +5,6 @@ User::User()
 
 }
 
-// So what do i really wanna do here?
-// Store the user here without the password? Only check the password to confirm him?
-
 bool User::read(const QJsonObject &json)
 {
     if (json.contains("users") && json["users"].isArray()) {

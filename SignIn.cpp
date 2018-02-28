@@ -47,7 +47,7 @@ void SignIn::setVerticalLayout()
 void SignIn::submitClicked(){
     if(username->text() == NULL ||  username->text() == ""
        || password->text() ==NULL || password->text()==""){
-        Message *msg = new Message("Some Fields are empty! Please Fill them and retry");
+        Message *msg = new Message("Some fields are empty! Please fill them and retry.");
         msg->show();
     }
     else{

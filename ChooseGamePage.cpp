@@ -12,8 +12,8 @@ ChooseGamePage::ChooseGamePage(QWidget *widget, User* user)
     grid = new QGridLayout();
 
     game1 = new QPushButton("Game 1: Aqua Clean");
-    game2 = new QPushButton("Game 2: ");
-    back = new QPushButton("Back to Home");
+    game2 = new QPushButton("Game 2: TBA");
+    back = new QPushButton("Back to home");
 
     profilePictureL = new QLabel();
 
