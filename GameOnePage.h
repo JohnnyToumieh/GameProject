@@ -23,9 +23,11 @@ public:
     QPushButton *checkRecords;
     QPushButton *back;
     QPushButton *description;
+    QPushButton *checkHistory;
 
     QLabel* profilePictureL;
     QLabel* nameL;
+
 signals:
 
 private:
