@@ -34,7 +34,7 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user)
     profilePictureL->setScaledContents(true);
 
 
-    nameL= new QLabel("     " + user->username);
+    nameL= new QLabel("     " + user->firstName + " " + user->lastName);
 
     setVerticalLayout();
     widget->setFixedSize(500,300);
