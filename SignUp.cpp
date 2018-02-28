@@ -233,7 +233,7 @@ void SignUp::submitClicked(){
         QFile saveFile(QStringLiteral("Data.json"));
 
         if (!saveFile.open(QIODevice::WriteOnly)) {
-            Message *msg = new Message("Couldn't open users file to save.");
+            Message *msg = new Message("Couldn't open data file to save.");
             msg->show();
         }
 

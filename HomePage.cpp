@@ -43,7 +43,7 @@ HomePage::HomePage(QWidget *widget)
     QFile loadFile(QStringLiteral("Data.json"));
 
     if (!loadFile.open(QIODevice::ReadWrite)) {
-        Message *msg = new Message("Couldn't open users file to load.");
+        Message *msg = new Message("Couldn't open data file to load.");
         msg->show();
     }
 
