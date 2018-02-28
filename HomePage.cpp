@@ -40,7 +40,7 @@ HomePage::HomePage(QWidget *widget)
 
     widget->setLayout(VerticalL);
 
-    QFile loadFile(QStringLiteral("Users.json"));
+    QFile loadFile(QStringLiteral("Data.json"));
 
     if (!loadFile.open(QIODevice::ReadWrite)) {
         Message *msg = new Message("Couldn't open users file to load.");
