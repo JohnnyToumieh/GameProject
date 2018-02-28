@@ -46,13 +46,13 @@ void ChooseGamePage::backToHomeClicked(){
 
 void ChooseGamePage::game1Clicked(){
     qDeleteAll(widget->children());
-    GameOnePage *gameOnePage = new GameOnePage(widget);
+    GameOnePage *gameOnePage = new GameOnePage(widget,1);
 
 }
 
 void ChooseGamePage::game2Clicked(){
     qDeleteAll(widget->children());
-    GameOnePage *gameOnePage = new GameOnePage(widget);
+    GameOnePage *gameOnePage = new GameOnePage(widget,2);
 
 }
 

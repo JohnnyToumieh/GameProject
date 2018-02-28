@@ -11,7 +11,7 @@ Message::Message(QString m)
     VerticalL = new QVBoxLayout();
     VerticalL->addWidget(msg);
     setLayout(VerticalL);
-    setFixedSize(300,80);
+    setFixedSize(350,100);
     setGeometry(
         QStyle::alignedRect(
             Qt::LeftToRight,

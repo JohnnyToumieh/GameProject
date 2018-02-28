@@ -1,8 +1,10 @@
 #include "GameOnePage.h"
 #include "ChooseGamePage.h"
+#include "Message.h"
 
-GameOnePage::GameOnePage(QWidget *widget)
+GameOnePage::GameOnePage(QWidget *widget,int gameNumber)
 {
+    this->gameNumber = gameNumber;
     this->widget=widget;
 
     verticalLayout = new QVBoxLayout();
@@ -12,6 +14,7 @@ GameOnePage::GameOnePage(QWidget *widget)
     newGame = new QPushButton("Start a new game");
     resumeGame = new QPushButton("Resume old game");
     back = new QPushButton("Back");
+    description = new QPushButton("Description");
 
     selectLevel = new QComboBox();
     selectLevel->addItem("Select Level");
@@ -38,7 +41,12 @@ GameOnePage::GameOnePage(QWidget *widget)
     widget->setLayout(verticalLayout);
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
+    QObject::connect(description, SIGNAL(clicked()), SLOT(descriptionClicked()));
 
+}
+void GameOnePage::descriptionClicked(){
+    Message *msg = new Message("SpongeBob has to move around the screen\nto collect items that increase his immunity level\nin order to be able to kill more bacteria\nand thus clean the aquarium.");
+    msg->show();
 }
 
 void GameOnePage::backClicked(){
@@ -56,9 +64,9 @@ void GameOnePage::setVerticalLayout()
     gridLayout->addWidget(new QLabel(""),1,1);
     gridLayout->addWidget(new QLabel(""),1,2);
     verticalLayout->addItem(gridLayout);
-    verticalLayout->addWidget(new QLabel(""));
+    verticalLayout->addWidget(description);
     verticalLayout->addWidget(newGame);
     verticalLayout->addWidget(resumeGame);
-     verticalLayout->addWidget(selectLevel);
+    verticalLayout->addWidget(selectLevel);
     verticalLayout->addWidget(back);
 }
