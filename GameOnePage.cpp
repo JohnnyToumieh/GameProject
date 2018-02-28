@@ -1,6 +1,7 @@
 #include "GameOnePage.h"
 #include "ChooseGamePage.h"
 #include "Message.h"
+#include "HistoryPage.h"
 
 GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user)
 {
@@ -59,6 +60,11 @@ void GameOnePage::descriptionClicked(){
 void GameOnePage::backClicked(){
     qDeleteAll(widget->children());
     ChooseGamePage *chooseGamePage = new ChooseGamePage(widget, user);
+}
+
+void GameOnePage::checkHistoryClicked(){
+    qDeleteAll(widget->children());
+    HistoryPage *historyPage = new HistoryPage(widget, gameNumber, user);
 }
 
 void GameOnePage::setVerticalLayout()

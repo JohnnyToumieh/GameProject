@@ -41,6 +41,7 @@ private:
 public slots:
     void backClicked();
     void descriptionClicked();
+    void checkHistoryClicked();
 };
 
 #endif // GAMEONEPAGE_H
