@@ -33,28 +33,35 @@ void HistoryPage::setVerticalLayout()
 
 bool HistoryPage::read(const QJsonObject &json)
 {
-    if (json.contains("users_score") && json["users_score"].isArray()) {
-        QJsonArray userArray = json["users_score"].toArray();
-        for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
-            QJsonObject userObject = userArray[userIndex].toObject();
-            if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username
-                    && userObject.contains("scores") && userObject["scores"].isArray()) {
-                QJsonArray userScores = userObject["scores"].toArray();
-                for (int scoreIndex = 0; scoreIndex < userScores.size(); scoreIndex++) {
-                    this->top10Scores[scoreIndex] = userScores[scoreIndex].toObject().value("score").toString();
+    if (json.contains("games") && json["games"].isArray()) {
+        QJsonArray games = json["games"].toArray();
+        if (games.contains(this->gameNumber - 1) && games[this->gameNumber - 1].isObject()) {
+            QJsonObject gameData = games[this->gameNumber - 1].toObject();
+            if (gameData.contains("users_score") && gameData["users_score"].isArray()) {
+                QJsonArray userArray = gameData["users_score"].toArray();
+                for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
+                    QJsonObject userObject = userArray[userIndex].toObject();
+                    if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username
+                            && userObject.contains("scores") && userObject["scores"].isArray()) {
+                        QJsonArray userScores = userObject["scores"].toArray();
+                        for (int scoreIndex = 0; scoreIndex < userScores.size(); scoreIndex++) {
+                            this->top10Scores[scoreIndex] = userScores[scoreIndex].toObject().value("score").toString();
+                        }
+                    }
                 }
             }
+
+            if (gameData.contains("top_score") && gameData["top_score"].isObject()) {
+                QJsonObject topUser = gameData["top_score"].toObject();
+                if (topUser.contains("username") && topUser["username"].isString()
+                        && topUser.contains("score") && topUser["score"].isString()) {
+                    this->topUser = topUser["username"].toString();
+                    this->topScore = topUser["score"].toString();
+                }
+            }
+
+            return true;
         }
     }
-
-    if (json.contains("top_score") && json["top_score"].isObject()) {
-        QJsonObject topUser = json["top_score"].toObject();
-        if (topUser.contains("username") && topUser["username"].isString()
-                && topUser.contains("score") && topUser["score"].isString()) {
-            this->topUser = topUser["username"].toString();
-            this->topScore = topUser["score"].toString();
-        }
-    }
-
-    return true;
+    return false;
 }
