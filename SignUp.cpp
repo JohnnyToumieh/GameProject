@@ -28,7 +28,7 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
     profilePictureL->setFixedHeight(100);
     profilePictureL->setFixedWidth(100);
     QPixmap profilePicture;
-    profilePicture.load(QDir::currentPath()+"/user_photos/profilepicture.png");
+    profilePicture.load(QDir::currentPath()+"/user_photos/Guest.png");
     profilePicture.scaled( 100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
     profilePictureL->setPixmap(profilePicture);
     profilePictureL->setScaledContents(true);
