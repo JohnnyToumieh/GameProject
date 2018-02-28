@@ -1,10 +1,14 @@
 #include "SignUp.h"
 #include "HomePage.h"
 #include "Message.h"
+#include "ChooseGamePage.h"
 
-SignUp::SignUp(QWidget *widget)
+SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
 {
     this->widget=widget;
+    this->user = user;
+    this->usersFile = usersFile;
+
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
     gridLayout1= new QGridLayout();
@@ -48,7 +52,7 @@ SignUp::SignUp(QWidget *widget)
     genderGB = new QGroupBox();
     genderGB->setLayout(genderVL);
 
-    checkPassword = new QPushButton("Check Password");
+    checkPassword = new QPushButton("Check password");
     submit = new QPushButton("Submit");
     submit->setEnabled(false);
     back = new QPushButton("Back to home");
@@ -76,7 +80,7 @@ SignUp::SignUp(QWidget *widget)
 
     QStringList days;
     days.append("Day");
-    for(int i=1;i<=30;i++){
+    for(int i=1;i<=31;i++){
         days.append(QString::number(i));
     }
     day->addItems(days);
@@ -138,39 +142,106 @@ void SignUp::setGridLayout()
 
 void SignUp::checkPassClicked(){
     if(password->text() == NULL || password->text() == ""){
-        emptyL->setText("Empty Password");
+        emptyL->setText("Empty password");
         submit->setDisabled(true);
+        passChecked = false;
     }
     else if(passwordConfirm->text() == NULL || passwordConfirm->text() == ""){
-        emptyL->setText("Empty Confirmed Password");
+        emptyL->setText("Empty confirmed password");
         submit->setDisabled(true);
-        passChecked == false;
+        passChecked = false;
     }
     else if(password->text()!=passwordConfirm->text()){
         emptyL->setText("Passwords don't match");
         submit->setDisabled(true);
-        passChecked == false;
+        passChecked = false;
     }
     else{
-        emptyL->setText("Passwords match");
-        submit->setEnabled(true);
-        passChecked == true;
+        if (password->text().size() < 8
+                || password->text().toLower() == password->text()
+                || password->text().toUpper() == password->text()
+                || !containsANumber(password->text())) {
+            emptyL->setText("Make sure your password is at least 8 characters, has a number,\na lower case character and an upper case character.");
+            submit->setDisabled(true);
+            passChecked = false;
+        } else {
+            emptyL->setText("Passwords match");
+            submit->setEnabled(true);
+            passChecked = true;
+        }
     }
 
 }
 
+bool SignUp::containsANumber(QString text) {
+    if (text.contains("0")
+            || text.contains("1")
+            || text.contains("2")
+            || text.contains("3")
+            || text.contains("4")
+            || text.contains("5")
+            || text.contains("6")
+            || text.contains("7")
+            || text.contains("8")
+            || text.contains("9")) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void SignUp::submitClicked(){
+    QButtonGroup group;
+    QList<QRadioButton *> allButtons = genderGB->findChildren<QRadioButton *>();
+    for(int i = 0; i < allButtons.size(); ++i) {
+        group.addButton(allButtons[i],i);
+    }
+
     if(firstName->text() == NULL || firstName->text() == ""
        || lastName->text() == NULL || lastName->text() == ""
        || email->text() == NULL ||  email->text() == ""
        || username->text() == NULL ||  username->text() == ""
        || passChecked == false || day->currentText()=="Day"
-       || month->currentText()=="Month" || year->currentText()=="Year"){
-        Message *msg = new Message("Some Fields are empty! Please Fill");
+       || month->currentText()=="Month" || year->currentText()=="Year"
+       || allButtons.size() == 0 || group.checkedId() < 0){
+        Message *msg = new Message("Some fields are empty! Please fill.");
         msg->show();
-    }
-    else{
-        //TODO: Write info to a file
+    } else {
+        user->username = username->text();
+        user->password = password->text();
+
+        if (user->read(usersFile)) {
+            Message *msg = new Message("Username already exist!");
+            msg->show();
+            return;
+        }
+
+        user->firstName = firstName->text();
+        user->lastName = lastName->text();
+        user->email = email->text();
+        user->age = age->text();
+        user->gender = group.checkedButton()->text();
+        user->DoBday = day->currentText();
+        user->DoBmonth = month->currentText();
+        user->DoByear = year->currentText();
+
+        QPixmap const* profilePicture = profilePictureL->pixmap();
+        profilePicture->save(QDir::currentPath()+"/user_photos/" + user->username + ".png","png");
+
+        user->write(usersFile);
+
+        QFile saveFile(QStringLiteral("Users.json"));
+
+        if (!saveFile.open(QIODevice::WriteOnly)) {
+            Message *msg = new Message("Couldn't open users file to save.");
+            msg->show();
+        }
+
+        QJsonDocument saveDoc(usersFile);
+        saveFile.write(saveDoc.toJson());
+
+        qDeleteAll(widget->children());
+        ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user);
     }
 }
 
@@ -190,8 +261,6 @@ void SignUp::choosePictureClicked(){
             profilePicture.scaled(100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
             profilePictureL->setPixmap(profilePicture);
             profilePictureL->setScaledContents(true);
-            profilePicture.save(QDir::currentPath()+"/user_photos/user","png");
         }
-
     }
 }
