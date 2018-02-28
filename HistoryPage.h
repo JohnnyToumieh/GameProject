@@ -10,8 +10,16 @@ class HistoryPage : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit HistoryPage(QWidget *widget,int gameNumber, User* user);
+    explicit HistoryPage(QWidget *widget,int gameNumber, User* user, QJsonObject usersFile);
+
+    bool read(const QJsonObject &json);
+
     int gameNumber;
+
+    QString topUser;
+    QString topScore;
+    QString* top10Scores;
+
     QWidget *widget;
 
     QVBoxLayout* verticalLayout;
@@ -19,6 +27,7 @@ public:
     QPushButton *back;
 
     User* user;
+    QJsonObject usersFile;
 
 signals:
 

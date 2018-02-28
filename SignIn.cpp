@@ -56,7 +56,7 @@ void SignIn::submitClicked(){
 
         if (user->read(usersFile)) {
             qDeleteAll(widget->children());
-            ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user);
+            ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, usersFile);
         } else {
             Message *msg = new Message("Username/Password combination does not match.");
             msg->show();

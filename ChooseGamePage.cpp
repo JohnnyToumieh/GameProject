@@ -5,10 +5,11 @@
 
 #include <ctime>
 
-ChooseGamePage::ChooseGamePage(QWidget *widget, User* user)
+ChooseGamePage::ChooseGamePage(QWidget *widget, User* user, QJsonObject usersFile)
 {
     this->widget=widget;
     this->user = user;
+    this->usersFile = usersFile;
 
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
@@ -57,12 +58,12 @@ void ChooseGamePage::backToHomeClicked(){
 
 void ChooseGamePage::game1Clicked(){
     qDeleteAll(widget->children());
-    GameOnePage *gameOnePage = new GameOnePage(widget, 1, user);
+    GameOnePage *gameOnePage = new GameOnePage(widget, 1, user, usersFile);
 }
 
 void ChooseGamePage::game2Clicked(){
     qDeleteAll(widget->children());
-    GameOnePage *gameOnePage = new GameOnePage(widget, 2, user);
+    GameOnePage *gameOnePage = new GameOnePage(widget, 2, user, usersFile);
 }
 
 void ChooseGamePage::setVerticalLayout()

@@ -79,6 +79,6 @@ void HomePage::playAsGuestClicked(){
     user->firstName = "Guest";
 
     qDeleteAll(widget->children());
-    ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user);
+    ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, usersFile);
 }
 

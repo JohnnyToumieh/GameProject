@@ -10,7 +10,7 @@ class ChooseGamePage : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit ChooseGamePage(QWidget *widget, User* user);
+    explicit ChooseGamePage(QWidget *widget, User* user, QJsonObject usersFile);
 
     QVBoxLayout* verticalLayout;
     QGridLayout* gridLayout;
@@ -26,6 +26,7 @@ public:
     QLabel* nameL;
 
     User* user;
+    QJsonObject usersFile;
 signals:
 
 private:

@@ -10,7 +10,7 @@ class GameOnePage : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit GameOnePage(QWidget *widget, int gameNumber, User* user);
+    explicit GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile);
 
     int gameNumber;
     
@@ -32,6 +32,7 @@ public:
     QLabel* nameL;
 
     User* user;
+    QJsonObject usersFile;
 
 signals:
 

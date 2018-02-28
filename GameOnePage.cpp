@@ -3,11 +3,12 @@
 #include "Message.h"
 #include "HistoryPage.h"
 
-GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user)
+GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile)
 {
     this->gameNumber = gameNumber;
     this->widget=widget;
     this->user = user;
+    this->usersFile = usersFile;
 
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
@@ -59,12 +60,12 @@ void GameOnePage::descriptionClicked(){
 
 void GameOnePage::backClicked(){
     qDeleteAll(widget->children());
-    ChooseGamePage *chooseGamePage = new ChooseGamePage(widget, user);
+    ChooseGamePage *chooseGamePage = new ChooseGamePage(widget, user, usersFile);
 }
 
 void GameOnePage::checkHistoryClicked(){
     qDeleteAll(widget->children());
-    HistoryPage *historyPage = new HistoryPage(widget, gameNumber, user);
+    HistoryPage *historyPage = new HistoryPage(widget, gameNumber, user, usersFile);
 }
 
 void GameOnePage::setVerticalLayout()

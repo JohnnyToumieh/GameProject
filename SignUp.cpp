@@ -241,7 +241,7 @@ void SignUp::submitClicked(){
         saveFile.write(saveDoc.toJson());
 
         qDeleteAll(widget->children());
-        ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user);
+        ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, usersFile);
     }
 }
 

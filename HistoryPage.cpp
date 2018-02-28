@@ -1,11 +1,12 @@
 #include "HistoryPage.h"
 #include "GameOnePage.h"
 
-HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user)
+HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile)
 {
-    this->gameNumber=gameNumber;
-    this->widget=widget;
+    this->gameNumber = gameNumber;
+    this->widget = widget;
     this->user = user;
+    this->usersFile = usersFile;
 
     verticalLayout = new QVBoxLayout();
 
@@ -15,15 +16,45 @@ HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user)
     widget->setFixedSize(500,350);
     widget->setLayout(verticalLayout);
 
-     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
+    top10Scores = new QString[10]();
+
+    QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
 }
 
 void HistoryPage::backClicked(){
     qDeleteAll(widget->children());
-    GameOnePage *chooseGamePage = new GameOnePage(widget, gameNumber, user);
+    GameOnePage *chooseGamePage = new GameOnePage(widget, gameNumber, user, usersFile);
 }
 
 void HistoryPage::setVerticalLayout()
 {
     verticalLayout->addWidget(back);
+}
+
+bool HistoryPage::read(const QJsonObject &json)
+{
+    if (json.contains("users_score") && json["users_score"].isArray()) {
+        QJsonArray userArray = json["users_score"].toArray();
+        for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
+            QJsonObject userObject = userArray[userIndex].toObject();
+            if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username
+                    && userObject.contains("scores") && userObject["scores"].isArray()) {
+                QJsonArray userScores = userObject["scores"].toArray();
+                for (int scoreIndex = 0; scoreIndex < userScores.size(); scoreIndex++) {
+                    this->top10Scores[scoreIndex] = userScores[scoreIndex].toObject().value("score").toString();
+                }
+            }
+        }
+    }
+
+    if (json.contains("top_score") && json["top_score"].isObject()) {
+        QJsonObject topUser = json["top_score"].toObject();
+        if (topUser.contains("username") && topUser["username"].isString()
+                && topUser.contains("score") && topUser["score"].isString()) {
+            this->topUser = topUser["username"].toString();
+            this->topScore = topUser["score"].toString();
+        }
+    }
+
+    return true;
 }
