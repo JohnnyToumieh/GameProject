@@ -3,16 +3,17 @@
 #include "SignUp.h"
 #include "ChooseGamePage.h"
 #include "SignIn.h"
+#include "Message.h"
 
 HomePage::HomePage(QWidget *widget)
 {
     this->widget=widget;
 
-    signInButton = new QPushButton("SignIn");
-    signUpButton = new QPushButton("SignUp");
+    signInButton = new QPushButton("Sign in");
+    signUpButton = new QPushButton("Sign up");
     guestButton = new QPushButton("Play as guest");
 
-    doneByL = new QLabel("\t\t\tGaming Platform\n\t\t\t       Done by \n\t\t\tHassan & Jhonny");
+    doneByL = new QLabel("\t\t\tGaming Platform\n\t\t\t       Done by \n\t\t\tHassan & Johnny");
 
     QPixmap logo;
     logo.load("logo2.JPG");
@@ -39,6 +40,18 @@ HomePage::HomePage(QWidget *widget)
 
     widget->setLayout(VerticalL);
 
+    QFile loadFile(QStringLiteral("Users.json"));
+
+    if (!loadFile.open(QIODevice::ReadWrite)) {
+        Message *msg = new Message("Couldn't open users file to load.");
+        msg->show();
+    }
+
+    user = new User();
+
+    QByteArray saveData = loadFile.readAll();
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+    usersFile = loadDoc.object();
 }
 
 
@@ -53,16 +66,18 @@ void HomePage::setVerticalLayout(){
 
 void HomePage::signUpClicked(){
     qDeleteAll(widget->children());
-    SignUp *signup = new SignUp(widget);
+    SignUp *signup = new SignUp(widget, user, usersFile);
 }
 
 void HomePage::signInClicked(){
     qDeleteAll(widget->children());
-    SignIn *signIn = new SignIn(widget);
+    SignIn *signIn = new SignIn(widget, user, usersFile);
 }
 
 void HomePage::playAsGuestClicked(){
+    user->username = "Guest";
+
     qDeleteAll(widget->children());
-    ChooseGamePage *choosegamePage = new ChooseGamePage(widget);
+    ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user);
 }
 
