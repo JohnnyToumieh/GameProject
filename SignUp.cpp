@@ -199,6 +199,9 @@ void SignUp::submitClicked(){
         user->DoBmonth = month->currentText();
         user->DoByear = year->currentText();
 
+        QPixmap const* profilePicture = profilePictureL->pixmap();
+        profilePicture->save(QDir::currentPath()+"/user_photos/" + user->username + ".png","png");
+
         user->write(usersFile);
 
         QFile saveFile(QStringLiteral("Users.json"));
@@ -232,8 +235,6 @@ void SignUp::choosePictureClicked(){
             profilePicture.scaled(100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
             profilePictureL->setPixmap(profilePicture);
             profilePictureL->setScaledContents(true);
-            profilePicture.save(QDir::currentPath()+"/user_photos/user","png");
         }
-
     }
 }
