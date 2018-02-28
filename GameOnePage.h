@@ -10,10 +10,15 @@ class GameOnePage : public QVBoxLayout
 {
     Q_OBJECT
 public:
+<<<<<<< HEAD
+    explicit GameOnePage(QWidget *widget,int gameNumber);
+    int gameNumber;
+=======
     explicit GameOnePage(QWidget *widget, int gameNumber, User* user);
 
     int gameNumber;
     
+>>>>>>> master
     QVBoxLayout* verticalLayout;
     QGridLayout* gridLayout;
     QGridLayout *grid;
@@ -26,11 +31,13 @@ public:
     QPushButton *checkRecords;
     QPushButton *back;
     QPushButton *description;
+    QPushButton *checkHistory;
 
     QLabel* profilePictureL;
     QLabel* nameL;
 
     User* user;
+
 signals:
 
 private:
