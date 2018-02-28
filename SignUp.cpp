@@ -1,10 +1,14 @@
 #include "SignUp.h"
 #include "HomePage.h"
 #include "Message.h"
+#include "ChooseGamePage.h"
 
-SignUp::SignUp(QWidget *widget)
+SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
 {
     this->widget=widget;
+    this->user = user;
+    this->usersFile = usersFile;
+
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
     gridLayout1= new QGridLayout();
@@ -140,37 +144,75 @@ void SignUp::checkPassClicked(){
     if(password->text() == NULL || password->text() == ""){
         emptyL->setText("Empty Password");
         submit->setDisabled(true);
+        passChecked = false;
     }
     else if(passwordConfirm->text() == NULL || passwordConfirm->text() == ""){
         emptyL->setText("Empty Confirmed Password");
         submit->setDisabled(true);
-        passChecked == false;
+        passChecked = false;
     }
     else if(password->text()!=passwordConfirm->text()){
         emptyL->setText("Passwords don't match");
         submit->setDisabled(true);
-        passChecked == false;
+        passChecked = false;
     }
     else{
         emptyL->setText("Passwords match");
         submit->setEnabled(true);
-        passChecked == true;
+        passChecked = true;
     }
 
 }
 
 void SignUp::submitClicked(){
+    QButtonGroup group;
+    QList<QRadioButton *> allButtons = genderGB->findChildren<QRadioButton *>();
+    for(int i = 0; i < allButtons.size(); ++i) {
+        group.addButton(allButtons[i],i);
+    }
+
     if(firstName->text() == NULL || firstName->text() == ""
        || lastName->text() == NULL || lastName->text() == ""
        || email->text() == NULL ||  email->text() == ""
        || username->text() == NULL ||  username->text() == ""
        || passChecked == false || day->currentText()=="Day"
-       || month->currentText()=="Month" || year->currentText()=="Year"){
+       || month->currentText()=="Month" || year->currentText()=="Year"
+       || allButtons.size() == 0 || group.checkedId() < 0){
         Message *msg = new Message("Some Fields are empty! Please Fill");
         msg->show();
-    }
-    else{
-        //TODO: Write info to a file
+    } else {
+        user->username = username->text();
+        user->password = password->text();
+
+        if (user->read(usersFile)) {
+            Message *msg = new Message("Username already exist!");
+            msg->show();
+            return;
+        }
+
+        user->firstName = firstName->text();
+        user->lastName = lastName->text();
+        user->email = email->text();
+        user->age = age->text();
+        user->gender = group.checkedButton()->text();
+        user->DoBday = day->currentText();
+        user->DoBmonth = month->currentText();
+        user->DoByear = year->currentText();
+
+        user->write(usersFile);
+
+        QFile saveFile(QStringLiteral("Users.json"));
+
+        if (!saveFile.open(QIODevice::WriteOnly)) {
+            Message *msg = new Message("Couldn't open users file to save.");
+            msg->show();
+        }
+
+        QJsonDocument saveDoc(usersFile);
+        saveFile.write(saveDoc.toJson());
+
+        qDeleteAll(widget->children());
+        ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user);
     }
 }
 

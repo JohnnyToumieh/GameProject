@@ -2,9 +2,10 @@
 #include "HomePage.h"
 #include "GameOnePage.h"
 
-ChooseGamePage::ChooseGamePage(QWidget *widget)
+ChooseGamePage::ChooseGamePage(QWidget *widget, User* user)
 {
     this->widget=widget;
+    this->user = user;
 
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
@@ -16,17 +17,16 @@ ChooseGamePage::ChooseGamePage(QWidget *widget)
 
     profilePictureL = new QLabel();
 
-    //TODO: get specific user's image according to his username
     profilePictureL->setFixedHeight(100);
     profilePictureL->setFixedWidth(100);
     QPixmap profilePicture;
-    profilePicture.load(QDir::currentPath()+"/user_photos/profilepicture.png");
+    profilePicture.load(QDir::currentPath() + "/user_photos/" + user->username + ".png");
     profilePicture.scaled(100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
     profilePictureL->setPixmap(profilePicture);
     profilePictureL->setScaledContents(true);
 
 
-    nameL= new QLabel("     username"); // user actual username KEEP spaces
+    nameL= new QLabel("     " + user->username);
 
     setVerticalLayout();
     widget->setFixedSize(500,300);
@@ -35,7 +35,6 @@ ChooseGamePage::ChooseGamePage(QWidget *widget)
     QObject::connect(back, SIGNAL(clicked()), SLOT(backToHomeClicked()));
     QObject::connect(game1, SIGNAL(clicked()), SLOT(game1Clicked()));
     QObject::connect(game2, SIGNAL(clicked()), SLOT(game2Clicked()));
-
 }
 
 void ChooseGamePage::backToHomeClicked(){
@@ -46,14 +45,12 @@ void ChooseGamePage::backToHomeClicked(){
 
 void ChooseGamePage::game1Clicked(){
     qDeleteAll(widget->children());
-    GameOnePage *gameOnePage = new GameOnePage(widget,1);
-
+    GameOnePage *gameOnePage = new GameOnePage(widget, 1, user);
 }
 
 void ChooseGamePage::game2Clicked(){
     qDeleteAll(widget->children());
-    GameOnePage *gameOnePage = new GameOnePage(widget,2);
-
+    GameOnePage *gameOnePage = new GameOnePage(widget, 2, user);
 }
 
 void ChooseGamePage::setVerticalLayout()

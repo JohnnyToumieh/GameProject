@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QObject>
 #include <QtWidgets>
+
 class HomePage : public QVBoxLayout
 {
     Q_OBJECT
@@ -21,6 +22,8 @@ public:
 
     QVBoxLayout *VerticalL;
 
+    User* user;
+    QJsonObject usersFile;
 
 signals:
 

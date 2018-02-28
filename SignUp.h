@@ -4,12 +4,16 @@
 #include <QWidget>
 #include <QObject>
 #include <QtWidgets>
+#include <QFile>
+#include <QIODevice>
+
+#include "User.h"
 
 class SignUp : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit SignUp(QWidget *widget);
+    explicit SignUp(QWidget *widget, User* user, QJsonObject usersFile);
 
     bool passChecked;
     QWidget *widget;
@@ -51,6 +55,9 @@ public:
     QPushButton* submit;
     QPushButton* back;
     QPushButton* choosePicture;
+
+    User* user;
+    QJsonObject usersFile;
 
 private:
     void setVerticalLayout();
