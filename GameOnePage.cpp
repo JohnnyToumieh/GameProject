@@ -45,6 +45,7 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObjec
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
     QObject::connect(description, SIGNAL(clicked()), SLOT(descriptionClicked()));
+    QObject::connect(checkHistory, SIGNAL(clicked()), SLOT(checkHistoryClicked()));
 }
 
 void GameOnePage::descriptionClicked(){
