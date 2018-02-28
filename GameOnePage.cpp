@@ -1,6 +1,7 @@
 #include "GameOnePage.h"
 #include "ChooseGamePage.h"
 #include "Message.h"
+#include "HistoryPage.h"
 
 GameOnePage::GameOnePage(QWidget *widget,int gameNumber)
 {
@@ -43,6 +44,7 @@ GameOnePage::GameOnePage(QWidget *widget,int gameNumber)
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
     QObject::connect(description, SIGNAL(clicked()), SLOT(descriptionClicked()));
+    QObject::connect(checkHistory, SIGNAL(clicked()), SLOT(checkHistoryClicked()));
 
 }
 
@@ -60,6 +62,14 @@ void GameOnePage::descriptionClicked(){
 void GameOnePage::backClicked(){
     qDeleteAll(widget->children());
     ChooseGamePage *chooseGamePage = new ChooseGamePage(widget);
+
+}
+
+void GameOnePage::checkHistoryClicked(){
+    qDeleteAll(widget->children());
+    if(gameNumber==1){
+        HistoryPage *historyPage = new HistoryPage(widget,gameNumber);
+    }
 
 }
 

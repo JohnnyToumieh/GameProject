@@ -7,7 +7,8 @@ SOURCES += \
     HomePage.cpp \
     ChooseGamePage.cpp \
     GameOnePage.cpp \
-    SignIn.cpp
+    SignIn.cpp \
+    HistoryPage.cpp
 
 HEADERS += \
     HomePage.h \
@@ -15,4 +16,5 @@ HEADERS += \
     SignUp.h \
     ChooseGamePage.h \
     GameOnePage.h \
-    SignIn.h
+    SignIn.h \
+    HistoryPage.h
