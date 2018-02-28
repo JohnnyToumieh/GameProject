@@ -62,6 +62,7 @@ public:
 private:
     void setVerticalLayout();
     void setGridLayout();
+    bool containsANumber(QString text);
 
 signals:
 
