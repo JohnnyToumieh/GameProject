@@ -2,11 +2,7 @@
 #include "ChooseGamePage.h"
 #include "Message.h"
 
-<<<<<<< HEAD
-GameOnePage::GameOnePage(QWidget *widget,int gameNumber)
-=======
 GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user)
->>>>>>> master
 {
     this->gameNumber = gameNumber;
     this->widget=widget;
@@ -20,10 +16,7 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user)
     resumeGame = new QPushButton("Resume old game");
     back = new QPushButton("Back");
     description = new QPushButton("Description");
-<<<<<<< HEAD
     checkHistory = new QPushButton("Check your history");
-=======
->>>>>>> master
 
     selectLevel = new QComboBox();
     selectLevel->addItem("Select level");
@@ -50,11 +43,6 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user)
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
     QObject::connect(description, SIGNAL(clicked()), SLOT(descriptionClicked()));
-}
-
-void GameOnePage::descriptionClicked(){
-    Message *msg = new Message("SpongeBob has to move around the screen\nto collect items that increase his immunity level\nin order to be able to kill more bacteria\nand thus clean the aquarium.");
-    msg->show();
 }
 
 void GameOnePage::descriptionClicked(){
