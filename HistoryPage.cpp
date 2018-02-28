@@ -25,7 +25,11 @@ HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObjec
     }
 
     topScoreL = new QLabel("Top score in the game is: \n" + topScore);
-    topUserL = new QLabel("And its is the score of: \n" + topUser);
+    if(user->username == topUser) {
+        topUserL = new QLabel("And it is the score of: \n" + topUser+" which is you!!!");
+    } else {
+        topUserL = new QLabel("And it is the score of: \n" + topUser);
+    }
 
     setVerticalLayout();
     widget->setFixedSize(500,350);
