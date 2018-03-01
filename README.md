@@ -9,4 +9,4 @@ his immunity level in order to be able to kill more bacteria and thus clean the 
 Game 2 - TBA.
 
 Done by:
-Hassan Fakih  Jihnny Toumieh
+Hassan Fakih  Johnny Toumieh
