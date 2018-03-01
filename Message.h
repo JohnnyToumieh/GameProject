@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QtWidgets>
+
 class Message : public QWidget
 {
     Q_OBJECT
