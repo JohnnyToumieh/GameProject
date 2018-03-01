@@ -47,10 +47,10 @@ void HistoryPage::setVerticalLayout()
 {
     verticalLayout->addWidget(top10ScoresL);
     verticalLayout->addWidget(scores);
-    verticalLayout->addWidget(new QLabel(""));
     verticalLayout->addWidget(topScoreL);
     verticalLayout->addWidget(topUserL);
     verticalLayout->addWidget(back);
+    verticalLayout->addItem(new QSpacerItem(400,200));
 }
 
 bool HistoryPage::read(const QJsonObject &json)
