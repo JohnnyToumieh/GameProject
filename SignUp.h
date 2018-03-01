@@ -20,6 +20,7 @@ public:
     QVBoxLayout* verticalLayout;
     QGridLayout* gridLayout;
     QGridLayout* gridLayout1;
+    QGridLayout* gridLayout2;
 
     QComboBox *day;
     QComboBox *month;
@@ -31,7 +32,6 @@ public:
     QLabel* usernameL;
     QLabel* passwordL;
     QLabel* passwordConfirmL;
-    QLabel* ageL;
     QLabel* genderL;
     QLabel* emptyL;
     QLabel* profilePictureL;
@@ -43,8 +43,6 @@ public:
     QLineEdit* username;
     QLineEdit* password;
     QLineEdit* passwordConfirm;
-
-    QSpinBox* age;
 
     QRadioButton* genderMale;
     QRadioButton* genderFemale;

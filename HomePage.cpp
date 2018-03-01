@@ -61,7 +61,7 @@ void HomePage::setVerticalLayout(){
     VerticalL->addWidget(signInButton);
     VerticalL->addWidget(signUpButton);
     VerticalL->addWidget(guestButton);
-    VerticalL->addWidget(new QLabel(""));
+    VerticalL->addItem(new QSpacerItem(500,100));
 }
 
 void HomePage::signUpClicked(){
@@ -77,8 +77,8 @@ void HomePage::signInClicked(){
 void HomePage::playAsGuestClicked(){
     user->username = "Guest";
     user->firstName = "Guest";
+    user->isGuest = true;
 
     qDeleteAll(widget->children());
     ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, usersFile);
 }
-
