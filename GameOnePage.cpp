@@ -43,6 +43,12 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObjec
     widget->setFixedSize(500,350);
     widget->setLayout(verticalLayout);
 
+    //Add background image
+    QPalette* pal = new QPalette();
+    pal->setBrush(QPalette::Background, QPixmap(QDir::currentPath() + "/user_photos/Guest.png"));
+    widget->setAutoFillBackground(true);
+    widget->setPalette(*pal);
+
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
     QObject::connect(description, SIGNAL(clicked()), SLOT(descriptionClicked()));
     QObject::connect(checkHistory, SIGNAL(clicked()), SLOT(checkHistoryClicked()));
