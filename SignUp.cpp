@@ -55,7 +55,7 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
     checkPassword = new QPushButton("Check password");
     submit = new QPushButton("Submit");
     submit->setEnabled(false);
-    back = new QPushButton("Back to home");
+    back = new QPushButton("Back");
     choosePicture = new QPushButton("Browse");
     choosePicture->setFixedHeight(30);
     choosePicture->setFixedWidth(100);
@@ -116,8 +116,8 @@ void SignUp::setVerticalLayout()
     verticalLayout->addItem(gridLayout);
     verticalLayout->addWidget(checkPassword);
     verticalLayout->addWidget(emptyL);
-    verticalLayout->addWidget(back);
     verticalLayout->addWidget(submit);
+    verticalLayout->addWidget(back);
 }
 
 void SignUp::setGridLayout()
