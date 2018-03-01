@@ -33,7 +33,7 @@ ChooseGamePage::ChooseGamePage(QWidget *widget, User* user, QJsonObject usersFil
     nameL= new QLabel("     " + user->firstName + " " + user->lastName);
 
     setVerticalLayout();
-    widget->setFixedSize(500,300);
+    widget->setFixedSize(500,600);
     widget->setLayout(verticalLayout);
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(backToHomeClicked()));
@@ -69,17 +69,17 @@ void ChooseGamePage::game2Clicked(){
 void ChooseGamePage::setVerticalLayout()
 {
     gridLayout->addWidget(profilePictureL,0,0);
-    gridLayout->addWidget(new QLabel(""),0,1);
-    gridLayout->addWidget(new QLabel(""),0,2);
+    gridLayout->addItem(new QSpacerItem(200,5),0,1);
+    gridLayout->addItem(new QSpacerItem(200,5),0,2);
     gridLayout->addWidget(nameL,1,0);
-    gridLayout->addWidget(new QLabel(""),1,1);
-    gridLayout->addWidget(new QLabel(""),1,2);
+    gridLayout->addItem(new QSpacerItem(200,5),1,1);
+    gridLayout->addItem(new QSpacerItem(200,5),1,2);
     verticalLayout->addItem(gridLayout);
-    verticalLayout->addWidget(new QLabel(""));
-    verticalLayout->addWidget(new QLabel(""));
+
+    verticalLayout->addItem(new QSpacerItem(400,200));
     verticalLayout->addWidget(game1);
     verticalLayout->addWidget(game2);
     verticalLayout->addWidget(back);
-    verticalLayout->addWidget(new QLabel(""));
+    verticalLayout->addItem(new QSpacerItem(400,200));
 }
 

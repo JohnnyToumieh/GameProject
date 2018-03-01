@@ -40,14 +40,14 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObjec
     nameL= new QLabel("     " + user->firstName + " " + user->lastName);
 
     setVerticalLayout();
-    widget->setFixedSize(500,350);
+    widget->setFixedSize(500,600);
     widget->setLayout(verticalLayout);
 
     //Add background image
-    QPalette* pal = new QPalette();
-    pal->setBrush(QPalette::Background, QPixmap(QDir::currentPath() + "/user_photos/Guest.png"));
-    widget->setAutoFillBackground(true);
-    widget->setPalette(*pal);
+   // QPalette* pal = new QPalette();
+   // pal->setBrush(QPalette::Background, QPixmap(QDir::currentPath() + "/user_photos/Guest.png"));
+   // widget->setAutoFillBackground(true);
+   // widget->setPalette(*pal);
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
     QObject::connect(description, SIGNAL(clicked()), SLOT(descriptionClicked()));
@@ -78,12 +78,15 @@ void GameOnePage::checkHistoryClicked(){
 void GameOnePage::setVerticalLayout()
 {
     gridLayout->addWidget(profilePictureL,0,0);
-    gridLayout->addWidget(new QLabel(""),0,1);
-    gridLayout->addWidget(new QLabel(""),0,2);
+    gridLayout->addItem(new QSpacerItem(400,5),0,1);
+    gridLayout->addItem(new QSpacerItem(400,5),0,2);
     gridLayout->addWidget(nameL,1,0);
-    gridLayout->addWidget(new QLabel(""),1,1);
-    gridLayout->addWidget(new QLabel(""),1,2);
+    gridLayout->addItem(new QSpacerItem(400,5),1,1);
+    gridLayout->addItem(new QSpacerItem(400,5),1,2);
     verticalLayout->addItem(gridLayout);
+
+    verticalLayout->addItem(new QSpacerItem(400,200));
+
     verticalLayout->addWidget(description);
     verticalLayout->addWidget(newGame);
     if (!this->user->isGuest) {
@@ -94,4 +97,6 @@ void GameOnePage::setVerticalLayout()
         verticalLayout->addWidget(checkHistory);
     }
     verticalLayout->addWidget(back);
+
+    verticalLayout->addItem(new QSpacerItem(400,200));
 }

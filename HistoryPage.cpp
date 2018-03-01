@@ -32,7 +32,7 @@ HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObjec
     }
 
     setVerticalLayout();
-    widget->setFixedSize(500,350);
+    widget->setFixedSize(500,600);
     widget->setLayout(verticalLayout);
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));

@@ -61,7 +61,7 @@ void HomePage::setVerticalLayout(){
     VerticalL->addWidget(signInButton);
     VerticalL->addWidget(signUpButton);
     VerticalL->addWidget(guestButton);
-    VerticalL->addItem(new QSpacerItem(500,100));
+    VerticalL->addItem(new QSpacerItem(500,200));
 }
 
 void HomePage::signUpClicked(){
