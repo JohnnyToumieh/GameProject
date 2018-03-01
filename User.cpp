@@ -2,7 +2,7 @@
 
 User::User()
 {
-
+    this->isGuest = false;
 }
 
 bool User::read(const QJsonObject &json)

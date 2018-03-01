@@ -82,6 +82,8 @@ void GameOnePage::setVerticalLayout()
     verticalLayout->addWidget(newGame);
     verticalLayout->addWidget(resumeGame);
     verticalLayout->addWidget(selectLevel);
-    verticalLayout->addWidget(checkHistory);
+    if (!this->user->isGuest) {
+        verticalLayout->addWidget(checkHistory);
+    }
     verticalLayout->addWidget(back);
 }

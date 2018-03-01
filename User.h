@@ -26,6 +26,8 @@ public:
     QString DoBmonth;
     QString DoByear;
 
+    bool isGuest;
+
 private:
     void writeHelper(QJsonObject &json) const;
 };
