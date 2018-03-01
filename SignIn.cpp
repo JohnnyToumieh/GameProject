@@ -22,7 +22,7 @@ SignIn::SignIn(QWidget *widget, User* user, QJsonObject usersFile)
     passwordL = new QLabel("Password");
 
     setVerticalLayout();
-    widget->setFixedSize(500,300);
+    widget->setFixedSize(500,600);
     widget->setLayout(verticalLayout);
 
     QObject::connect(submit, SIGNAL(clicked()), SLOT(submitClicked()));
@@ -31,17 +31,15 @@ SignIn::SignIn(QWidget *widget, User* user, QJsonObject usersFile)
 
 void SignIn::setVerticalLayout()
 {
+    verticalLayout->addItem(new QSpacerItem(500, 200));
     verticalLayout->addWidget(usernameL);
     verticalLayout->addWidget(username);
-    verticalLayout->addWidget(new QLabel(""));
     verticalLayout->addWidget(passwordL);
     verticalLayout->addWidget(password);
-    verticalLayout->addWidget(new QLabel(""));
+    verticalLayout->addItem(new QSpacerItem(500, 50));
     verticalLayout->addWidget(submit);
     verticalLayout->addWidget(back);
-    verticalLayout->addWidget(new QLabel(""));
-    verticalLayout->addWidget(new QLabel(""));
-    verticalLayout->addWidget(new QLabel(""));
+    verticalLayout->addItem(new QSpacerItem(500, 200));
 }
 
 void SignIn::submitClicked(){
