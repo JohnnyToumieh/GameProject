@@ -19,7 +19,6 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
     usernameL = new QLabel("Username:");
     passwordL = new QLabel("Password:");
     passwordConfirmL = new QLabel("Confirm Password:");
-    ageL = new QLabel("Age");
     genderL = new QLabel("Gender");
     emptyL = new QLabel("");
     profilePictureL = new QLabel("");
@@ -41,8 +40,6 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
     password->setEchoMode(QLineEdit::Password);
     passwordConfirm = new QLineEdit();
     passwordConfirm->setEchoMode(QLineEdit::Password);
-
-    age = new QSpinBox();
 
     genderMale = new QRadioButton("Male");
     genderFemale = new QRadioButton("Female");
@@ -134,10 +131,8 @@ void SignUp::setGridLayout()
     gridLayout->addWidget(password, 4, 1);
     gridLayout->addWidget(passwordConfirmL, 5, 0);
     gridLayout->addWidget(passwordConfirm, 5, 1);
-    gridLayout->addWidget(ageL, 6, 0);
-    gridLayout->addWidget(genderL, 6, 1);
-    gridLayout->addWidget(age, 7, 0);
-    gridLayout->addWidget(genderGB, 7, 1);
+    gridLayout->addWidget(genderL, 6, 0);
+    gridLayout->addWidget(genderGB, 7, 0);
 }
 
 void SignUp::checkPassClicked(){
@@ -219,7 +214,6 @@ void SignUp::submitClicked(){
         user->firstName = firstName->text();
         user->lastName = lastName->text();
         user->email = email->text();
-        user->age = age->text();
         user->gender = group.checkedButton()->text();
         user->DoBday = day->currentText();
         user->DoBmonth = month->currentText();

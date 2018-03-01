@@ -31,7 +31,6 @@ public:
     QLabel* usernameL;
     QLabel* passwordL;
     QLabel* passwordConfirmL;
-    QLabel* ageL;
     QLabel* genderL;
     QLabel* emptyL;
     QLabel* profilePictureL;
@@ -43,8 +42,6 @@ public:
     QLineEdit* username;
     QLineEdit* password;
     QLineEdit* passwordConfirm;
-
-    QSpinBox* age;
 
     QRadioButton* genderMale;
     QRadioButton* genderFemale;
