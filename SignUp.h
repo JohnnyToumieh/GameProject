@@ -20,6 +20,7 @@ public:
     QVBoxLayout* verticalLayout;
     QGridLayout* gridLayout;
     QGridLayout* gridLayout1;
+    QGridLayout* gridLayout2;
 
     QComboBox *day;
     QComboBox *month;

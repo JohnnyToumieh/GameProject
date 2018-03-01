@@ -11,7 +11,8 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
 
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
-    gridLayout1= new QGridLayout();
+    gridLayout1 = new QGridLayout();
+    gridLayout2 = new QGridLayout();
 
     firstNameL = new QLabel("First Name:");
     lastNameL = new QLabel("Last Name:");
@@ -97,18 +98,11 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
 void SignUp::setVerticalLayout()
 {
     gridLayout1->addWidget(profilePictureL,0,0);
-    gridLayout1->addWidget(new QLabel(""),0,1);
-    gridLayout1->addWidget(new QLabel(""),0,2);
+    gridLayout1->addItem(new QSpacerItem(400, 30), 0, 1);
+    gridLayout1->addItem(new QSpacerItem(400, 30), 0, 2);
     gridLayout1->addWidget(choosePicture,1,0);
-    gridLayout1->addWidget(new QLabel(""),1,1);
-    gridLayout1->addWidget(new QLabel(""),1,2);
-    gridLayout1->addWidget(dateOfBirthL,2,0);
-    gridLayout1->addWidget(new QLabel(""),2,1);
-    gridLayout1->addWidget(day,2,2);
-    gridLayout1->addWidget(new QLabel(""),2,3);
-    gridLayout1->addWidget(month,2,4);
-    gridLayout1->addWidget(new QLabel(""),2,5);
-    gridLayout1->addWidget(year,2,6);
+    gridLayout1->addItem(new QSpacerItem(400, 30), 1, 1);
+    gridLayout1->addItem(new QSpacerItem(400, 30), 1, 2);
     verticalLayout->addItem(gridLayout1);
     verticalLayout->addItem(gridLayout);
     verticalLayout->addWidget(checkPassword);
@@ -121,18 +115,34 @@ void SignUp::setGridLayout()
 {
     gridLayout->addWidget(firstNameL, 0, 0);
     gridLayout->addWidget(firstName, 0, 1);
-    gridLayout->addWidget(lastNameL, 1, 0);
-    gridLayout->addWidget(lastName, 1, 1);
-    gridLayout->addWidget(emailL, 2, 0);
-    gridLayout->addWidget(email, 2, 1);
-    gridLayout->addWidget(usernameL, 3, 0);
-    gridLayout->addWidget(username, 3, 1);
-    gridLayout->addWidget(passwordL, 4, 0);
-    gridLayout->addWidget(password, 4, 1);
-    gridLayout->addWidget(passwordConfirmL, 5, 0);
-    gridLayout->addWidget(passwordConfirm, 5, 1);
-    gridLayout->addWidget(genderL, 6, 0);
-    gridLayout->addWidget(genderGB, 7, 0);
+    gridLayout->addItem(new QSpacerItem(50, 8), 1, 0);
+    gridLayout->addWidget(lastNameL, 2, 0);
+    gridLayout->addWidget(lastName, 2, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 3, 0);
+    gridLayout->addWidget(usernameL, 4, 0);
+    gridLayout->addWidget(username, 4, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 5, 0);
+    gridLayout->addWidget(passwordL, 6, 0);
+    gridLayout->addWidget(password, 6, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 7, 0);
+    gridLayout->addWidget(passwordConfirmL, 8, 0);
+    gridLayout->addWidget(passwordConfirm, 8, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 9, 0);
+    gridLayout->addWidget(emailL, 10, 0);
+    gridLayout->addWidget(email, 10, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 11, 0);
+    gridLayout->addWidget(dateOfBirthL,12,0);
+
+    gridLayout2->addWidget(day,0,0);
+    gridLayout2->addWidget(new QLabel(""),0,1);
+    gridLayout2->addWidget(month,0,2);
+    gridLayout2->addWidget(new QLabel(""),0,3);
+    gridLayout2->addWidget(year,0,4);
+
+    gridLayout->addItem(gridLayout2,12,1);
+    gridLayout->addWidget(genderL, 13, 0);
+    gridLayout->addWidget(genderGB, 13, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 14, 0);
 }
 
 void SignUp::checkPassClicked(){
