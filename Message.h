@@ -8,6 +8,7 @@ class Message : public QWidget
     Q_OBJECT
 public:
     explicit Message();
+
     Message(QString m);
 
     QLabel *msg;
