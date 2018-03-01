@@ -1,6 +1,6 @@
 # GameProject
 
-This is a repository of 435 Lab project which consist of 2 games.
+This is a repository of 435 lab project which consist of 2 games.
 
 Game 1 - Aqua clean: 
 The player (SpongeBob) has to move around the screen to collect items that increase
