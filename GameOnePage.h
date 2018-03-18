@@ -43,6 +43,7 @@ public slots:
     void backClicked();
     void descriptionClicked();
     void checkHistoryClicked();
+    void startNewGameClicked();
 };
 
 #endif // GAMEONEPAGE_H

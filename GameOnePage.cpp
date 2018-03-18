@@ -2,6 +2,7 @@
 #include "ChooseGamePage.h"
 #include "Message.h"
 #include "HistoryPage.h"
+#include "Game1Scene.h"
 
 GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile)
 {
@@ -52,6 +53,7 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObjec
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
     QObject::connect(description, SIGNAL(clicked()), SLOT(descriptionClicked()));
     QObject::connect(checkHistory, SIGNAL(clicked()), SLOT(checkHistoryClicked()));
+    QObject::connect(newGame, SIGNAL(clicked()), SLOT(startNewGameClicked()));
 }
 
 void GameOnePage::descriptionClicked(){
@@ -63,6 +65,25 @@ void GameOnePage::descriptionClicked(){
         Message *msg = new Message("Game 2 is still in the unknown :)!");
         msg->show();
     }
+}
+
+void GameOnePage::startNewGameClicked(){
+    qDeleteAll(widget->children());
+    widget->close();
+    Game1Scene *game1scene = new Game1Scene();
+
+    QGraphicsView *view = new QGraphicsView(game1scene);
+    view->setFixedSize(1000,600);
+    view->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    view->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    view->setGeometry(
+                QStyle::alignedRect(
+                           Qt::LeftToRight,
+                           Qt::AlignCenter,
+                           view->size(),
+                           qApp->desktop()->availableGeometry()
+                    ));
+    view->show();
 }
 
 void GameOnePage::backClicked(){
