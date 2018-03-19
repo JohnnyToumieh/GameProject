@@ -8,8 +8,13 @@ SOURCES += \
     ChooseGamePage.cpp \
     GameOnePage.cpp \
     SignIn.cpp \
-    HistoryPage.cpp \
     User.cpp \
+    HistoryPage.cpp \
+    Game1Scene.cpp \
+    SpongeBob.cpp \
+    Bacteria.cpp \
+    HealthyItem.cpp \
+    UnhealthyItem.cpp
 
 HEADERS += \
     HomePage.h \
@@ -18,5 +23,10 @@ HEADERS += \
     ChooseGamePage.h \
     GameOnePage.h \
     SignIn.h \
-    HistoryPage.h \
     User.h \
+    HistoryPage.h \
+    Game1Scene.h \
+    SpongeBob.h \
+    Bacteria.h \
+    HealthyItem.h \
+    UnhealthyItem.h

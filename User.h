@@ -20,11 +20,12 @@ public:
     QString firstName;
     QString lastName;
     QString email;
-    QString age;
     QString gender;
     QString DoBday;
     QString DoBmonth;
     QString DoByear;
+
+    bool isGuest;
 
 private:
     void writeHelper(QJsonObject &json) const;

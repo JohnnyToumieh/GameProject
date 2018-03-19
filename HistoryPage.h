@@ -4,20 +4,36 @@
 #include <QWidget>
 #include <QtWidgets>
 #include <QObject>
-
+#include "User.h"
 
 class HistoryPage : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit HistoryPage(QWidget *widget,int gameNumber);
+    explicit HistoryPage(QWidget *widget,int gameNumber, User* user, QJsonObject usersFile);
+
+    bool read(const QJsonObject &json);
+
     int gameNumber;
+
+    QListWidget *scores;
+
+    QString topUser;
+    QString topScore;
+    QString* top10Scores;
+
+    QLabel *top10ScoresL;
+    QLabel *topUserL;
+    QLabel *topScoreL;
+
     QWidget *widget;
 
     QVBoxLayout* verticalLayout;
 
     QPushButton *back;
 
+    User* user;
+    QJsonObject usersFile;
 
 signals:
 

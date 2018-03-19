@@ -2,11 +2,14 @@
 #include "ChooseGamePage.h"
 #include "Message.h"
 #include "HistoryPage.h"
+#include "Game1Scene.h"
 
-GameOnePage::GameOnePage(QWidget *widget,int gameNumber)
+GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile)
 {
     this->gameNumber = gameNumber;
     this->widget=widget;
+    this->user = user;
+    this->usersFile = usersFile;
 
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
@@ -39,13 +42,19 @@ GameOnePage::GameOnePage(QWidget *widget,int gameNumber)
     nameL= new QLabel("     username"); // user actual username KEEP spaces
 
     setVerticalLayout();
-    widget->setFixedSize(500,350);
+    widget->setFixedSize(500,600);
     widget->setLayout(verticalLayout);
+
+    //Add background image
+   // QPalette* pal = new QPalette();
+   // pal->setBrush(QPalette::Background, QPixmap(QDir::currentPath() + "/user_photos/Guest.png"));
+   // widget->setAutoFillBackground(true);
+   // widget->setPalette(*pal);
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
     QObject::connect(description, SIGNAL(clicked()), SLOT(descriptionClicked()));
     QObject::connect(checkHistory, SIGNAL(clicked()), SLOT(checkHistoryClicked()));
-
+    QObject::connect(newGame, SIGNAL(clicked()), SLOT(startNewGameClicked()));
 }
 
 void GameOnePage::descriptionClicked(){
@@ -59,33 +68,59 @@ void GameOnePage::descriptionClicked(){
     }
 }
 
+void GameOnePage::startNewGameClicked(){
+    qDeleteAll(widget->children());
+    widget->close();
+    Game1Scene *game1scene = new Game1Scene();
+
+    QGraphicsView *view = new QGraphicsView(game1scene);
+    view->setFixedSize(1000,600);
+    view->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    view->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    view->setGeometry(
+                QStyle::alignedRect(
+                           Qt::LeftToRight,
+                           Qt::AlignCenter,
+                           view->size(),
+                           qApp->desktop()->availableGeometry()
+                    ));
+    view->show();
+}
+
 void GameOnePage::backClicked(){
     qDeleteAll(widget->children());
-    ChooseGamePage *chooseGamePage = new ChooseGamePage(widget);
 
+    ChooseGamePage *chooseGamePage = new ChooseGamePage(widget, user, usersFile);
 }
 
 void GameOnePage::checkHistoryClicked(){
     qDeleteAll(widget->children());
-    if(gameNumber==1){
-        HistoryPage *historyPage = new HistoryPage(widget,gameNumber);
-    }
 
+    HistoryPage *historyPage = new HistoryPage(widget, gameNumber, user, usersFile);
 }
 
 void GameOnePage::setVerticalLayout()
 {
     gridLayout->addWidget(profilePictureL,0,0);
-    gridLayout->addWidget(new QLabel(""),0,1);
-    gridLayout->addWidget(new QLabel(""),0,2);
+    gridLayout->addItem(new QSpacerItem(400,5),0,1);
+    gridLayout->addItem(new QSpacerItem(400,5),0,2);
     gridLayout->addWidget(nameL,1,0);
-    gridLayout->addWidget(new QLabel(""),1,1);
-    gridLayout->addWidget(new QLabel(""),1,2);
+    gridLayout->addItem(new QSpacerItem(400,5),1,1);
+    gridLayout->addItem(new QSpacerItem(400,5),1,2);
     verticalLayout->addItem(gridLayout);
+
+    verticalLayout->addItem(new QSpacerItem(400,200));
+
     verticalLayout->addWidget(description);
     verticalLayout->addWidget(newGame);
-    verticalLayout->addWidget(resumeGame);
+    if (!this->user->isGuest) {
+        verticalLayout->addWidget(resumeGame);
+    }
     verticalLayout->addWidget(selectLevel);
-    verticalLayout->addWidget(checkHistory);
+    if (!this->user->isGuest) {
+        verticalLayout->addWidget(checkHistory);
+    }
     verticalLayout->addWidget(back);
+
+    verticalLayout->addItem(new QSpacerItem(400,200));
 }

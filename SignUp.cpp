@@ -11,7 +11,8 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
 
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
-    gridLayout1= new QGridLayout();
+    gridLayout1 = new QGridLayout();
+    gridLayout2 = new QGridLayout();
 
     firstNameL = new QLabel("First Name:");
     lastNameL = new QLabel("Last Name:");
@@ -19,7 +20,6 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
     usernameL = new QLabel("Username:");
     passwordL = new QLabel("Password:");
     passwordConfirmL = new QLabel("Confirm Password:");
-    ageL = new QLabel("Age");
     genderL = new QLabel("Gender");
     emptyL = new QLabel("");
     profilePictureL = new QLabel("");
@@ -28,7 +28,7 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
     profilePictureL->setFixedHeight(100);
     profilePictureL->setFixedWidth(100);
     QPixmap profilePicture;
-    profilePicture.load(QDir::currentPath()+"/user_photos/profilepicture.png");
+    profilePicture.load(QDir::currentPath()+"/user_photos/Guest.png");
     profilePicture.scaled( 100,100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
     profilePictureL->setPixmap(profilePicture);
     profilePictureL->setScaledContents(true);
@@ -42,8 +42,6 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
     passwordConfirm = new QLineEdit();
     passwordConfirm->setEchoMode(QLineEdit::Password);
 
-    age = new QSpinBox();
-
     genderMale = new QRadioButton("Male");
     genderFemale = new QRadioButton("Female");
     genderVL = new QVBoxLayout();
@@ -55,7 +53,7 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
     checkPassword = new QPushButton("Check password");
     submit = new QPushButton("Submit");
     submit->setEnabled(false);
-    back = new QPushButton("Back to home");
+    back = new QPushButton("Back");
     choosePicture = new QPushButton("Browse");
     choosePicture->setFixedHeight(30);
     choosePicture->setFixedWidth(100);
@@ -100,44 +98,51 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
 void SignUp::setVerticalLayout()
 {
     gridLayout1->addWidget(profilePictureL,0,0);
-    gridLayout1->addWidget(new QLabel(""),0,1);
-    gridLayout1->addWidget(new QLabel(""),0,2);
+    gridLayout1->addItem(new QSpacerItem(400, 30), 0, 1);
+    gridLayout1->addItem(new QSpacerItem(400, 30), 0, 2);
     gridLayout1->addWidget(choosePicture,1,0);
-    gridLayout1->addWidget(new QLabel(""),1,1);
-    gridLayout1->addWidget(new QLabel(""),1,2);
-    gridLayout1->addWidget(dateOfBirthL,2,0);
-    gridLayout1->addWidget(new QLabel(""),2,1);
-    gridLayout1->addWidget(day,2,2);
-    gridLayout1->addWidget(new QLabel(""),2,3);
-    gridLayout1->addWidget(month,2,4);
-    gridLayout1->addWidget(new QLabel(""),2,5);
-    gridLayout1->addWidget(year,2,6);
+    gridLayout1->addItem(new QSpacerItem(400, 30), 1, 1);
+    gridLayout1->addItem(new QSpacerItem(400, 30), 1, 2);
     verticalLayout->addItem(gridLayout1);
     verticalLayout->addItem(gridLayout);
     verticalLayout->addWidget(checkPassword);
     verticalLayout->addWidget(emptyL);
-    verticalLayout->addWidget(back);
     verticalLayout->addWidget(submit);
+    verticalLayout->addWidget(back);
 }
 
 void SignUp::setGridLayout()
 {
     gridLayout->addWidget(firstNameL, 0, 0);
     gridLayout->addWidget(firstName, 0, 1);
-    gridLayout->addWidget(lastNameL, 1, 0);
-    gridLayout->addWidget(lastName, 1, 1);
-    gridLayout->addWidget(emailL, 2, 0);
-    gridLayout->addWidget(email, 2, 1);
-    gridLayout->addWidget(usernameL, 3, 0);
-    gridLayout->addWidget(username, 3, 1);
-    gridLayout->addWidget(passwordL, 4, 0);
-    gridLayout->addWidget(password, 4, 1);
-    gridLayout->addWidget(passwordConfirmL, 5, 0);
-    gridLayout->addWidget(passwordConfirm, 5, 1);
-    gridLayout->addWidget(ageL, 6, 0);
-    gridLayout->addWidget(genderL, 6, 1);
-    gridLayout->addWidget(age, 7, 0);
-    gridLayout->addWidget(genderGB, 7, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 1, 0);
+    gridLayout->addWidget(lastNameL, 2, 0);
+    gridLayout->addWidget(lastName, 2, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 3, 0);
+    gridLayout->addWidget(usernameL, 4, 0);
+    gridLayout->addWidget(username, 4, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 5, 0);
+    gridLayout->addWidget(passwordL, 6, 0);
+    gridLayout->addWidget(password, 6, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 7, 0);
+    gridLayout->addWidget(passwordConfirmL, 8, 0);
+    gridLayout->addWidget(passwordConfirm, 8, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 9, 0);
+    gridLayout->addWidget(emailL, 10, 0);
+    gridLayout->addWidget(email, 10, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 11, 0);
+    gridLayout->addWidget(dateOfBirthL,12,0);
+
+    gridLayout2->addWidget(day,0,0);
+    gridLayout2->addWidget(new QLabel(""),0,1);
+    gridLayout2->addWidget(month,0,2);
+    gridLayout2->addWidget(new QLabel(""),0,3);
+    gridLayout2->addWidget(year,0,4);
+
+    gridLayout->addItem(gridLayout2,12,1);
+    gridLayout->addWidget(genderL, 13, 0);
+    gridLayout->addWidget(genderGB, 13, 1);
+    gridLayout->addItem(new QSpacerItem(50, 8), 14, 0);
 }
 
 void SignUp::checkPassClicked(){
@@ -219,7 +224,6 @@ void SignUp::submitClicked(){
         user->firstName = firstName->text();
         user->lastName = lastName->text();
         user->email = email->text();
-        user->age = age->text();
         user->gender = group.checkedButton()->text();
         user->DoBday = day->currentText();
         user->DoBmonth = month->currentText();
@@ -230,10 +234,10 @@ void SignUp::submitClicked(){
 
         user->write(usersFile);
 
-        QFile saveFile(QStringLiteral("Users.json"));
+        QFile saveFile(QStringLiteral("Data.json"));
 
         if (!saveFile.open(QIODevice::WriteOnly)) {
-            Message *msg = new Message("Couldn't open users file to save.");
+            Message *msg = new Message("Couldn't open data file to save.");
             msg->show();
         }
 
@@ -241,7 +245,7 @@ void SignUp::submitClicked(){
         saveFile.write(saveDoc.toJson());
 
         qDeleteAll(widget->children());
-        ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user);
+        ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, usersFile);
     }
 }
 

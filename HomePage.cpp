@@ -40,10 +40,10 @@ HomePage::HomePage(QWidget *widget)
 
     widget->setLayout(VerticalL);
 
-    QFile loadFile(QStringLiteral("Users.json"));
+    QFile loadFile(QStringLiteral("Data.json"));
 
     if (!loadFile.open(QIODevice::ReadWrite)) {
-        Message *msg = new Message("Couldn't open users file to load.");
+        Message *msg = new Message("Couldn't open data file to load.");
         msg->show();
     }
 
@@ -61,7 +61,7 @@ void HomePage::setVerticalLayout(){
     VerticalL->addWidget(signInButton);
     VerticalL->addWidget(signUpButton);
     VerticalL->addWidget(guestButton);
-    VerticalL->addWidget(new QLabel(""));
+    VerticalL->addItem(new QSpacerItem(500,200));
 }
 
 void HomePage::signUpClicked(){
@@ -76,8 +76,9 @@ void HomePage::signInClicked(){
 
 void HomePage::playAsGuestClicked(){
     user->username = "Guest";
+    user->firstName = "Guest";
+    user->isGuest = true;
 
     qDeleteAll(widget->children());
-    ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user);
+    ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, usersFile);
 }
-

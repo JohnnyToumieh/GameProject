@@ -9,7 +9,8 @@ class GameOnePage : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit GameOnePage(QWidget *widget,int gameNumber);
+    explicit GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile);
+
     int gameNumber;
     QVBoxLayout* verticalLayout;
     QGridLayout* gridLayout;
@@ -28,6 +29,9 @@ public:
     QLabel* profilePictureL;
     QLabel* nameL;
 
+    User* user;
+    QJsonObject usersFile;
+
 signals:
 
 private:
@@ -37,6 +41,7 @@ public slots:
     void backClicked();
     void descriptionClicked();
     void checkHistoryClicked();
+    void startNewGameClicked();
 };
 
 #endif // GAMEONEPAGE_H
