@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QtWidgets>
 #include <QObject>
+#include "User.h"
 
 class GameOnePage : public QVBoxLayout
 {

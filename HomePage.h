@@ -21,6 +21,8 @@ public:
 
     QVBoxLayout *VerticalL;
 
+    User* user;
+    QJsonObject usersFile;
 
 signals:
 
