@@ -14,7 +14,7 @@ class SpongeBob : public QObject, public QGraphicsPixmapItem
 public:
     explicit SpongeBob(QGraphicsPixmapItem *needle, QGraphicsPixmapItem** pixmapLifeList, QObject *parent = nullptr);
     void keyPressEvent(QKeyEvent *event);
-    void collisionWithBacteria();
+    void collisionWithBacteria(int bacteriaType);
 
     QGraphicsPixmapItem** pixmapLifeList;
     QGraphicsPixmapItem *needle;
@@ -26,6 +26,8 @@ public:
     QTimer* collisionTimer;
     bool blinkerStatus;
     QTimer* collisionBlinker;
+
+    int* numCollisionsWithBacterias;
 
 signals:
 

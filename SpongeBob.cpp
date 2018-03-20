@@ -14,6 +14,11 @@ SpongeBob::SpongeBob(QGraphicsPixmapItem *needle, QGraphicsPixmapItem** pixmapLi
     this->canCollide = true;
     this->blinkerStatus = false;
 
+    this->numCollisionsWithBacterias=new int[3];
+    this->numCollisionsWithBacterias[0] = 0;
+    this->numCollisionsWithBacterias[1] = 0;
+    this->numCollisionsWithBacterias[2] = 0;
+
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(changeGlow()));
     timer->start(500);
@@ -70,9 +75,11 @@ void SpongeBob::setCanCollide() {
     blinkerStatus = false;
 }
 
-void SpongeBob::collisionWithBacteria(){
+void SpongeBob::collisionWithBacteria(int bacteriaType){
     // Update lives
     if(lives > 0) {
+        numCollisionsWithBacterias[bacteriaType]++;
+
         lives = lives - 1;
         if(lives == 2) {
             scene()->removeItem(pixmapLifeList[0]);
