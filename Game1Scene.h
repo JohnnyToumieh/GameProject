@@ -21,6 +21,7 @@ class Game1Scene : public QGraphicsScene
 public:
     explicit Game1Scene(QWidget* widget, User* user, QJsonObject usersFile, QGraphicsScene *parent = nullptr);
     void gameOver(bool result);
+    bool saveProgress();
 
     QWidget* widget;
     User* user;
@@ -68,6 +69,9 @@ public:
     QGraphicsPixmapItem *pixmapLife3;
 
     QGraphicsPixmapItem** pixmapLifeList;
+
+private:
+    void saveProgressHelper(QJsonObject &userObject) const;
 
 signals:
 

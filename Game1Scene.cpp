@@ -1,5 +1,7 @@
 #include "Game1Scene.h"
 
+#include "Message.h"
+
 Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, QGraphicsScene *parent) : QGraphicsScene(parent)
 {
     this->widget = widget;
@@ -175,10 +177,83 @@ void Game1Scene::unpauseClicked() {
 }
 
 void Game1Scene::quitClicked() {
+    saveProgress();
+
+    QFile saveFile(QStringLiteral("Data.json"));
+
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        Message *msg = new Message("Couldn't open data file to save.");
+        msg->show();
+    }
+
+    QJsonDocument saveDoc(usersFile);
+    saveFile.write(saveDoc.toJson());
+
     views()[0]->close();
     GameOnePage *gameOnePage = new GameOnePage(widget, 1, user, usersFile);
     widget->show();
 }
+
+bool Game1Scene::saveProgress() {
+    if (usersFile.contains("games") && usersFile["games"].isArray()) {
+        QJsonArray games = usersFile["games"].toArray();
+        if (games.size() > 0 && games[0].isObject()) {
+            QJsonObject gameData = games[0].toObject();
+            if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
+                QJsonArray userArray = gameData["users_save"].toArray();
+
+                // If save for user already created, overwrite it
+                for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
+                    QJsonObject userObject = userArray[userIndex].toObject();
+                    if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
+                        QJsonObject saveObject;
+                        saveProgressHelper(saveObject);
+                        userObject["save"] = saveObject;
+                        userArray[userIndex] = userObject;
+                        gameData["users_save"] = userArray;
+                        games[0] = gameData;
+                        usersFile["games"] = games;
+                        return true;
+                    }
+                }
+
+                // If save for user never created before, create it
+                QJsonObject userObject;
+                QJsonObject saveObject;
+                saveProgressHelper(saveObject);
+                userObject["save"] = saveObject;
+                userObject["username"] = this->user->username;
+                userArray.append(userObject);
+                gameData["users_save"] = userArray;
+                games[0] = gameData;
+                usersFile["games"] = games;
+                return true;
+            } else {
+                // If no users have ever been created before, create new list and create the user
+                QJsonArray userArray;
+                QJsonObject userObject;
+                QJsonObject saveObject;
+                saveProgressHelper(saveObject);
+                userObject["save"] = saveObject;
+                userObject["username"] = this->user->username;
+                userArray.append(userObject);
+                gameData["users_save"] = userArray;
+                games[0] = gameData;
+                usersFile["games"] = games;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
+{
+    // Add more update fields
+    saveObject["level"] = this->aquarium->level;
+    saveObject["score"] = this->aquarium->score;
+}
+
 
 void Game1Scene::updateBacterias() {
     if (updateBacteriasTimer->isSingleShot()) {
