@@ -41,7 +41,7 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,QGraphicsPixmapItem** pixmapLif
 void Bacteria::updateLives(){
     if(!(scene()->collidingItems(this).isEmpty()) && scene()->collidingItems(this).at(0)->hasFocus()){
         if(this->type > this->spongeBob->immunityLevel) {
-            this->spongeBob->updateLives();
+            this->spongeBob->collisionWithBacteria();
         }
     }
 }

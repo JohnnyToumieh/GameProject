@@ -42,7 +42,8 @@ void SpongeBob::keyPressEvent(QKeyEvent *event){
         setPos(x(),y()+10);
 }
 
-void SpongeBob::updateLives(){
+void SpongeBob::collisionWithBacteria(){
+    // Update lives
     if(lives > 0) {
         lives = lives - 1;
         if(lives == 2) {
