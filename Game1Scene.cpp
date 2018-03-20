@@ -356,6 +356,8 @@ void Game1Scene::updateBacterias() {
 }
 
 void Game1Scene::checkGameState() {
+    spongeBob->setFocus();
+
     // Check if game paused
     if (aquarium->gamePaused) {
        // Pause everything. We need those stats anw for the save functionality
