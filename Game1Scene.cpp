@@ -86,8 +86,8 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     time = new QTime();
     time->start();
 
+    timeUpdater = new QTimer(this);
     updateTimer();
-    timeUpdater = new QTimer(this);;
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
     timeUpdater->start(500);
 
@@ -99,6 +99,11 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
 }
 
 void Game1Scene::updateTimer() {
+    if (timeUpdater->isSingleShot()) {
+        timeUpdater->setSingleShot(false);
+        timeUpdater->start(500);
+    }
+
     int secs = (time->elapsed() + pausedTime) / 1000;
     int mins = (secs / 60) % 60;
     secs = secs % 60;
@@ -111,6 +116,11 @@ void Game1Scene::updateTimer() {
 }
 
 void Game1Scene::updateItems(){
+    if (updateItemsTimer->isSingleShot()) {
+        updateItemsTimer->setSingleShot(false);
+        updateItemsTimer->start(3000);
+    }
+
     int random_number = (rand() % 2) + 1;
 
     if(random_number==1) {
@@ -123,6 +133,11 @@ void Game1Scene::updateItems(){
 }
 
 void Game1Scene::updateBacterias() {
+    if (updateBacteriasTimer->isSingleShot()) {
+        updateBacteriasTimer->setSingleShot(false);
+        updateBacteriasTimer->start(5000);
+    }
+
     if (bacteriasIndex >= 97) {
         bacteriasIndex = 0;
     }
@@ -143,6 +158,10 @@ void Game1Scene::checkGameState() {
         if (justPaused) {
             pausedTime += time->elapsed();
 
+            pausedTimeUpdater = timeUpdater->remainingTime();
+            pausedUpdateItemsTimer = updateItemsTimer->remainingTime();
+            pausedUpdateBacteriasTimer = updateBacteriasTimer->remainingTime();
+
             timeUpdater->stop();
             updateItemsTimer->stop();
             updateBacteriasTimer->stop();
@@ -155,9 +174,13 @@ void Game1Scene::checkGameState() {
         if (!justPaused) {
             time->restart();
 
-            timeUpdater->start(500);
-            updateItemsTimer->start(3000);
-            updateBacteriasTimer->start(5000);
+            timeUpdater->setSingleShot(true);
+            updateItemsTimer->setSingleShot(true);
+            updateBacteriasTimer->setSingleShot(true);
+
+            timeUpdater->start(pausedTimeUpdater);
+            updateItemsTimer->start(pausedUpdateItemsTimer);
+            updateBacteriasTimer->start(pausedUpdateBacteriasTimer);
 
             justPaused = true;
         }

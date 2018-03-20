@@ -24,12 +24,16 @@ public:
     SpongeBob *spongeBob;
 
     QLabel* timeLabel;
+
     QTime* time;
     int pausedTime;
-    QTimer* timeUpdater;
 
+    QTimer* timeUpdater;
+    int pausedTimeUpdater;
     QTimer* updateItemsTimer;
+    int pausedUpdateItemsTimer;
     QTimer* updateBacteriasTimer;
+    int pausedUpdateBacteriasTimer;
     QTimer* checkGameStateTimer;
 
     bool justPaused;
