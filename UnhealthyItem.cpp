@@ -7,14 +7,14 @@ UnhealthyItem::UnhealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *p
     this->aquarium = aquarium;
     this->spongeBob = spongeBob;
 
-    int random_number= (rand()%3)+1;
+    this->type = (rand()%3)+1;
 
-    if(random_number==1){
+    if(this->type==1){
         setPixmap((QPixmap("unhealthy1.png")).scaled(40,40));
         setPos(200,100);
 
     }
-    else if(random_number==2){
+    else if(this->type==2){
         setPixmap((QPixmap("unhealthy2.png")).scaled(40,40));
         setPos(400,100);
     }

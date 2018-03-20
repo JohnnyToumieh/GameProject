@@ -13,6 +13,8 @@ class UnhealthyItem : public QObject, public QGraphicsPixmapItem
 public:
     explicit UnhealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *parent = nullptr);
 
+    int type;
+
     Aquarium* aquarium;
     SpongeBob *spongeBob;
 

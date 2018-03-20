@@ -302,7 +302,6 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
     saveObject["bacterias"] = bacterias;
 
     // Add healthyitems fields
-    // Add type of food?
     QJsonArray healthyItems;
 
     for (int i = 0; i < 10; i++) {
@@ -311,6 +310,7 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
 
             currentHealthyItem["x"] = this->healthyItems[i]->x();
             currentHealthyItem["y"] = this->healthyItems[i]->y();
+            currentHealthyItem["type"] = this->healthyItems[i]->type;
 
             healthyItems[i] = currentHealthyItem;
         }
@@ -319,7 +319,6 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
     saveObject["healthyItems"] = healthyItems;
 
     // Add unhealthyitems fields
-    // Add type of food?
     QJsonArray unhealthyItems;
 
     for (int i = 0; i < 10; i++) {
@@ -328,6 +327,7 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
 
             currentUnhealthyItem["x"] = this->unhealthyItems[i]->x();
             currentUnhealthyItem["y"] = this->unhealthyItems[i]->y();
+            currentUnhealthyItem["type"] = this->unhealthyItems[i]->type;
 
             unhealthyItems[i] = currentUnhealthyItem;
         }

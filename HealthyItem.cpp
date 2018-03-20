@@ -8,14 +8,14 @@ HealthyItem::HealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *paren
 
     this->justPaused = true;
 
-    int random_number= (rand()%3)+1;
+    this->type = (rand()%3)+1;
 
-    if(random_number==1){
+    if(this->type==1){
         setPixmap((QPixmap("healthy1.png")).scaled(60,30));
         setPos(200,100);
 
     }
-    else if(random_number==2){
+    else if(this->type==2){
         setPixmap((QPixmap("healthy2.png")).scaled(40,40));
         setPos(400,100);
     }
