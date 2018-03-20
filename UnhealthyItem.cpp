@@ -2,9 +2,11 @@
 #include <QTimer>
 #include <QGraphicsScene>
 
-UnhealthyItem::UnhealthyItem(SpongeBob *spongeBob,QObject *parent) : QObject(parent)
+UnhealthyItem::UnhealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *parent) : QObject(parent)
 {
-    this->spongeBob=spongeBob;
+    this->aquarium = aquarium;
+    this->spongeBob = spongeBob;
+
     int random_number= (rand()%3)+1;
 
     if(random_number==1){
@@ -27,9 +29,11 @@ UnhealthyItem::UnhealthyItem(SpongeBob *spongeBob,QObject *parent) : QObject(par
 }
 
 void UnhealthyItem::update(){
+    if (aquarium->gamePaused) {
+        return;
+    }
+
     if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){
-        scene()->removeItem(this);
-        delete this;
         int degree=spongeBob->immunityLevelDegree;
         if(!(degree==1 && spongeBob->immunityLevel==1)){
             degree=spongeBob->immunityLevelDegree--;
@@ -44,10 +48,15 @@ void UnhealthyItem::update(){
 
            spongeBob->immunityLevel--;
         }
+        scene()->removeItem(this);
+        delete this;
+        return;
     }
+
     if((y()+30) >= 500) {
         scene()->removeItem(this);
         delete this;
+        return;
     }
     else
         setPos(x(),y()+30);

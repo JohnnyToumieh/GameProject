@@ -3,13 +3,18 @@
 
 #include <QObject>
 #include <QGraphicsPixmapItem>
+
 #include "SpongeBob.h"
+#include "Aquarium.h"
+
 class UnhealthyItem : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    explicit UnhealthyItem(SpongeBob *spongeBob,QObject *parent = nullptr);
-     SpongeBob *spongeBob;
+    explicit UnhealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *parent = nullptr);
+
+    Aquarium* aquarium;
+    SpongeBob *spongeBob;
 
 signals:
 

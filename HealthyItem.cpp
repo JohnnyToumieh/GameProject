@@ -1,9 +1,10 @@
 #include "HealthyItem.h"
 #include <QTimer>
 #include <QGraphicsScene>
-HealthyItem::HealthyItem(SpongeBob *spongeBob,QObject *parent)
+HealthyItem::HealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *parent)
 {
-    this->spongeBob=spongeBob;
+    this->aquarium = aquarium;
+    this->spongeBob = spongeBob;
 
     int random_number= (rand()%3)+1;
 
@@ -27,29 +28,34 @@ HealthyItem::HealthyItem(SpongeBob *spongeBob,QObject *parent)
 }
 
 void HealthyItem::update(){
+    if (aquarium->gamePaused) {
+        return;
+    }
 
-     if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){
-         scene()->removeItem(this);
-         delete this;
-         int degree=spongeBob->immunityLevelDegree;
-         if(!(degree>=6 && spongeBob->immunityLevel==3)){
-             degree=spongeBob->immunityLevelDegree++;
-             spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
-                                                        spongeBob->needle->boundingRect().center().y());
-             spongeBob->needle->setRotation(spongeBob->needle->rotation()+8);
-         }
+    if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){
+        int degree=spongeBob->immunityLevelDegree;
+        if(!(degree>=6 && spongeBob->immunityLevel==3)){
+            degree=spongeBob->immunityLevelDegree++;
+            spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
+                                                       spongeBob->needle->boundingRect().center().y());
+            spongeBob->needle->setRotation(spongeBob->needle->rotation()+8);
+        }
 
-         if((degree>=6 && spongeBob->immunityLevel==1) ||
-            (degree>=9 && spongeBob->immunityLevel==2)){
-            spongeBob->immunityLevelDegree=1;
+        if((degree>=6 && spongeBob->immunityLevel==1) ||
+           (degree>=9 && spongeBob->immunityLevel==2)){
+           spongeBob->immunityLevelDegree=1;
 
-            spongeBob->immunityLevel++;
-         }
-         return;
-     }
+           spongeBob->immunityLevel++;
+        }
+        scene()->removeItem(this);
+        delete this;
+        return;
+    }
+
     if((y()+30) >= 500) {
         scene()->removeItem(this);
         delete this;
+        return;
     }
     else
         setPos(x(),y()+30);

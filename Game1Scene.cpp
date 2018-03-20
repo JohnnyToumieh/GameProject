@@ -124,10 +124,10 @@ void Game1Scene::updateItems(){
     int random_number = (rand() % 2) + 1;
 
     if(random_number==1) {
-        HealthyItem *healthyItem = new HealthyItem(spongeBob);
+        HealthyItem *healthyItem = new HealthyItem(aquarium, spongeBob);
         addItem(healthyItem);
     } else if(random_number==2) {
-        UnhealthyItem *unhealthyItem = new UnhealthyItem(spongeBob);
+        UnhealthyItem *unhealthyItem = new UnhealthyItem(aquarium, spongeBob);
         addItem(unhealthyItem);
     }
 }
