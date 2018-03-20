@@ -71,7 +71,8 @@ void GameOnePage::descriptionClicked(){
 void GameOnePage::startNewGameClicked(){
     qDeleteAll(widget->children());
     widget->close();
-    Game1Scene *game1scene = new Game1Scene();
+
+    Game1Scene *game1scene = new Game1Scene(widget, user, usersFile);
 
     QGraphicsView *view = new QGraphicsView(game1scene);
     view->setFixedSize(1000,600);

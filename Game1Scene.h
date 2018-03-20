@@ -11,7 +11,7 @@
 #include "SpongeBob.h"
 #include "Bacteria.h"
 #include "Aquarium.h"
-#include "HomePage.h"
+#include "GameOnePage.h"
 #include "HealthyItem.h"
 #include "UnhealthyItem.h"
 
@@ -19,8 +19,12 @@ class Game1Scene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit Game1Scene(QGraphicsScene *parent = nullptr);
+    explicit Game1Scene(QWidget* widget, User* user, QJsonObject usersFile, QGraphicsScene *parent = nullptr);
     void gameOver(bool result);
+
+    QWidget* widget;
+    User* user;
+    QJsonObject usersFile;
 
     Aquarium *aquarium;
     SpongeBob *spongeBob;

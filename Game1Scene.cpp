@@ -1,7 +1,11 @@
 #include "Game1Scene.h"
 
-Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
+Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, QGraphicsScene *parent) : QGraphicsScene(parent)
 {
+    this->widget = widget;
+    this->user = user;
+    this->usersFile = usersFile;
+
     aquarium = new Aquarium(1, 10, 1, 0, 1, 300000, 0, 0);
 
     setBackgroundBrush(QBrush(QImage("background2.JPG").scaledToHeight(600).scaledToWidth(1000)));
@@ -171,8 +175,9 @@ void Game1Scene::unpauseClicked() {
 }
 
 void Game1Scene::quitClicked() {
-    //qDeleteAll(widget->children());
-    //HomePage *homePage = new HomePage(widget);
+    views()[0]->close();
+    GameOnePage *gameOnePage = new GameOnePage(widget, 1, user, usersFile);
+    widget->show();
 }
 
 void Game1Scene::updateBacterias() {
