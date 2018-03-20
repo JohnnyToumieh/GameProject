@@ -11,7 +11,7 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
 
     timeLabel = new QLabel();
     timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
-    timeLabel->move(this->width() / 2 - 20, 25);
+    timeLabel->move(this->width() / 2 - 30, 25);
     addWidget(timeLabel);
 
     levelLabel = new QLabel();
@@ -82,6 +82,31 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     updateBacteriasTimer->start(5000);
 
     pausedTime = 0;
+    justPaused = true;
+
+    greyForeground = new QWidget();
+    greyForeground->setStyleSheet("background-color: rgba(105, 105, 105, 100);");
+    greyForeground->setFixedHeight(this->height());
+    greyForeground->setFixedWidth(this->width());
+    addWidget(greyForeground);
+    greyForeground->hide();
+
+    unpause = new QPushButton("Unpause");
+    unpause->move(this->width() / 2 - 30, this->height() / 2 - 20);
+    addWidget(unpause);
+    unpause->hide();
+
+    quit = new QPushButton("Quit");
+    quit->move(this->width() / 2 - 30, this->height() / 2 + 10);
+    addWidget(quit);
+    quit->hide();
+
+    QObject::connect(unpause, SIGNAL(clicked()), SLOT(unpauseClicked()));
+    QObject::connect(quit, SIGNAL(clicked()), SLOT(quitClicked()));
+
+    checkGameStateTimer = new QTimer(this);
+    connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
+    checkGameStateTimer->start(100);
 
     time = new QTime();
     time->start();
@@ -90,12 +115,6 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     updateTimer();
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
     timeUpdater->start(500);
-
-    checkGameStateTimer = new QTimer(this);
-    connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
-    checkGameStateTimer->start(100);
-
-    justPaused = true;
 }
 
 void Game1Scene::updateTimer() {
@@ -130,6 +149,21 @@ void Game1Scene::updateItems(){
         UnhealthyItem *unhealthyItem = new UnhealthyItem(aquarium, spongeBob);
         addItem(unhealthyItem);
     }
+}
+
+void Game1Scene::unpauseClicked() {
+    aquarium->gamePaused = false;
+
+    greyForeground->hide();
+    unpause->hide();
+    quit->hide();
+
+    spongeBob->setFocus();
+}
+
+void Game1Scene::quitClicked() {
+    //qDeleteAll(widget->children());
+    //HomePage *homePage = new HomePage(widget);
 }
 
 void Game1Scene::updateBacterias() {
@@ -167,6 +201,10 @@ void Game1Scene::checkGameState() {
             updateBacteriasTimer->stop();
 
             justPaused = false;
+
+            greyForeground->show();
+            unpause->show();
+            quit->show();
         }
 
         return;
@@ -183,6 +221,10 @@ void Game1Scene::checkGameState() {
             updateBacteriasTimer->start(pausedUpdateBacteriasTimer);
 
             justPaused = true;
+
+            greyForeground->hide();
+            unpause->hide();
+            quit->hide();
         }
     }
 

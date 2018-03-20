@@ -6,10 +6,12 @@
 #include <QGraphicsRectItem>
 #include <QTimer>
 #include <QTime>
-#include <QLabel>
+#include <QtWidgets>
+
 #include "SpongeBob.h"
 #include "Bacteria.h"
 #include "Aquarium.h"
+#include "HomePage.h"
 
 class Game1Scene : public QGraphicsScene
 {
@@ -38,6 +40,11 @@ public:
 
     bool justPaused;
 
+    QWidget* greyForeground;
+
+    QPushButton* unpause;
+    QPushButton* quit;
+
     QLabel* levelLabel;
     QLabel* scoreLabel;
 
@@ -56,6 +63,8 @@ public slots:
     void updateBacterias();
     void updateTimer();
     void checkGameState();
+    void unpauseClicked();
+    void quitClicked();
 };
 
 #endif // GAME1SCENE_H
