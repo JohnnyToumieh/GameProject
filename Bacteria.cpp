@@ -6,11 +6,13 @@
 #include <QGraphicsScene>
 #include <QList>
 #include <QDebug>
-#include "Game1Scene.h"
-Bacteria::Bacteria(int type,SpongeBob *spongeBob,QGraphicsPixmapItem** pixmapLifeList,QObject *parent)
+
+Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPixmapItem* greenColorItem, QGraphicsPixmapItem** pixmapLifeList,QObject *parent)
 {
     this->type=type;
     this->spongeBob=spongeBob;
+    this->aquarium=aquarium;
+    this->greenColorItem=greenColorItem;
     this->pixmapLifeList=pixmapLifeList;
 
     if(type==1){
@@ -30,9 +32,9 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,QGraphicsPixmapItem** pixmapLif
 
     int random_number= (rand()%3)+1;
 
-    if(random_number==1){
+    if (random_number==1) {
         this->speed = 200;
-    } else if(random_number==2){
+    } else if (random_number==2) {
         this->speed = 250;
     } else {
         this->speed = 300;
@@ -49,12 +51,10 @@ void Bacteria::update(){
             this->spongeBob->collisionWithBacteria();
         } else if(this->type <= this->spongeBob->immunityLevel) {
             //increase cleanliness
-            QGraphicsPixmapItem *greenColorItem= new QGraphicsPixmapItem();
+            aquarium->currentCleanliness += aquarium->incrementCleanliness;
             QPixmap *greenColor = new QPixmap("needle.png");
             greenColor->fill(Qt::green);
-            greenColorItem->setPixmap(greenColor->scaled(80,20));
-            greenColorItem->setPos(15,51);
-            scene()->addItem(greenColorItem);
+            greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->maxCleanliness) * aquarium->currentCleanliness, 20));
 
             //TODO: increase score
             // if cleanliness is 100
@@ -68,20 +68,17 @@ void Bacteria::update(){
          }
     }
 
-    if(((x()+30) >= 950)){
-       if(type==1)
-            setPos(0,200);
-       else if(type==2)
-            setPos(0,300);
-       else
-            setPos(0,400);
-    }
-    else{
-     if(type==1)
-        setPos(x()+30,200+20*qSin(x()+30));
-     else if(type==2)
-         setPos(x()+30,300+30*qSin(x()+30));
-     else
-          setPos(x()+30,400+20*qSin(x()+30));
+    if (x() + 30 >= 950){
+        scene()->removeItem(this);
+        delete this;
+        return;
+    } else {
+        if (type == 1) {
+            setPos(x()+30,200+20*qSin(x()+30));
+        } else if (type == 2) {
+            setPos(x()+30,300+30*qSin(x()+30));
+        } else {
+            setPos(x()+30,400+20*qSin(x()+30));
+        }
     }
 }

@@ -9,6 +9,7 @@
 #include <QLabel>
 #include "SpongeBob.h"
 #include "Bacteria.h"
+#include "Aquarium.h"
 
 class Game1Scene : public QGraphicsScene
 {
@@ -17,14 +18,14 @@ public:
     explicit Game1Scene(QGraphicsScene *parent = nullptr);
     void gameOver(bool result);
 
+    Aquarium *aquarium;
     SpongeBob *spongeBob;
-
-    Bacteria *bacteria;
 
     QLabel* timeLabel;
     QTime* time;
     QTimer* timeUpdater;
 
+    QGraphicsPixmapItem *greenColorItem;
     QGraphicsPixmapItem *pixmapNeedle;
     QGraphicsPixmapItem *pixmapLife1;
     QGraphicsPixmapItem *pixmapLife2;
@@ -35,9 +36,10 @@ public:
 signals:
 
 public slots:
-    void update();
+    void updateItems();
+    void updateBacterias();
     void updateTimer();
-    void checkDeath();
+    void checkGameState();
 };
 
 #endif // GAME1SCENE_H

@@ -4,6 +4,8 @@
 #include "UnhealthyItem.h"
 Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
 {
+    aquarium = new Aquarium(1, 10, 1, 0, 1, 300000);
+
     setBackgroundBrush(QBrush(QImage("background2.JPG").scaledToHeight(600).scaledToWidth(1000)));
     setSceneRect(0,0,1000,600);
 
@@ -32,6 +34,10 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     pixmapLife3->setPos(700,30);
     addItem(pixmapLife3);
 
+    greenColorItem= new QGraphicsPixmapItem();
+    greenColorItem->setPos(15,51);
+    addItem(greenColorItem);
+
     pixmapLifeList = new QGraphicsPixmapItem*[3];
 
     pixmapLifeList[0]=pixmapLife1;
@@ -44,16 +50,20 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
     spongeBob->setFocus();
 
-    bacteria = new Bacteria(1,this->spongeBob,pixmapLifeList);
+    Bacteria* bacteria = new Bacteria(1,spongeBob,aquarium,greenColorItem,pixmapLifeList);
     addItem(bacteria);
-    bacteria = new Bacteria(2,this->spongeBob,pixmapLifeList);
+    bacteria = new Bacteria(2,spongeBob,aquarium,greenColorItem,pixmapLifeList);
     addItem(bacteria);
-    bacteria = new Bacteria(3,this->spongeBob,pixmapLifeList);
+    bacteria = new Bacteria(3,spongeBob,aquarium,greenColorItem,pixmapLifeList);
     addItem(bacteria);
 
     QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateItems()));
     timer->start(3000);
+
+    QTimer *timer3 = new QTimer(this);
+    connect(timer3, SIGNAL(timeout()), this, SLOT(updateBacterias()));
+    timer3->start(5000);
 
     time = new QTime();
     time->start();
@@ -64,7 +74,7 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     timeUpdater->start(500);
 
     QTimer* timer2 = new QTimer(this);
-    connect(timer2, SIGNAL(timeout()), this, SLOT(checkDeath()));
+    connect(timer2, SIGNAL(timeout()), this, SLOT(checkGameState()));
     timer2->start(100);
 }
 
@@ -75,29 +85,50 @@ void Game1Scene::updateTimer() {
     timeLabel->setText(QString("%1:%2")
     .arg(mins, 2, 10, QLatin1Char('0'))
     .arg(secs, 2, 10, QLatin1Char('0')) );
-
-    if (time->elapsed() >= 300000) {
-        this->gameOver(false);
-    }
 }
 
-void Game1Scene::update(){
-    int random_number= (rand()%2)+1;
+void Game1Scene::updateItems(){
+    int random_number = (rand() % 2) + 1;
 
-    if(random_number==1){
-        HealthyItem *healthyItem = new HealthyItem(this->spongeBob);
+    if(random_number==1) {
+        HealthyItem *healthyItem = new HealthyItem(spongeBob);
         addItem(healthyItem);
-    }
-
-    else if(random_number==2){
-        UnhealthyItem *unhealthyItem = new UnhealthyItem(this->spongeBob);
+    } else if(random_number==2) {
+        UnhealthyItem *unhealthyItem = new UnhealthyItem(spongeBob);
         addItem(unhealthyItem);
     }
 }
 
-void Game1Scene::checkDeath() {
-    if (this->spongeBob->lives == 0) {
-        this->gameOver(false);
+void Game1Scene::updateBacterias() {
+    Bacteria* bacteria = new Bacteria(1,spongeBob,aquarium,greenColorItem,pixmapLifeList);
+    addItem(bacteria);
+    bacteria = new Bacteria(2,spongeBob,aquarium,greenColorItem,pixmapLifeList);
+    addItem(bacteria);
+    bacteria = new Bacteria(3,spongeBob,aquarium,greenColorItem,pixmapLifeList);
+    addItem(bacteria);
+}
+
+void Game1Scene::checkGameState() {
+    // Check if spongebob is dead
+    if (spongeBob->lives == 0) {
+        gameOver(false);
+    }
+
+    // Check if time is up
+    if (time->elapsed() >= aquarium->maxTime) {
+        int secs = aquarium->maxTime / 1000;
+        int mins = (secs / 60) % 60;
+        secs = secs % 60;
+        timeLabel->setText(QString("%1:%2")
+        .arg(mins, 2, 10, QLatin1Char('0'))
+        .arg(secs, 2, 10, QLatin1Char('0')) );
+
+        gameOver(false);
+    }
+
+    // Check if the aquarium is cleaned
+    if (aquarium->currentCleanliness == aquarium->maxCleanliness) {
+        gameOver(true);
     }
 }
 
