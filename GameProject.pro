@@ -9,7 +9,12 @@ SOURCES += \
     GameOnePage.cpp \
     SignIn.cpp \
     User.cpp \
-    HistoryPage.cpp
+    HistoryPage.cpp \
+    Game1Scene.cpp \
+    SpongeBob.cpp \
+    Bacteria.cpp \
+    HealthyItem.cpp \
+    UnhealthyItem.cpp
 
 HEADERS += \
     HomePage.h \
@@ -19,4 +24,9 @@ HEADERS += \
     GameOnePage.h \
     SignIn.h \
     User.h \
-    HistoryPage.h
+    HistoryPage.h \
+    Game1Scene.h \
+    SpongeBob.h \
+    Bacteria.h \
+    HealthyItem.h \
+    UnhealthyItem.h
