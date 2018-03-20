@@ -157,5 +157,7 @@ void Game1Scene::checkGameState() {
 void Game1Scene::gameOver(bool result) {
     timeUpdater->stop();
 
-    aquarium->score += aquarium->maxTime / aquarium->currentTime - 1;
+    if (result) {
+        aquarium->score += aquarium->maxTime / aquarium->currentTime - 1;
+    }
 }
