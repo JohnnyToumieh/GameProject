@@ -23,16 +23,35 @@ UnhealthyItem::UnhealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *p
         setPos(600,100);
     }
 
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(500);
+    speedTimer = new QTimer(this);
+    connect(speedTimer, SIGNAL(timeout()), this, SLOT(update()));
+    speedTimer->start(500);
+
+    checkGameStateTimer = new QTimer(this);
+    connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
+    checkGameStateTimer->start(100);
+}
+
+void UnhealthyItem::checkGameState() {
+    // Check if game paused
+    if (aquarium->gamePaused) {
+        if (justPaused) {
+            speedTimer->stop();
+
+            justPaused = false;
+        }
+
+        return;
+    } else {
+        if (!justPaused) {
+            speedTimer->start(500);
+
+            justPaused = true;
+        }
+    }
 }
 
 void UnhealthyItem::update(){
-    if (aquarium->gamePaused) {
-        return;
-    }
-
     if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){
         int degree=spongeBob->immunityLevelDegree;
         if(!(degree==1 && spongeBob->immunityLevel==1)){

@@ -16,10 +16,16 @@ public:
     Aquarium* aquarium;
     SpongeBob *spongeBob;
 
+    bool justPaused;
+
+    QTimer* checkGameStateTimer;
+    QTimer* speedTimer;
+
 signals:
 
 public slots:
     void update();
+    void checkGameState();
 };
 
 #endif // UNHEALTHYITEM_H

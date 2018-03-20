@@ -22,12 +22,18 @@ public:
     SpongeBob *spongeBob;
     Aquarium* aquarium;
 
+    bool justPaused;
+
+    QTimer* checkGameStateTimer;
+    QTimer* speedTimer;
+
     QGraphicsPixmapItem* greenColorItem;
     QGraphicsPixmapItem** pixmapLifeList;
 signals:
 
 public slots:
     void update();
+    void checkGameState();
 };
 
 #endif // BACTERIA_H

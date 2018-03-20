@@ -15,6 +15,8 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
     this->greenColorItem=greenColorItem;
     this->pixmapLifeList=pixmapLifeList;
 
+    this->justPaused = true;
+
     if(type==1){
         QPixmap *pic  = new QPixmap("bacteria1.png");
         setPixmap(pic->scaled(80,80));
@@ -40,16 +42,35 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
         this->speed = 300;
     }
 
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(this->speed);
+    speedTimer = new QTimer(this);
+    connect(speedTimer, SIGNAL(timeout()), this, SLOT(update()));
+    speedTimer->start(this->speed);
+
+    checkGameStateTimer = new QTimer(this);
+    connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
+    checkGameStateTimer->start(100);
+}
+
+void Bacteria::checkGameState() {
+    // Check if game paused
+    if (aquarium->gamePaused) {
+        if (justPaused) {
+            speedTimer->stop();
+
+            justPaused = false;
+        }
+
+        return;
+    } else {
+        if (!justPaused) {
+            speedTimer->start(this->speed);
+
+            justPaused = true;
+        }
+    }
 }
 
 void Bacteria::update(){
-    if (aquarium->gamePaused) {
-        return;
-    }
-
     if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){
         if (this->type > this->spongeBob->immunityLevel && this->spongeBob->canCollide) {
             //decrease score
