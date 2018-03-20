@@ -249,9 +249,91 @@ bool Game1Scene::saveProgress() {
 
 void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
 {
-    // Add more update fields
-    saveObject["level"] = this->aquarium->level;
-    saveObject["score"] = this->aquarium->score;
+    // Add aquarium fields
+    QJsonObject aquarium;
+
+    aquarium["level"] = this->aquarium->level;
+    aquarium["score"] = this->aquarium->score;
+
+    aquarium["maxCleanliness"] = this->aquarium->maxCleanliness;
+    aquarium["incrementCleanliness"] = this->aquarium->incrementCleanliness;
+    aquarium["currentCleanliness"] = this->aquarium->currentCleanliness;
+
+    aquarium["immunityFactor"] = this->aquarium->immunityFactor;
+
+    aquarium["maxTime"] = this->aquarium->maxTime;
+    aquarium["currentTime"] = this->aquarium->currentTime;
+
+    saveObject["aquarium"] = aquarium;
+
+    // Add spongeBob fields
+    QJsonObject spongeBob;
+
+    spongeBob["immunityLevel"] = this->spongeBob->immunityLevel;
+    spongeBob["immunityLevelDegree"] = this->spongeBob->immunityLevelDegree;
+    spongeBob["lives"] = this->spongeBob->lives;
+    spongeBob["x"] = this->spongeBob->x();
+    spongeBob["y"] = this->spongeBob->y();
+
+    QJsonObject bacteriaCollisions;
+    for (int i = 0; i < 3; i++) {
+        bacteriaCollisions[QStringLiteral("numbBacteriaCollisions%1").arg(i + 1)] = this->spongeBob->numCollisionsWithBacterias[i];
+    }
+    spongeBob["numbBacteriaCollisions"] = bacteriaCollisions;
+
+    saveObject["spongeBob"] = spongeBob;
+
+    // Add bacterias fields
+    QJsonArray bacterias;
+
+    for (int i = 0; i < 100; i++) {
+        if (this->bacterias[i] != NULL) {
+            QJsonObject currentBacteria;
+
+            currentBacteria["x"] = this->bacterias[i]->x();
+            currentBacteria["y"] = this->bacterias[i]->y();
+            currentBacteria["type"] = this->bacterias[i]->type;
+            currentBacteria["speed"] = this->bacterias[i]->speed;
+
+            bacterias[i] = currentBacteria;
+        }
+    }
+
+    saveObject["bacterias"] = bacterias;
+
+    // Add healthyitems fields
+    // Add type of food?
+    QJsonArray healthyItems;
+
+    for (int i = 0; i < 10; i++) {
+        if (this->healthyItems[i] != NULL) {
+            QJsonObject currentHealthyItem;
+
+            currentHealthyItem["x"] = this->healthyItems[i]->x();
+            currentHealthyItem["y"] = this->healthyItems[i]->y();
+
+            healthyItems[i] = currentHealthyItem;
+        }
+    }
+
+    saveObject["healthyItems"] = healthyItems;
+
+    // Add unhealthyitems fields
+    // Add type of food?
+    QJsonArray unhealthyItems;
+
+    for (int i = 0; i < 10; i++) {
+        if (this->unhealthyItems[i] != NULL) {
+            QJsonObject currentUnhealthyItem;
+
+            currentUnhealthyItem["x"] = this->unhealthyItems[i]->x();
+            currentUnhealthyItem["y"] = this->unhealthyItems[i]->y();
+
+            unhealthyItems[i] = currentUnhealthyItem;
+        }
+    }
+
+    saveObject["unhealthyItems"] = unhealthyItems;
 }
 
 
