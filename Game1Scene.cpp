@@ -4,7 +4,7 @@
 #include "UnhealthyItem.h"
 Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
 {
-    aquarium = new Aquarium(1, 10, 1, 0, 1, 300000);
+    aquarium = new Aquarium(1, 10, 1, 0, 1, 300000, 0, 0);
 
     setBackgroundBrush(QBrush(QImage("background2.JPG").scaledToHeight(600).scaledToWidth(1000)));
     setSceneRect(0,0,1000,600);
@@ -82,9 +82,12 @@ void Game1Scene::updateTimer() {
     int secs = time->elapsed() / 1000;
     int mins = (secs / 60) % 60;
     secs = secs % 60;
+
     timeLabel->setText(QString("%1:%2")
     .arg(mins, 2, 10, QLatin1Char('0'))
     .arg(secs, 2, 10, QLatin1Char('0')) );
+
+    aquarium->currentTime = time->elapsed();
 }
 
 void Game1Scene::updateItems(){
@@ -123,6 +126,8 @@ void Game1Scene::checkGameState() {
         .arg(mins, 2, 10, QLatin1Char('0'))
         .arg(secs, 2, 10, QLatin1Char('0')) );
 
+        aquarium->currentTime = aquarium->maxTime;
+
         gameOver(false);
     }
 
@@ -134,4 +139,6 @@ void Game1Scene::checkGameState() {
 
 void Game1Scene::gameOver(bool result) {
     timeUpdater->stop();
+
+    aquarium->score += aquarium->maxTime / aquarium->currentTime - 1;
 }

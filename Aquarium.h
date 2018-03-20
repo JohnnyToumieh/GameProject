@@ -7,15 +7,20 @@ class Aquarium : public QObject
 {
     Q_OBJECT
 public:
-    explicit Aquarium(int level, int maxCleanliness, int incrementCleanliness, int currentCleanliness, int immunityFactor, int maxTime, QObject *parent = nullptr);
+    explicit Aquarium(int level, int maxCleanliness, int incrementCleanliness, int currentCleanliness, int immunityFactor, int maxTime, int currentTime, int score, QObject *parent = nullptr);
 
     int level;
 
     int maxCleanliness;
     int incrementCleanliness;
     int currentCleanliness;
+
     int immunityFactor;
+
     int maxTime;
+    int currentTime;
+
+    int score;
 signals:
 
 public slots:
