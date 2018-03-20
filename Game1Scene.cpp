@@ -295,12 +295,14 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
             currentBacteria["type"] = this->bacterias[i]->type;
             currentBacteria["speed"] = this->bacterias[i]->speed;
 
-            bacterias[i] = currentBacteria;
+            bacterias.append(currentBacteria);
         }
     }
 
-    saveObject["bacterias"] = bacterias;
-
+    if (!bacterias.empty()) {
+        saveObject["bacterias"] = bacterias;
+    }
+return;
     // Add healthyitems fields
     QJsonArray healthyItems;
 
@@ -312,11 +314,13 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
             currentHealthyItem["y"] = this->healthyItems[i]->y();
             currentHealthyItem["type"] = this->healthyItems[i]->type;
 
-            healthyItems[i] = currentHealthyItem;
+            healthyItems.append(currentHealthyItem);
         }
     }
 
-    saveObject["healthyItems"] = healthyItems;
+    if (!healthyItems.empty()) {
+        saveObject["healthyItems"] = healthyItems;
+    }
 
     // Add unhealthyitems fields
     QJsonArray unhealthyItems;
@@ -329,11 +333,13 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
             currentUnhealthyItem["y"] = this->unhealthyItems[i]->y();
             currentUnhealthyItem["type"] = this->unhealthyItems[i]->type;
 
-            unhealthyItems[i] = currentUnhealthyItem;
+            unhealthyItems.append(currentUnhealthyItem);
         }
     }
 
-    saveObject["unhealthyItems"] = unhealthyItems;
+    if (!unhealthyItems.empty()) {
+        saveObject["unhealthyItems"] = unhealthyItems;
+    }
 }
 
 
