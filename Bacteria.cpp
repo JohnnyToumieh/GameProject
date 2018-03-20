@@ -49,7 +49,11 @@ void Bacteria::update(){
     if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){
         if (this->type > this->spongeBob->immunityLevel && this->spongeBob->canCollide) {
             //decrease score
-            aquarium->score -= type * 50;
+            if (aquarium->score <= type * 50) {
+                aquarium->score = 0;
+            } else {
+                aquarium->score -= type * 50;
+            }
 
             this->spongeBob->collisionWithBacteria(this->type);
         } else if(this->type <= this->spongeBob->immunityLevel) {

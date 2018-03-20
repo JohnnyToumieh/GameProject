@@ -25,6 +25,9 @@ public:
     QTime* time;
     QTimer* timeUpdater;
 
+    QLabel* levelLabel;
+    QLabel* scoreLabel;
+
     QGraphicsPixmapItem *greenColorItem;
     QGraphicsPixmapItem *pixmapNeedle;
     QGraphicsPixmapItem *pixmapLife1;

@@ -14,6 +14,18 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     timeLabel->move(this->width() / 2 - 20, 25);
     addWidget(timeLabel);
 
+    levelLabel = new QLabel();
+    levelLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
+    levelLabel->move(300, 20);
+    levelLabel->setText("Level: " + QString::number(aquarium->level));
+    addWidget(levelLabel);
+
+    scoreLabel = new QLabel();
+    scoreLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
+    scoreLabel->move(300, 50);
+    scoreLabel->setText("Score: " + QString::number(aquarium->score));
+    addWidget(scoreLabel);
+
     pixmapNeedle = new QGraphicsPixmapItem();
     QPixmap *picNeedle  = new QPixmap("needle.png");
     pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
@@ -112,6 +124,9 @@ void Game1Scene::updateBacterias() {
 }
 
 void Game1Scene::checkGameState() {
+    // Update score
+    scoreLabel->setText("Score: " + QString::number(aquarium->score));
+
     // Check if spongebob is dead
     if (spongeBob->lives == 0) {
         gameOver(false);

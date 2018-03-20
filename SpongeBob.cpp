@@ -61,18 +61,14 @@ void SpongeBob::toggleVisibility() {
         setPixmap((QPixmap("bob1.png")).scaled(80,80));
     }
     blinkerStatus = !blinkerStatus;
-
-    if (collisionBlinker->isSingleShot()) {
-        collisionBlinker->setSingleShot(false);
-        collisionBlinker->start(500);
-    }
 }
 
 void SpongeBob::setCanCollide() {
     canCollide = true;
     collisionBlinker->stop();
-    setPixmap((QPixmap("bob1.png")).scaled(80,80));
-    blinkerStatus = false;
+    if (blinkerStatus == true) {
+        toggleVisibility();
+    }
 }
 
 void SpongeBob::collisionWithBacteria(int bacteriaType){
@@ -93,8 +89,8 @@ void SpongeBob::collisionWithBacteria(int bacteriaType){
 
         if (lives != 0) {
             collisionTimer->start(4000);
-            collisionBlinker->setSingleShot(true);
-            collisionBlinker->start(1);
+            toggleVisibility();
+            collisionBlinker->start(500);
         }
     }
 }
