@@ -7,6 +7,19 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     setBackgroundBrush(QBrush(QImage("background2.JPG").scaledToHeight(600).scaledToWidth(1000)));
     setSceneRect(0,0,1000,600);
 
+    timeLabel = new QLabel();
+    timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
+    timeLabel->move(this->width() / 2 - 20, 25);
+    addWidget(timeLabel);
+
+    time = new QTime();
+    time->start();
+
+    updateTimer();
+    timeUpdater = new QTimer(this);;
+    connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
+    timeUpdater->start(500);
+
     pixmapNeedle = new QGraphicsPixmapItem();
     QPixmap *picNeedle  = new QPixmap("needle.png");
     pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
@@ -46,13 +59,18 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     bacteria = new Bacteria(3,this->spongeBob,pixmapLifeList);
     addItem(bacteria);
 
-
-
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(3000);
+}
 
-
+void Game1Scene::updateTimer() {
+    int secs = time->elapsed() / 1000;
+    int mins = (secs / 60) % 60;
+    secs = secs % 60;
+    timeLabel->setText(QString("%1:%2")
+    .arg(mins, 2, 10, QLatin1Char('0'))
+    .arg(secs, 2, 10, QLatin1Char('0')) );
 }
 
 void Game1Scene::update(){
@@ -67,7 +85,5 @@ void Game1Scene::update(){
         UnhealthyItem *unhealthyItem = new UnhealthyItem(this->spongeBob);
         addItem(unhealthyItem);
     }
-
-
 }
 

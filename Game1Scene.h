@@ -5,6 +5,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QTimer>
+#include <QTime>
+#include <QLabel>
 #include "SpongeBob.h"
 #include "Bacteria.h"
 
@@ -17,6 +19,10 @@ public:
 
     Bacteria *bacteria;
 
+    QLabel* timeLabel;
+    QTime* time;
+    QTimer* timeUpdater;
+
     QGraphicsPixmapItem *pixmapNeedle;
     QGraphicsPixmapItem *pixmapLife1;
     QGraphicsPixmapItem *pixmapLife2;
@@ -28,6 +34,7 @@ signals:
 
 public slots:
     void update();
+    void updateTimer();
 };
 
 #endif // GAME1SCENE_H
