@@ -21,6 +21,8 @@ public:
     int currentTime;
 
     int score;
+
+    bool gamePaused;
 signals:
 
 public slots:

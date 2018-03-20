@@ -8,13 +8,18 @@
 #include <QPainter>
 #include <QGraphicsScene>
 #include<QKeyEvent>
+
+#include "Aquarium.h"
+
 class SpongeBob : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    explicit SpongeBob(QGraphicsPixmapItem *needle, QGraphicsPixmapItem** pixmapLifeList, QObject *parent = nullptr);
+    explicit SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsPixmapItem** pixmapLifeList, QObject *parent = nullptr);
     void keyPressEvent(QKeyEvent *event);
     void collisionWithBacteria(int bacteriaType);
+
+    Aquarium* aquarium;
 
     QGraphicsPixmapItem** pixmapLifeList;
     QGraphicsPixmapItem *needle;

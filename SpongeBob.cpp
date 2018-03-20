@@ -1,13 +1,14 @@
 #include "SpongeBob.h"
 #include <QTimer>
-SpongeBob::SpongeBob(QGraphicsPixmapItem *needle, QGraphicsPixmapItem** pixmapLifeList, QObject *parent) : QObject(parent)
+SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsPixmapItem** pixmapLifeList, QObject *parent) : QObject(parent)
 {
-    this->pixmapLifeList=pixmapLifeList;
+    this->aquarium = aquarium;
+    this->pixmapLifeList = pixmapLifeList;
+    this->needle=needle;
 
     setPixmap((QPixmap("bob1.png")).scaled(80,80));
     setPos(500,100);
 
-    this->needle=needle;
     this->immunityLevel=1;
     this->immunityLevelDegree=1;
     this->lives=3;
@@ -44,14 +45,19 @@ void SpongeBob::changeGlow(){
 }
 
 void SpongeBob::keyPressEvent(QKeyEvent *event){
-    if (event->key() == Qt::Key_Right && x()+10 < 930)
-        setPos(x()+10,y());
-    if (event->key() == Qt::Key_Left && x()-10 > -30)
-        setPos(x()-10,y());
-    if (event->key() == Qt::Key_Up && y()-10 > 0)
-        setPos(x(),y()-10);
-    if (event->key() == Qt::Key_Down && y()+10 < 550)
-        setPos(x(),y()+10);
+    if (event->key() == Qt::Key_Escape) {
+        aquarium->gamePaused = !aquarium->gamePaused;
+    }
+    if (!aquarium->gamePaused) {
+        if (event->key() == Qt::Key_Right && x()+10 < 930)
+            setPos(x()+10,y());
+        if (event->key() == Qt::Key_Left && x()-10 > -30)
+            setPos(x()-10,y());
+        if (event->key() == Qt::Key_Up && y()-10 > 0)
+            setPos(x(),y()-10);
+        if (event->key() == Qt::Key_Down && y()+10 < 550)
+            setPos(x(),y()+10);
+    }
 }
 
 void SpongeBob::toggleVisibility() {

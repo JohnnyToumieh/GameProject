@@ -19,11 +19,20 @@ public:
     void gameOver(bool result);
 
     Aquarium *aquarium;
+    Bacteria** bacterias;
+    int bacteriasIndex;
     SpongeBob *spongeBob;
 
     QLabel* timeLabel;
     QTime* time;
+    int pausedTime;
     QTimer* timeUpdater;
+
+    QTimer* updateItemsTimer;
+    QTimer* updateBacteriasTimer;
+    QTimer* checkGameStateTimer;
+
+    bool justPaused;
 
     QLabel* levelLabel;
     QLabel* scoreLabel;

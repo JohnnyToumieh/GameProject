@@ -46,6 +46,10 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
 }
 
 void Bacteria::update(){
+    if (aquarium->gamePaused) {
+        return;
+    }
+
     if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){
         if (this->type > this->spongeBob->immunityLevel && this->spongeBob->canCollide) {
             //decrease score

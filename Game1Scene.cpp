@@ -57,26 +57,31 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     pixmapLifeList[1]=pixmapLife2;
     pixmapLifeList[2]=pixmapLife3;
 
-    spongeBob = new SpongeBob(pixmapNeedle, pixmapLifeList);
+    spongeBob = new SpongeBob(aquarium, pixmapNeedle, pixmapLifeList);
     addItem(spongeBob);
 
     spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
     spongeBob->setFocus();
 
-    Bacteria* bacteria = new Bacteria(1,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacteria);
-    bacteria = new Bacteria(2,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacteria);
-    bacteria = new Bacteria(3,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacteria);
+    bacterias = new Bacteria*[100];
+    bacteriasIndex = 0;
 
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateItems()));
-    timer->start(3000);
+    bacterias[bacteriasIndex] = new Bacteria(1,spongeBob,aquarium,greenColorItem,pixmapLifeList);
+    addItem(bacterias[bacteriasIndex++]);
+    bacterias[bacteriasIndex] = new Bacteria(2,spongeBob,aquarium,greenColorItem,pixmapLifeList);
+    addItem(bacterias[bacteriasIndex++]);
+    bacterias[bacteriasIndex] = new Bacteria(3,spongeBob,aquarium,greenColorItem,pixmapLifeList);
+    addItem(bacterias[bacteriasIndex++]);
 
-    QTimer *timer3 = new QTimer(this);
-    connect(timer3, SIGNAL(timeout()), this, SLOT(updateBacterias()));
-    timer3->start(5000);
+    updateItemsTimer = new QTimer(this);
+    connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
+    updateItemsTimer->start(3000);
+
+    updateBacteriasTimer = new QTimer(this);
+    connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
+    updateBacteriasTimer->start(5000);
+
+    pausedTime = 0;
 
     time = new QTime();
     time->start();
@@ -86,13 +91,15 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
     timeUpdater->start(500);
 
-    QTimer* timer2 = new QTimer(this);
-    connect(timer2, SIGNAL(timeout()), this, SLOT(checkGameState()));
-    timer2->start(100);
+    checkGameStateTimer = new QTimer(this);
+    connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
+    checkGameStateTimer->start(100);
+
+    justPaused = true;
 }
 
 void Game1Scene::updateTimer() {
-    int secs = time->elapsed() / 1000;
+    int secs = (time->elapsed() + pausedTime) / 1000;
     int mins = (secs / 60) % 60;
     secs = secs % 60;
 
@@ -100,7 +107,7 @@ void Game1Scene::updateTimer() {
     .arg(mins, 2, 10, QLatin1Char('0'))
     .arg(secs, 2, 10, QLatin1Char('0')) );
 
-    aquarium->currentTime = time->elapsed();
+    aquarium->currentTime = time->elapsed() + pausedTime;
 }
 
 void Game1Scene::updateItems(){
@@ -116,15 +123,46 @@ void Game1Scene::updateItems(){
 }
 
 void Game1Scene::updateBacterias() {
-    Bacteria* bacteria = new Bacteria(1,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacteria);
-    bacteria = new Bacteria(2,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacteria);
-    bacteria = new Bacteria(3,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacteria);
+    if (bacteriasIndex >= 97) {
+        bacteriasIndex = 0;
+    }
+
+    bacterias[bacteriasIndex] = new Bacteria(1,spongeBob,aquarium,greenColorItem,pixmapLifeList);
+    addItem(bacterias[bacteriasIndex++]);
+    bacterias[bacteriasIndex] = new Bacteria(2,spongeBob,aquarium,greenColorItem,pixmapLifeList);
+    addItem(bacterias[bacteriasIndex++]);
+    bacterias[bacteriasIndex] = new Bacteria(3,spongeBob,aquarium,greenColorItem,pixmapLifeList);
+    addItem(bacterias[bacteriasIndex++]);
 }
 
 void Game1Scene::checkGameState() {
+    // Check if game paused
+    if (aquarium->gamePaused) {
+       // Pause everything. We need those stats anw for the save functionality
+
+        if (justPaused) {
+            pausedTime += time->elapsed();
+
+            timeUpdater->stop();
+            updateItemsTimer->stop();
+            updateBacteriasTimer->stop();
+
+            justPaused = false;
+        }
+
+        return;
+    } else {
+        if (!justPaused) {
+            time->restart();
+
+            timeUpdater->start(500);
+            updateItemsTimer->start(3000);
+            updateBacteriasTimer->start(5000);
+
+            justPaused = true;
+        }
+    }
+
     // Update score
     scoreLabel->setText(QStringLiteral("Score: %1").arg(aquarium->score));
     scoreLabel->adjustSize();

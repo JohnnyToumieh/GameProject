@@ -11,4 +11,6 @@ Aquarium::Aquarium(int level, int maxCleanliness, int incrementCleanliness, int 
     this->maxTime = maxTime;
     this->currentTime = currentTime;
     this->score = score;
+
+    this->gamePaused = false;
 }
