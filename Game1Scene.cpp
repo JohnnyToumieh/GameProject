@@ -33,7 +33,7 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     pixmapLifeList[1]=pixmapLife2;
     pixmapLifeList[2]=pixmapLife3;
 
-    spongeBob = new SpongeBob(pixmapNeedle);
+    spongeBob = new SpongeBob(pixmapNeedle, pixmapLifeList);
     addItem(spongeBob);
 
     spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);

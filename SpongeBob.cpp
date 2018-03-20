@@ -1,7 +1,9 @@
 #include "SpongeBob.h"
 #include <QTimer>
-SpongeBob::SpongeBob(QGraphicsPixmapItem *needle,QObject *parent) : QObject(parent)
+SpongeBob::SpongeBob(QGraphicsPixmapItem *needle, QGraphicsPixmapItem** pixmapLifeList, QObject *parent) : QObject(parent)
 {
+    this->pixmapLifeList=pixmapLifeList;
+
     setPixmap((QPixmap("bob1.png")).scaled(80,80));
     setPos(500,100);
 
@@ -38,4 +40,17 @@ void SpongeBob::keyPressEvent(QKeyEvent *event){
         setPos(x(),y()-10);
     if (event->key() == Qt::Key_Down && y()+10 < 550)
         setPos(x(),y()+10);
+}
+
+void SpongeBob::updateLives(){
+    if(lives > 0) {
+        lives = lives - 1;
+        if(lives == 2) {
+            scene()->removeItem(pixmapLifeList[0]);
+        } else if(lives == 1) {
+            scene()->removeItem(pixmapLifeList[1]);
+        } else {
+            scene()->removeItem(pixmapLifeList[2]);
+        }
+    }
 }
