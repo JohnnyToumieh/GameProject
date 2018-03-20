@@ -56,11 +56,6 @@ void Bacteria::update(){
             greenColor->fill(Qt::green);
             greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->maxCleanliness) * aquarium->currentCleanliness, 20));
 
-            //TODO: increase score
-            // if cleanliness is 100
-            //check is score reached next level ==> promote+reset timer
-            // if low score then don't promote (make player re-do same level)
-
             //delete this bacteria
             scene()->removeItem(this);
             delete this;
@@ -68,7 +63,7 @@ void Bacteria::update(){
          }
     }
 
-    if (x() + 30 >= 950){
+    if (x() + 30 >= 950) {
         scene()->removeItem(this);
         delete this;
         return;
