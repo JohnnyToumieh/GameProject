@@ -1,7 +1,5 @@
 #include "Game1Scene.h"
-#include "SpongeBob.h"
-#include "HealthyItem.h"
-#include "UnhealthyItem.h"
+
 Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
 {
     aquarium = new Aquarium(1, 10, 1, 0, 1, 300000, 0, 0);
@@ -73,6 +71,11 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     bacterias[bacteriasIndex] = new Bacteria(3,spongeBob,aquarium,greenColorItem,pixmapLifeList);
     addItem(bacterias[bacteriasIndex++]);
 
+    healthyItems = new HealthyItem*[10];
+    healthyItemsIndex = 0;
+    unhealthyItems = new UnhealthyItem*[10];
+    unhealthyItemsIndex = 0;
+
     updateItemsTimer = new QTimer(this);
     connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
     updateItemsTimer->start(3000);
@@ -143,11 +146,17 @@ void Game1Scene::updateItems(){
     int random_number = (rand() % 2) + 1;
 
     if(random_number==1) {
-        HealthyItem *healthyItem = new HealthyItem(aquarium, spongeBob);
-        addItem(healthyItem);
+        if (healthyItemsIndex >= 10) {
+            healthyItemsIndex = 0;
+        }
+        healthyItems[healthyItemsIndex] = new HealthyItem(aquarium, spongeBob);
+        addItem(healthyItems[healthyItemsIndex++]);
     } else if(random_number==2) {
-        UnhealthyItem *unhealthyItem = new UnhealthyItem(aquarium, spongeBob);
-        addItem(unhealthyItem);
+        if (unhealthyItemsIndex >= 10) {
+            unhealthyItemsIndex = 0;
+        }
+        unhealthyItems[unhealthyItemsIndex] = new UnhealthyItem(aquarium, spongeBob);
+        addItem(unhealthyItems[unhealthyItemsIndex++]);
     }
 }
 
