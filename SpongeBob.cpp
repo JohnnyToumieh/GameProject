@@ -11,10 +11,19 @@ SpongeBob::SpongeBob(QGraphicsPixmapItem *needle, QGraphicsPixmapItem** pixmapLi
     this->immunityLevel=1;
     this->immunityLevelDegree=1;
     this->lives=3;
+    this->canCollide = true;
+    this->blinkerStatus = false;
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(changeGlow()));
     timer->start(500);
+
+    collisionTimer = new QTimer(this);
+    collisionTimer->setSingleShot(true);
+    connect(collisionTimer, SIGNAL(timeout()), this, SLOT(setCanCollide()));
+
+    collisionBlinker = new QTimer(this);
+    connect(collisionBlinker, SIGNAL(timeout()), this, SLOT(toggleVisibility()));
 }
 
 void SpongeBob::changeGlow(){
@@ -26,9 +35,7 @@ void SpongeBob::changeGlow(){
     }
     if(immunityLevel==3){
         setPixmap((QPixmap("bob3.png")).scaled(80,80));
-
     }
-
 }
 
 void SpongeBob::keyPressEvent(QKeyEvent *event){
@@ -42,6 +49,27 @@ void SpongeBob::keyPressEvent(QKeyEvent *event){
         setPos(x(),y()+10);
 }
 
+void SpongeBob::toggleVisibility() {
+    if (!blinkerStatus) {
+        setPixmap((QPixmap("bob1.png")).scaled(0,0));
+    } else {
+        setPixmap((QPixmap("bob1.png")).scaled(80,80));
+    }
+    blinkerStatus = !blinkerStatus;
+
+    if (collisionBlinker->isSingleShot()) {
+        collisionBlinker->setSingleShot(false);
+        collisionBlinker->start(500);
+    }
+}
+
+void SpongeBob::setCanCollide() {
+    canCollide = true;
+    collisionBlinker->stop();
+    setPixmap((QPixmap("bob1.png")).scaled(80,80));
+    blinkerStatus = false;
+}
+
 void SpongeBob::collisionWithBacteria(){
     // Update lives
     if(lives > 0) {
@@ -53,5 +81,10 @@ void SpongeBob::collisionWithBacteria(){
         } else {
             scene()->removeItem(pixmapLifeList[2]);
         }
+
+        canCollide = false;
+        collisionTimer->start(4000);
+        collisionBlinker->setSingleShot(true);
+        collisionBlinker->start(1);
     }
 }

@@ -22,11 +22,17 @@ public:
     int immunityLevelDegree;
     int lives;
 
+    bool canCollide;
+    QTimer* collisionTimer;
+    bool blinkerStatus;
+    QTimer* collisionBlinker;
 
 signals:
 
 public slots:
      void changeGlow();
+     void setCanCollide();
+     void toggleVisibility();
 };
 
 #endif // SPONGEBOB_H

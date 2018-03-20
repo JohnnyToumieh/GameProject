@@ -21,7 +21,6 @@ signals:
 
 public slots:
     void update();
-    void updateLives();
 };
 
 #endif // BACTERIA_H

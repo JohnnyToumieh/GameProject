@@ -27,29 +27,17 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,QGraphicsPixmapItem** pixmapLif
         setPixmap(pic->scaled(80,80));
         setPos(0,400);
     }
+
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(250);
-
-    QTimer *timer1 = new QTimer(this);
-    connect(timer1, SIGNAL(timeout()), this, SLOT(updateLives()));
-    timer1->start(1000);
-
 }
-
-
-void Bacteria::updateLives(){
-    if(!(scene()->collidingItems(this).isEmpty()) && scene()->collidingItems(this).at(0)->hasFocus()){
-        if(this->type > this->spongeBob->immunityLevel) {
-            this->spongeBob->collisionWithBacteria();
-        }
-    }
-}
-
 
 void Bacteria::update(){
     if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){
-        if(this->type<=this->spongeBob->immunityLevel){
+        if (this->type > this->spongeBob->immunityLevel && this->spongeBob->canCollide) {
+            this->spongeBob->collisionWithBacteria();
+        } else if(this->type <= this->spongeBob->immunityLevel) {
             //increase cleanliness
             QGraphicsPixmapItem *greenColorItem= new QGraphicsPixmapItem();
             QPixmap *greenColor = new QPixmap("needle.png");
@@ -58,15 +46,15 @@ void Bacteria::update(){
             greenColorItem->setPos(15,51);
             scene()->addItem(greenColorItem);
 
-            scene()->removeItem(this);
-            delete this;
-
-
-
             //TODO: increase score
             // if cleanliness is 100
             //check is score reached next level ==> promote+reset timer
             // if low score then don't promote (make player re-do same level)
+
+            //delete this bacteria
+            scene()->removeItem(this);
+            delete this;
+            return;
          }
     }
 
