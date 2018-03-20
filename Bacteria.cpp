@@ -28,9 +28,19 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,QGraphicsPixmapItem** pixmapLif
         setPos(0,400);
     }
 
+    int random_number= (rand()%3)+1;
+
+    if(random_number==1){
+        this->speed = 200;
+    } else if(random_number==2){
+        this->speed = 250;
+    } else {
+        this->speed = 300;
+    }
+
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(250);
+    timer->start(this->speed);
 }
 
 void Bacteria::update(){

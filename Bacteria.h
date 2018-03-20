@@ -14,7 +14,10 @@ class Bacteria : public QObject, public QGraphicsPixmapItem
     Q_OBJECT
 public:
     explicit Bacteria(int type,SpongeBob *spongeBob,QGraphicsPixmapItem** pixmapLifeList,QObject *parent = nullptr);
+
     int type;
+    int speed;
+
     SpongeBob *spongeBob;
     QGraphicsPixmapItem** pixmapLifeList;
 signals:
