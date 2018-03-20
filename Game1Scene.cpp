@@ -12,14 +12,6 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     timeLabel->move(this->width() / 2 - 20, 25);
     addWidget(timeLabel);
 
-    time = new QTime();
-    time->start();
-
-    updateTimer();
-    timeUpdater = new QTimer(this);;
-    connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
-    timeUpdater->start(500);
-
     pixmapNeedle = new QGraphicsPixmapItem();
     QPixmap *picNeedle  = new QPixmap("needle.png");
     pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
@@ -62,6 +54,14 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(3000);
+
+    time = new QTime();
+    time->start();
+
+    updateTimer();
+    timeUpdater = new QTimer(this);;
+    connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
+    timeUpdater->start(500);
 }
 
 void Game1Scene::updateTimer() {
@@ -71,6 +71,10 @@ void Game1Scene::updateTimer() {
     timeLabel->setText(QString("%1:%2")
     .arg(mins, 2, 10, QLatin1Char('0'))
     .arg(secs, 2, 10, QLatin1Char('0')) );
+
+    if (time->elapsed() >= 300000) {
+        this->gameOver(false);
+    }
 }
 
 void Game1Scene::update(){
@@ -87,3 +91,6 @@ void Game1Scene::update(){
     }
 }
 
+void Game1Scene::gameOver(bool result) {
+    timeUpdater->stop();
+}

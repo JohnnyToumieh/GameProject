@@ -15,6 +15,8 @@ class Game1Scene : public QGraphicsScene
     Q_OBJECT
 public:
     explicit Game1Scene(QGraphicsScene *parent = nullptr);
+    void gameOver(bool result);
+
     SpongeBob *spongeBob;
 
     Bacteria *bacteria;

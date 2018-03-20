@@ -86,5 +86,7 @@ void SpongeBob::collisionWithBacteria(){
         collisionTimer->start(4000);
         collisionBlinker->setSingleShot(true);
         collisionBlinker->start(1);
+    } else {
+        //Game Over
     }
 }
