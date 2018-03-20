@@ -62,6 +62,10 @@ Game1Scene::Game1Scene(QGraphicsScene *parent) : QGraphicsScene(parent)
     timeUpdater = new QTimer(this);;
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
     timeUpdater->start(500);
+
+    QTimer* timer2 = new QTimer(this);
+    connect(timer2, SIGNAL(timeout()), this, SLOT(checkDeath()));
+    timer2->start(100);
 }
 
 void Game1Scene::updateTimer() {
@@ -88,6 +92,12 @@ void Game1Scene::update(){
     else if(random_number==2){
         UnhealthyItem *unhealthyItem = new UnhealthyItem(this->spongeBob);
         addItem(unhealthyItem);
+    }
+}
+
+void Game1Scene::checkDeath() {
+    if (this->spongeBob->lives == 0) {
+        this->gameOver(false);
     }
 }
 

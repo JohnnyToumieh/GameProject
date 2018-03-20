@@ -37,6 +37,7 @@ signals:
 public slots:
     void update();
     void updateTimer();
+    void checkDeath();
 };
 
 #endif // GAME1SCENE_H

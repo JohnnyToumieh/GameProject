@@ -83,10 +83,11 @@ void SpongeBob::collisionWithBacteria(){
         }
 
         canCollide = false;
-        collisionTimer->start(4000);
-        collisionBlinker->setSingleShot(true);
-        collisionBlinker->start(1);
-    } else {
-        //Game Over
+
+        if (lives != 0) {
+            collisionTimer->start(4000);
+            collisionBlinker->setSingleShot(true);
+            collisionBlinker->start(1);
+        }
     }
 }
