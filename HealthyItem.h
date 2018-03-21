@@ -15,6 +15,8 @@ public:
 
     int type;
 
+    bool toDelete;
+
     Aquarium* aquarium;
     SpongeBob *spongeBob;
 

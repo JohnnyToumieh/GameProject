@@ -19,6 +19,8 @@ public:
     int type;
     int speed;
 
+    bool toDelete;
+
     SpongeBob *spongeBob;
     Aquarium* aquarium;
 

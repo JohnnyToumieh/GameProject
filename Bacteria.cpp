@@ -16,6 +16,7 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
     this->pixmapLifeList=pixmapLifeList;
 
     this->justPaused = true;
+    this->toDelete = false;
 
     if(type==1){
         QPixmap *pic  = new QPixmap("bacteria1.png");
@@ -93,14 +94,16 @@ void Bacteria::update(){
 
             //delete this bacteria
             scene()->removeItem(this);
-            delete this;
+            toDelete = true;
+            speedTimer->stop();
             return;
          }
     }
 
     if (x() + 30 >= 950) {
         scene()->removeItem(this);
-        delete this;
+        toDelete = true;
+        speedTimer->stop();
         return;
     } else {
         if (type == 1) {

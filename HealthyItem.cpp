@@ -7,6 +7,7 @@ HealthyItem::HealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *paren
     this->spongeBob = spongeBob;
 
     this->justPaused = true;
+    this->toDelete = false;
 
     this->type = (rand()%3)+1;
 
@@ -69,13 +70,15 @@ void HealthyItem::update(){
            spongeBob->immunityLevel++;
         }
         scene()->removeItem(this);
-        delete this;
+        speedTimer->stop();
+        toDelete = true;
         return;
     }
 
     if((y()+30) >= 500) {
         scene()->removeItem(this);
-        delete this;
+        speedTimer->stop();
+        toDelete = true;
         return;
     }
     else

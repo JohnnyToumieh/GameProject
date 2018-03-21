@@ -67,7 +67,10 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, QGrap
     spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
     spongeBob->setFocus();
 
-    bacterias = new Bacteria*[100];
+    bacterias = new Bacteria*[20];
+    for (int i = 0; i < 20; i++) {
+        bacterias[i] = NULL;
+    }
     bacteriasIndex = 0;
 
     bacterias[bacteriasIndex] = new Bacteria(1,spongeBob,aquarium,greenColorItem,pixmapLifeList);
@@ -78,8 +81,14 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, QGrap
     addItem(bacterias[bacteriasIndex++]);
 
     healthyItems = new HealthyItem*[10];
+    for (int i = 0; i < 10; i++) {
+        healthyItems[i] = NULL;
+    }
     healthyItemsIndex = 0;
     unhealthyItems = new UnhealthyItem*[10];
+    for (int i = 0; i < 10; i++) {
+        unhealthyItems[i] = NULL;
+    }
     unhealthyItemsIndex = 0;
 
     updateItemsTimer = new QTimer(this);
@@ -150,6 +159,19 @@ void Game1Scene::updateItems(){
     }
 
     int random_number = (rand() % 2) + 1;
+
+    for (int i = 0; i < 10; i++) {
+        if (healthyItems[i] != NULL && healthyItems[i]->toDelete) {
+            delete healthyItems[i];
+            healthyItems[i] = NULL;
+        }
+    }
+    for (int i = 0; i < 10; i++) {
+        if (unhealthyItems[i] != NULL && unhealthyItems[i]->toDelete) {
+            delete unhealthyItems[i];
+            unhealthyItems[i] = NULL;
+        }
+    }
 
     if(random_number==1) {
         if (healthyItemsIndex >= 10) {
@@ -249,7 +271,6 @@ bool Game1Scene::saveProgress() {
 
 void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
 {
-    return;
     // Add aquarium fields
     QJsonObject aquarium;
 
@@ -287,7 +308,7 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
     // Add bacterias fields
     QJsonArray bacterias;
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 20; i++) {
         if (this->bacterias[i] != NULL) {
             QJsonObject currentBacteria;
 
@@ -350,7 +371,14 @@ void Game1Scene::updateBacterias() {
         updateBacteriasTimer->start(5000);
     }
 
-    if (bacteriasIndex >= 97) {
+    for (int i = 0; i < 20; i++) {
+        if (bacterias[i] != NULL && bacterias[i]->toDelete) {
+            delete bacterias[i];
+            bacterias[i] = NULL;
+        }
+    }
+
+    if (bacteriasIndex >= 17) {
         bacteriasIndex = 0;
     }
 
