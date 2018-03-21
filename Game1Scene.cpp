@@ -637,7 +637,6 @@ void Game1Scene::gameOver(bool result) {
 
     for (int i = 0; i < 20; i++) {
         if (bacterias[i] != NULL) {
-            removeItem(bacterias[i]);
             delete bacterias[i];
             bacterias[i] = NULL;
         }
@@ -646,7 +645,6 @@ void Game1Scene::gameOver(bool result) {
 
     for (int i = 0; i < 20; i++) {
         if (items[i] != NULL) {
-            removeItem(items[i]);
             delete items[i];
             items[i] = NULL;
         }
