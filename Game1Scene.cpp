@@ -46,22 +46,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     pixmapNeedle->setPos(850,80);
     addItem(pixmapNeedle);
 
-    spongeBob = new SpongeBob(aquarium, pixmapNeedle, pixmapLifeList);
-
-    if (resume) {
-        QJsonObject spongeBobSave = read("spongeBob");
-        spongeBob->immunityLevel = spongeBobSave["immunityLevel"].toInt();
-        spongeBob->immunityLevelDegree = spongeBobSave["immunityLevelDegree"].toInt();
-        spongeBob->lives = spongeBobSave["lives"].toInt();
-        spongeBob->setX(spongeBobSave["x"].toInt());
-        spongeBob->setY(spongeBobSave["y"].toInt());
-        spongeBob->numCollisionsWithBacterias[0] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions1"].toInt();
-        spongeBob->numCollisionsWithBacterias[1] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions2"].toInt();
-        spongeBob->numCollisionsWithBacterias[2] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions3"].toInt();
-    }
-
-    addItem(spongeBob);
-
     spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
     spongeBob->setFocus();
 
@@ -69,21 +53,15 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     pixmapLife2 = new QGraphicsPixmapItem();
     pixmapLife3 = new QGraphicsPixmapItem();
     QPixmap *picLife  = new QPixmap("life.png");
-    if (spongeBob->lives >= 3) {
-        pixmapLife1->setPixmap(picLife->scaled(50,50));
-        pixmapLife1->setPos(600,30);
-        addItem(pixmapLife1);
-    }
-    if (spongeBob->lives >= 2) {
-        pixmapLife2->setPixmap(picLife->scaled(50,50));
-        pixmapLife2->setPos(650,30);
-        addItem(pixmapLife2);
-    }
-    if (spongeBob->lives >= 1) {
-        pixmapLife3->setPixmap(picLife->scaled(50,50));
-        pixmapLife3->setPos(700,30);
-        addItem(pixmapLife3);
-    }
+    pixmapLife1->setPixmap(picLife->scaled(50,50));
+    pixmapLife1->setPos(600,30);
+    addItem(pixmapLife1);
+    pixmapLife2->setPixmap(picLife->scaled(50,50));
+    pixmapLife2->setPos(650,30);
+    addItem(pixmapLife2);
+    pixmapLife3->setPixmap(picLife->scaled(50,50));
+    pixmapLife3->setPos(700,30);
+    addItem(pixmapLife3);
 
     greenColorItem= new QGraphicsPixmapItem();
     greenColorItem->setPos(15,51);
@@ -97,6 +75,29 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     pixmapLifeList[0]=pixmapLife1;
     pixmapLifeList[1]=pixmapLife2;
     pixmapLifeList[2]=pixmapLife3;
+
+    spongeBob = new SpongeBob(aquarium, pixmapNeedle, pixmapLifeList);
+
+    if (resume) {
+        QJsonObject spongeBobSave = read("spongeBob");
+        spongeBob->immunityLevel = spongeBobSave["immunityLevel"].toInt();
+        spongeBob->immunityLevelDegree = spongeBobSave["immunityLevelDegree"].toInt();
+        spongeBob->lives = spongeBobSave["lives"].toInt();
+        spongeBob->setX(spongeBobSave["x"].toInt());
+        spongeBob->setY(spongeBobSave["y"].toInt());
+        spongeBob->numCollisionsWithBacterias[0] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions1"].toInt();
+        spongeBob->numCollisionsWithBacterias[1] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions2"].toInt();
+        spongeBob->numCollisionsWithBacterias[2] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions3"].toInt();
+
+        if (spongeBob->lives < 3) {
+            removeItem(pixmapLifeList[1]);
+        }
+        if (spongeBob->lives < 2) {
+            removeItem(pixmapLifeList[0]);
+        }
+    }
+
+    addItem(spongeBob);
 
     bacterias = new Bacteria*[20];
     for (int i = 0; i < 20; i++) {
