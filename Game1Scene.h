@@ -22,7 +22,7 @@ public:
     explicit Game1Scene(QWidget* widget, User* user, QJsonObject usersFile, bool resume = false, QGraphicsScene *parent = nullptr);
     void gameOver(bool result);
     bool saveProgress();
-    QJsonObject read(QString type);
+    QJsonDocument read(QString type);
 
     QWidget* widget;
     User* user;
