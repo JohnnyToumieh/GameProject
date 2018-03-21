@@ -40,36 +40,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     scoreLabel->adjustSize();
     addWidget(scoreLabel);
 
-    pixmapNeedle = new QGraphicsPixmapItem();
-    QPixmap *picNeedle  = new QPixmap("needle.png");
-    pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
-    pixmapNeedle->setPos(850,80);
-    addItem(pixmapNeedle);
-
-    pixmapLife1 = new QGraphicsPixmapItem();
-    pixmapLife2 = new QGraphicsPixmapItem();
-    pixmapLife3 = new QGraphicsPixmapItem();
-    QPixmap *picLife  = new QPixmap("life.png");
-    pixmapLife1->setPixmap(picLife->scaled(50,50));
-    pixmapLife1->setPos(600,30);
-    addItem(pixmapLife1);
-    pixmapLife2->setPixmap(picLife->scaled(50,50));
-    pixmapLife2->setPos(650,30);
-    addItem(pixmapLife2);
-    pixmapLife3->setPixmap(picLife->scaled(50,50));
-    pixmapLife3->setPos(700,30);
-    addItem(pixmapLife3);
-
-    greenColorItem= new QGraphicsPixmapItem();
-    greenColorItem->setPos(15,51);
-    addItem(greenColorItem);
-
-    pixmapLifeList = new QGraphicsPixmapItem*[3];
-
-    pixmapLifeList[0]=pixmapLife1;
-    pixmapLifeList[1]=pixmapLife2;
-    pixmapLifeList[2]=pixmapLife3;
-
     spongeBob = new SpongeBob(aquarium, pixmapNeedle, pixmapLifeList);
 
     if (resume) {
@@ -88,6 +58,42 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
 
     spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
     spongeBob->setFocus();
+
+    pixmapNeedle = new QGraphicsPixmapItem();
+    QPixmap *picNeedle  = new QPixmap("needle.png");
+    pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
+    pixmapNeedle->setPos(850,80);
+    addItem(pixmapNeedle);
+
+    pixmapLife1 = new QGraphicsPixmapItem();
+    pixmapLife2 = new QGraphicsPixmapItem();
+    pixmapLife3 = new QGraphicsPixmapItem();
+    QPixmap *picLife  = new QPixmap("life.png");
+    if (spongeBob->lives >= 3) {
+        pixmapLife1->setPixmap(picLife->scaled(50,50));
+        pixmapLife1->setPos(600,30);
+        addItem(pixmapLife1);
+    }
+    if (spongeBob->lives >= 2) {
+        pixmapLife2->setPixmap(picLife->scaled(50,50));
+        pixmapLife2->setPos(650,30);
+        addItem(pixmapLife2);
+    }
+    if (spongeBob->lives >= 1) {
+        pixmapLife3->setPixmap(picLife->scaled(50,50));
+        pixmapLife3->setPos(700,30);
+        addItem(pixmapLife3);
+    }
+
+    greenColorItem= new QGraphicsPixmapItem();
+    greenColorItem->setPos(15,51);
+    addItem(greenColorItem);
+
+    pixmapLifeList = new QGraphicsPixmapItem*[3];
+
+    pixmapLifeList[0]=pixmapLife1;
+    pixmapLifeList[1]=pixmapLife2;
+    pixmapLifeList[2]=pixmapLife3;
 
     bacterias = new Bacteria*[20];
     for (int i = 0; i < 20; i++) {
