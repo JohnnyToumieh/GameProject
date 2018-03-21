@@ -13,9 +13,8 @@ SOURCES += \
     Game1Scene.cpp \
     SpongeBob.cpp \
     Bacteria.cpp \
-    HealthyItem.cpp \
-    UnhealthyItem.cpp \
-    Aquarium.cpp
+    Aquarium.cpp \
+    Item.cpp
 
 HEADERS += \
     HomePage.h \
@@ -29,6 +28,5 @@ HEADERS += \
     Game1Scene.h \
     SpongeBob.h \
     Bacteria.h \
-    HealthyItem.h \
-    UnhealthyItem.h \
-    Aquarium.h
+    Aquarium.h \
+    Item.h

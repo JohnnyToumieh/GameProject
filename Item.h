@@ -1,5 +1,5 @@
-#ifndef HEALTHYITEM_H
-#define HEALTHYITEM_H
+#ifndef ITEM_H
+#define ITEM_H
 
 #include <QObject>
 #include <QGraphicsPixmapItem>
@@ -7,12 +7,13 @@
 #include "SpongeBob.h"
 #include "Aquarium.h"
 
-class HealthyItem : public QObject,public QGraphicsPixmapItem
+class Item : public QObject,public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    explicit HealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *parent = nullptr);
+    explicit Item(Aquarium* aquarium, SpongeBob *spongeBob,bool isHealthy = true, int type = -1,QObject *parent = nullptr);
 
+    bool isHealthy;
     int type;
 
     bool toDelete;
@@ -32,4 +33,4 @@ public slots:
     void checkGameState();
 };
 
-#endif // HEALTHYITEM_H
+#endif // ITEM_H

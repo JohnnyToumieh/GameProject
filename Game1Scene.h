@@ -12,8 +12,7 @@
 #include "Bacteria.h"
 #include "Aquarium.h"
 #include "GameOnePage.h"
-#include "HealthyItem.h"
-#include "UnhealthyItem.h"
+#include "Item.h"
 
 class Game1Scene : public QGraphicsScene
 {
@@ -34,11 +33,8 @@ public:
     Bacteria** bacterias;
     int bacteriasIndex;
 
-    HealthyItem** healthyItems;
-    int healthyItemsIndex;
-
-    UnhealthyItem** unhealthyItems;
-    int unhealthyItemsIndex;
+    Item** items;
+    int itemsIndex;
 
     QLabel* timeLabel;
 

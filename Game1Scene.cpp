@@ -46,9 +46,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     pixmapNeedle->setPos(850,80);
     addItem(pixmapNeedle);
 
-    spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
-    spongeBob->setFocus();
-
     pixmapLife1 = new QGraphicsPixmapItem();
     pixmapLife2 = new QGraphicsPixmapItem();
     pixmapLife3 = new QGraphicsPixmapItem();
@@ -99,6 +96,9 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
 
     addItem(spongeBob);
 
+    spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
+    spongeBob->setFocus();
+
     bacterias = new Bacteria*[20];
     for (int i = 0; i < 20; i++) {
         bacterias[i] = NULL;
@@ -122,29 +122,23 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
     updateBacteriasTimer->start(5000);
 
-    healthyItems = new HealthyItem*[10];
-    for (int i = 0; i < 10; i++) {
-        healthyItems[i] = NULL;
+    items = new Item*[20];
+    for (int i = 0; i < 20; i++) {
+        items[i] = NULL;
     }
-    healthyItemsIndex = 0;
+    itemsIndex = 0;
 
     if (resume) {
-        QJsonArray healthyItemsSave = read("healthyItems").array();
-        for (healthyItemsIndex = 0; healthyItemsIndex < healthyItemsSave.size(); healthyItemsIndex++) {
-            QJsonObject currenthealthyItem = healthyItemsSave[healthyItemsIndex].toObject();
-            healthyItems[healthyItemsIndex] = new HealthyItem(aquarium, spongeBob);
+        QJsonArray itemsSave = read("items").array();
+        for (itemsIndex = 0; itemsIndex < itemsSave.size(); itemsIndex++) {
+            QJsonObject currentItem = itemsSave[itemsIndex].toObject();
+            items[itemsIndex] = new Item(aquarium, spongeBob);
             // Add type
-            healthyItems[healthyItemsIndex]->setX(currenthealthyItem["x"].toInt());
-            healthyItems[healthyItemsIndex]->setY(currenthealthyItem["y"].toInt());
-            addItem(healthyItems[healthyItemsIndex]);
+            items[itemsIndex]->setX(currentItem["x"].toInt());
+            items[itemsIndex]->setY(currentItem["y"].toInt());
+            addItem(items[itemsIndex]);
         }
     }
-
-    unhealthyItems = new UnhealthyItem*[10];
-    for (int i = 0; i < 10; i++) {
-        unhealthyItems[i] = NULL;
-    }
-    unhealthyItemsIndex = 0;
 
     updateItemsTimer = new QTimer(this);
     connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
@@ -215,31 +209,23 @@ void Game1Scene::updateItems(){
 
     int random_number = (rand() % 2) + 1;
 
-    for (int i = 0; i < 10; i++) {
-        if (healthyItems[i] != NULL && healthyItems[i]->toDelete) {
-            delete healthyItems[i];
-            healthyItems[i] = NULL;
-        }
-    }
-    for (int i = 0; i < 10; i++) {
-        if (unhealthyItems[i] != NULL && unhealthyItems[i]->toDelete) {
-            delete unhealthyItems[i];
-            unhealthyItems[i] = NULL;
+    for (int i = 0; i < 20; i++) {
+        if (items[i] != NULL && items[i]->toDelete) {
+            delete items[i];
+            items[i] = NULL;
         }
     }
 
+    if (itemsIndex >= 20) {
+        itemsIndex = 0;
+    }
+
     if(random_number==1) {
-        if (healthyItemsIndex >= 10) {
-            healthyItemsIndex = 0;
-        }
-        healthyItems[healthyItemsIndex] = new HealthyItem(aquarium, spongeBob);
-        addItem(healthyItems[healthyItemsIndex++]);
+        items[itemsIndex] = new Item(aquarium, spongeBob, true);
+        addItem(items[itemsIndex++]);
     } else if(random_number==2) {
-        if (unhealthyItemsIndex >= 10) {
-            unhealthyItemsIndex = 0;
-        }
-        unhealthyItems[unhealthyItemsIndex] = new UnhealthyItem(aquarium, spongeBob);
-        addItem(unhealthyItems[unhealthyItemsIndex++]);
+        items[itemsIndex] = new Item(aquarium, spongeBob, false);
+        addItem(items[itemsIndex++]);
     }
 }
 
@@ -403,42 +389,24 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
         saveObject["bacterias"] = bacterias;
     }
 
-    // Add healthyitems fields
-    QJsonArray healthyItems;
+    // Add items fields
+    QJsonArray items;
 
-    for (int i = 0; i < 10; i++) {
-        if (this->healthyItems[i] != NULL) {
-            QJsonObject currentHealthyItem;
+    for (int i = 0; i < 20; i++) {
+        if (this->items[i] != NULL) {
+            QJsonObject currentItem;
 
-            currentHealthyItem["x"] = this->healthyItems[i]->x();
-            currentHealthyItem["y"] = this->healthyItems[i]->y();
-            currentHealthyItem["type"] = this->healthyItems[i]->type;
+            currentItem["x"] = this->items[i]->x();
+            currentItem["y"] = this->items[i]->y();
+            currentItem["type"] = this->items[i]->type;
+            currentItem["isHealthy"] = this->items[i]->isHealthy;
 
-            healthyItems.append(currentHealthyItem);
+            items.append(currentItem);
         }
     }
 
-    if (!healthyItems.empty()) {
-        saveObject["healthyItems"] = healthyItems;
-    }
-
-    // Add unhealthyitems fields
-    QJsonArray unhealthyItems;
-
-    for (int i = 0; i < 10; i++) {
-        if (this->unhealthyItems[i] != NULL) {
-            QJsonObject currentUnhealthyItem;
-
-            currentUnhealthyItem["x"] = this->unhealthyItems[i]->x();
-            currentUnhealthyItem["y"] = this->unhealthyItems[i]->y();
-            currentUnhealthyItem["type"] = this->unhealthyItems[i]->type;
-
-            unhealthyItems.append(currentUnhealthyItem);
-        }
-    }
-
-    if (!unhealthyItems.empty()) {
-        saveObject["unhealthyItems"] = unhealthyItems;
+    if (!items.empty()) {
+        saveObject["items"] = items;
     }
 }
 

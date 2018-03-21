@@ -1,7 +1,7 @@
-#include "HealthyItem.h"
+#include "Item.h"
 #include <QTimer>
 #include <QGraphicsScene>
-HealthyItem::HealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *parent)
+Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, QObject *parent)
 {
     this->aquarium = aquarium;
     this->spongeBob = spongeBob;
@@ -9,19 +9,36 @@ HealthyItem::HealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *paren
     this->justPaused = true;
     this->toDelete = false;
 
-    this->type = (rand()%3)+1;
+    this->type = type;
+    this->isHealthy = isHealthy;
+
+    if (this->type == -1) {
+        this->type = (rand()%3)+1;
+    }
 
     if(this->type==1){
-        setPixmap((QPixmap("healthy1.png")).scaled(60,30));
+        if (this->isHealthy) {
+            setPixmap((QPixmap("healthy1.png")).scaled(60,30));
+        } else {
+            setPixmap((QPixmap("unhealthy1.png")).scaled(40,40));
+        }
         setPos(200,100);
 
     }
     else if(this->type==2){
-        setPixmap((QPixmap("healthy2.png")).scaled(40,40));
+        if (this->isHealthy) {
+            setPixmap((QPixmap("healthy2.png")).scaled(40,40));
+        } else {
+            setPixmap((QPixmap("unhealthy2.png")).scaled(40,40));
+        }
         setPos(400,100);
     }
     else{
-        setPixmap((QPixmap("healthy3.png")).scaled(30,60));
+        if (this->isHealthy) {
+            setPixmap((QPixmap("healthy3.png")).scaled(30,60));
+        } else {
+            setPixmap((QPixmap("unhealthy3.png")).scaled(40,40));
+        }
         setPos(600,100);
     }
 
@@ -34,7 +51,7 @@ HealthyItem::HealthyItem(Aquarium* aquarium, SpongeBob *spongeBob,QObject *paren
     checkGameStateTimer->start(100);
 }
 
-void HealthyItem::checkGameState() {
+void Item::checkGameState() {
     // Check if game paused
     if (aquarium->gamePaused) {
         if (justPaused) {
@@ -53,21 +70,38 @@ void HealthyItem::checkGameState() {
     }
 }
 
-void HealthyItem::update(){
+void Item::update(){
     if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){
         int degree=spongeBob->immunityLevelDegree;
-        if(!(degree>=6 && spongeBob->immunityLevel==3)){
-            degree=spongeBob->immunityLevelDegree++;
-            spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
-                                                       spongeBob->needle->boundingRect().center().y());
-            spongeBob->needle->setRotation(spongeBob->needle->rotation()+8);
-        }
 
-        if((degree>=6 && spongeBob->immunityLevel==1) ||
-           (degree>=9 && spongeBob->immunityLevel==2)){
-           spongeBob->immunityLevelDegree=1;
+        if (isHealthy) {
+            if(!(degree>=6 && spongeBob->immunityLevel==3)){
+                degree=spongeBob->immunityLevelDegree++;
+                spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
+                                                           spongeBob->needle->boundingRect().center().y());
+                spongeBob->needle->setRotation(spongeBob->needle->rotation()+8);
+            }
 
-           spongeBob->immunityLevel++;
+            if((degree>=6 && spongeBob->immunityLevel==1) ||
+               (degree>=9 && spongeBob->immunityLevel==2)){
+               spongeBob->immunityLevelDegree=1;
+
+               spongeBob->immunityLevel++;
+            }
+        } else {
+            if(!(degree==1 && spongeBob->immunityLevel==1)){
+                degree=spongeBob->immunityLevelDegree--;
+                spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
+                                                           spongeBob->needle->boundingRect().center().y());
+                spongeBob->needle->setRotation(spongeBob->needle->rotation()-8);
+            }
+
+            if((degree==1 && spongeBob->immunityLevel==2) ||
+               (degree==1 && spongeBob->immunityLevel==3)){
+               spongeBob->immunityLevelDegree=8;
+
+               spongeBob->immunityLevel--;
+            }
         }
         scene()->removeItem(this);
         speedTimer->stop();
