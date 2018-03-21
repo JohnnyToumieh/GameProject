@@ -87,6 +87,9 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
 
     greenColorItem= new QGraphicsPixmapItem();
     greenColorItem->setPos(15,51);
+    QPixmap *greenColor = new QPixmap("needle.png");
+    greenColor->fill(Qt::green);
+    greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->maxCleanliness) * aquarium->currentCleanliness, 20));
     addItem(greenColorItem);
 
     pixmapLifeList = new QGraphicsPixmapItem*[3];
