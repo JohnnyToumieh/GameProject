@@ -105,6 +105,8 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     }
     bacteriasIndex = 0;
 
+    updateBacteriasTimer = new QTimer(this);
+
     if (resume) {
         QJsonArray bacteriasSave = read("bacterias").array();
         for (bacteriasIndex = 0; bacteriasIndex < bacteriasSave.size(); bacteriasIndex++) {
@@ -115,12 +117,9 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
             bacterias[bacteriasIndex]->setY(currentBacteria["y"].toInt());
             addItem(bacterias[bacteriasIndex]);
         }
+    } else {
+        updateBacterias();
     }
-
-    updateBacteriasTimer = new QTimer(this);
-    updateBacterias();
-    connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
-    updateBacteriasTimer->start(5000);
 
     items = new Item*[20];
     for (int i = 0; i < 20; i++) {
@@ -138,10 +137,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
             addItem(items[itemsIndex]);
         }
     }
-
-    updateItemsTimer = new QTimer(this);
-    connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
-    updateItemsTimer->start(3000);
 
     if (resume) {
         pausedTime = aquarium->currentTime;
@@ -177,10 +172,29 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     time = new QTime();
     time->start();
 
+    connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
+    updateItemsTimer = new QTimer(this);
+    connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
     timeUpdater = new QTimer(this);
-    updateTimer();
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
-    timeUpdater->start(500);
+
+    if (resume) {
+        QJsonObject pausedTimesSave = read("pausedTimes").object();
+
+        timeUpdater->setSingleShot(true);
+        updateItemsTimer->setSingleShot(true);
+        updateBacteriasTimer->setSingleShot(true);
+
+        timeUpdater->start(pausedTimesSave["pausedTimeUpdater"].toInt());
+        updateItemsTimer->start(pausedTimesSave["pausedUpdateItemsTimer"].toInt());
+        updateBacteriasTimer->start(pausedTimesSave["pausedUpdateBacteriasTimer"].toInt());
+    } else {
+        updateBacteriasTimer->start(5000);
+        updateItemsTimer->start(3000);
+        timeUpdater->start(500);
+    }
+
+    updateTimer();
 }
 
 void Game1Scene::updateTimer() {
@@ -270,7 +284,11 @@ QJsonDocument Game1Scene::read(QString type) {
                     QJsonObject userObject = userArray[userIndex].toObject();
                     if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
                         save = userObject["save"].toObject();
-                        return (QJsonDocument) save[type].toObject();
+                        if (save[type].isObject()) {
+                            return (QJsonDocument) save[type].toObject();
+                        } else if (save[type].isArray()) {
+                            return (QJsonDocument) save[type].toArray();
+                        }
                     }
                 }
             }
@@ -407,6 +425,15 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
     if (!items.empty()) {
         saveObject["items"] = items;
     }
+
+    // Add paused times
+    QJsonObject pausedTimes;
+
+    pausedTimes["pausedTimeUpdater"] = this->pausedTimeUpdater;
+    pausedTimes["pausedUpdateItemsTimer"] = this->pausedUpdateItemsTimer;
+    pausedTimes["pausedUpdateBacteriasTimer"] = this->pausedUpdateBacteriasTimer;
+
+    saveObject["pausedTimes"] = pausedTimes;
 }
 
 
