@@ -494,10 +494,13 @@ void Game1Scene::checkGameState() {
             justPaused = false;
 
             greyForeground->show();
+            greyForeground->activateWindow();
             greyForeground->raise();
             unpause->show();
+            unpause->activateWindow();
             unpause->raise();
             quit->show();
+            quit->activateWindow();
             quit->raise();
         }
 
