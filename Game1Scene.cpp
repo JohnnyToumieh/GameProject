@@ -249,6 +249,7 @@ bool Game1Scene::saveProgress() {
 
 void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
 {
+    return;
     // Add aquarium fields
     QJsonObject aquarium;
 
@@ -302,7 +303,7 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
     if (!bacterias.empty()) {
         saveObject["bacterias"] = bacterias;
     }
-return;
+
     // Add healthyitems fields
     QJsonArray healthyItems;
 
@@ -362,8 +363,6 @@ void Game1Scene::updateBacterias() {
 }
 
 void Game1Scene::checkGameState() {
-    spongeBob->setFocus();
-
     // Check if game paused
     if (aquarium->gamePaused) {
        // Pause everything. We need those stats anw for the save functionality
@@ -406,6 +405,8 @@ void Game1Scene::checkGameState() {
             quit->hide();
         }
     }
+
+    spongeBob->setFocus();
 
     // Update score
     scoreLabel->setText(QStringLiteral("Score: %1").arg(aquarium->score));
