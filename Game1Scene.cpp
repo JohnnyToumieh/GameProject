@@ -87,10 +87,10 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         spongeBob->numCollisionsWithBacterias[2] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions3"].toInt();
 
         if (spongeBob->lives < 3) {
-            removeItem(pixmapLifeList[1]);
+            removeItem(pixmapLifeList[0]);
         }
         if (spongeBob->lives < 2) {
-            removeItem(pixmapLifeList[0]);
+            removeItem(pixmapLifeList[1]);
         }
     }
 
@@ -132,8 +132,7 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         QJsonArray itemsSave = read("items").array();
         for (itemsIndex = 0; itemsIndex < itemsSave.size(); itemsIndex++) {
             QJsonObject currentItem = itemsSave[itemsIndex].toObject();
-            items[itemsIndex] = new Item(aquarium, spongeBob);
-            // Add type
+            items[itemsIndex] = new Item(aquarium, spongeBob, currentItem["isHealthy"].toBool(), currentItem["type"].toInt());
             items[itemsIndex]->setX(currentItem["x"].toInt());
             items[itemsIndex]->setY(currentItem["y"].toInt());
             addItem(items[itemsIndex]);
