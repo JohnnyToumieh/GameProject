@@ -92,6 +92,10 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         if (spongeBob->lives < 2) {
             removeItem(pixmapLifeList[1]);
         }
+
+        QJsonObject needleSave = read("needle").object();
+        pixmapNeedle->setTransformOriginPoint(needleSave["x"].toInt(), needleSave["y"].toInt());
+        pixmapNeedle->setRotation(needleSave["rotation"].toInt());
     }
 
     addItem(spongeBob);
@@ -434,6 +438,15 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
     pausedTimes["pausedUpdateBacteriasTimer"] = this->pausedUpdateBacteriasTimer;
 
     saveObject["pausedTimes"] = pausedTimes;
+
+    // Add needle orientation
+    QJsonObject needle;
+
+    needle["x"] = this->pixmapNeedle->boundingRect().center().x();
+    needle["y"] = this->pixmapNeedle->boundingRect().center().y();
+    needle["rotation"] = this->pixmapNeedle->rotation();
+
+    saveObject["needle"] = needle;
 }
 
 
@@ -481,8 +494,11 @@ void Game1Scene::checkGameState() {
             justPaused = false;
 
             greyForeground->show();
+            greyForeground->raise();
             unpause->show();
+            unpause->raise();
             quit->show();
+            quit->raise();
         }
 
         return;
