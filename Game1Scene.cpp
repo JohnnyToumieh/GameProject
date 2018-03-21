@@ -104,8 +104,12 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     }
     bacteriasIndex = 0;
 
-    updateBacterias();
+    if (resume) {
+
+    }
+
     updateBacteriasTimer = new QTimer(this);
+    updateBacterias();
     connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
     updateBacteriasTimer->start(5000);
 
