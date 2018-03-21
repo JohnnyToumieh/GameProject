@@ -558,8 +558,36 @@ void Game1Scene::checkGameState() {
 
 void Game1Scene::gameOver(bool result) {
     timeUpdater->stop();
+    updateItemsTimer->stop();
+    updateBacteriasTimer->stop();
+
+    for (int i = 0; i < 20; i++) {
+        if (bacterias[i] != NULL) {
+            removeItem(bacterias[i]);
+            delete bacterias[i];
+            bacterias[i] = NULL;
+        }
+    }
+
+    for (int i = 0; i < 20; i++) {
+        if (items[i] != NULL) {
+            removeItem(items[i]);
+            delete items[i];
+            items[i] = NULL;
+        }
+    }
 
     if (result) {
         aquarium->score += aquarium->maxTime / aquarium->currentTime - 1;
     }
+
+    greyForeground->setStyleSheet("background-color: rgba(0, 0, 0, 255);");
+    greyForeground->show();
+    greyForeground->activateWindow();
+    greyForeground->raise();
+
+    QLabel* gameOver = new QLabel("GAME OVER");
+    gameOver->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
+    gameOver->move(100, 200);
+    addWidget(gameOver);
 }
