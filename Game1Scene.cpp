@@ -594,6 +594,6 @@ void Game1Scene::gameOver(bool result) {
     QLabel* score = new QLabel(QStringLiteral("Score: %1").arg(aquarium->score));
     score->setWordWrap(true);
     score->setStyleSheet("QLabel { background-color : black; color : white; font: 80px; }");
-    score->move((this->width() - score->width()) / 2, 330);
+    score->move((this->width() + 250 - score->width()) / 2, 330);
     addWidget(score);
 }
