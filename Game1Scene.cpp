@@ -166,6 +166,11 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     addWidget(quit);
     quit->hide();
 
+    quit2 = new QPushButton("Quit");
+    quit2->move(this->width() / 2 - 50, this->height() / 2 + 150);
+    addWidget(quit2);
+    quit2->hide();
+
     gameOverLabel = new QLabel("GAME OVER");
     gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
     gameOverLabel->move(90, 150);
@@ -184,6 +189,7 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
 
     QObject::connect(unpause, SIGNAL(clicked()), SLOT(unpauseClicked()));
     QObject::connect(quit, SIGNAL(clicked()), SLOT(quitClicked()));
+    QObject::connect(quit2, SIGNAL(clicked()), SLOT(quitClicked()));
     QObject::connect(nextLevelButton, SIGNAL(clicked()), SLOT(nextLevel()));
 
     checkGameStateTimer = new QTimer(this);
@@ -220,10 +226,26 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
 
 void Game1Scene::nextLevel() {
     scoreLabel2->hide();
+    quit2->hide();
     greyForeground->hide();
     gameOverLabel->hide();
     nextLevelButton->hide();
 
+    spongeBob->setFocus();
+
+    updateBacterias();
+
+    checkGameStateTimer->start(100);
+    updateBacteriasTimer->start(5000);
+    updateItemsTimer->start(3000);
+    timeUpdater->start(500);
+
+    pausedTime = 0;
+    time->restart();
+    updateTimer();
+}
+
+void Game1Scene::setUpNextLevel() {
     aquarium->level++;
     aquarium->currentCleanliness = 0;
     aquarium->currentTime = 0;
@@ -239,21 +261,11 @@ void Game1Scene::nextLevel() {
     }
     spongeBob->lives = 3;
     spongeBob->setPos(500,100);
-    spongeBob->setFocus();
 
+    QPixmap *greenColor = new QPixmap("needle.png");
+    greenColor->fill(Qt::green);
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->maxCleanliness) * aquarium->currentCleanliness, 20));
     pixmapNeedle->setPos(850,80);
-
-    updateBacterias();
-
-    checkGameStateTimer->start(100);
-    updateBacteriasTimer->start(5000);
-    updateItemsTimer->start(3000);
-    timeUpdater->start(500);
-
-    pausedTime = 0;
-    time->restart();
-    updateTimer();
 }
 
 void Game1Scene::updateTimer() {
@@ -312,17 +324,19 @@ void Game1Scene::unpauseClicked() {
 }
 
 void Game1Scene::quitClicked() {
-    saveProgress();
+    if (spongeBob->lives > 0) {
+        saveProgress();
 
-    QFile saveFile(QStringLiteral("Data.json"));
+        QFile saveFile(QStringLiteral("Data.json"));
 
-    if (!saveFile.open(QIODevice::WriteOnly)) {
-        Message *msg = new Message("Couldn't open data file to save.");
-        msg->show();
+        if (!saveFile.open(QIODevice::WriteOnly)) {
+            Message *msg = new Message("Couldn't open data file to save.");
+            msg->show();
+        }
+
+        QJsonDocument saveDoc(usersFile);
+        saveFile.write(saveDoc.toJson());
     }
-
-    QJsonDocument saveDoc(usersFile);
-    saveFile.write(saveDoc.toJson());
 
     views()[0]->close();
     GameOnePage *gameOnePage = new GameOnePage(widget, 1, user, usersFile);
@@ -659,11 +673,18 @@ void Game1Scene::gameOver(bool result) {
     scoreLabel2->activateWindow();
     scoreLabel2->raise();
 
-    // Fix quit and resume interaction
+    quit2->show();
+    quit2->activateWindow();
+    quit2->raise();
 
     if (result) {
+        setUpNextLevel();
+
         nextLevelButton->show();
         nextLevelButton->activateWindow();
         nextLevelButton->raise();
+
+        quit2->move(this->width() / 2 - 110, this->height() / 2 + 150);
+        nextLevelButton->move(this->width() / 2 + 10, this->height() / 2 + 150);
     }
 }

@@ -22,6 +22,7 @@ public:
     void gameOver(bool result);
     bool saveProgress();
     QJsonDocument read(QString type);
+    void setUpNextLevel();
 
     QWidget* widget;
     User* user;
@@ -58,6 +59,7 @@ public:
     QPushButton* unpause;
     QPushButton* quit;
     QPushButton* nextLevelButton;
+    QPushButton* quit2;
 
     QLabel* levelLabel;
     QLabel* scoreLabel;
