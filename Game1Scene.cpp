@@ -104,12 +104,10 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     }
     bacteriasIndex = 0;
 
-    bacterias[bacteriasIndex] = new Bacteria(1,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacterias[bacteriasIndex++]);
-    bacterias[bacteriasIndex] = new Bacteria(2,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacterias[bacteriasIndex++]);
-    bacterias[bacteriasIndex] = new Bacteria(3,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacterias[bacteriasIndex++]);
+    updateBacterias();
+    updateBacteriasTimer = new QTimer(this);
+    connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
+    updateBacteriasTimer->start(5000);
 
     healthyItems = new HealthyItem*[10];
     for (int i = 0; i < 10; i++) {
@@ -125,10 +123,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     updateItemsTimer = new QTimer(this);
     connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
     updateItemsTimer->start(3000);
-
-    updateBacteriasTimer = new QTimer(this);
-    connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
-    updateBacteriasTimer->start(5000);
 
     if (resume) {
         pausedTime = aquarium->currentTime;
