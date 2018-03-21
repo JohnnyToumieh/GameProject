@@ -55,6 +55,7 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObjec
     QObject::connect(description, SIGNAL(clicked()), SLOT(descriptionClicked()));
     QObject::connect(checkHistory, SIGNAL(clicked()), SLOT(checkHistoryClicked()));
     QObject::connect(newGame, SIGNAL(clicked()), SLOT(startNewGameClicked()));
+    QObject::connect(resumeGame, SIGNAL(clicked()), SLOT(resumeGameClicked()));
 }
 
 void GameOnePage::descriptionClicked(){
@@ -73,6 +74,26 @@ void GameOnePage::startNewGameClicked(){
     widget->close();
 
     Game1Scene *game1scene = new Game1Scene(widget, user, usersFile);
+
+    QGraphicsView *view = new QGraphicsView(game1scene);
+    view->setFixedSize(1000,600);
+    view->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    view->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    view->setGeometry(
+                QStyle::alignedRect(
+                           Qt::LeftToRight,
+                           Qt::AlignCenter,
+                           view->size(),
+                           qApp->desktop()->availableGeometry()
+                    ));
+    view->show();
+}
+
+void GameOnePage::resumeGameClicked(){
+    qDeleteAll(widget->children());
+    widget->close();
+
+    Game1Scene *game1scene = new Game1Scene(widget, user, usersFile, true);
 
     QGraphicsView *view = new QGraphicsView(game1scene);
     view->setFixedSize(1000,600);
