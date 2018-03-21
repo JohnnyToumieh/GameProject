@@ -18,7 +18,7 @@ class Game1Scene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit Game1Scene(QWidget* widget, User* user, QJsonObject usersFile, bool resume = false, QGraphicsScene *parent = nullptr);
+    explicit Game1Scene(QWidget* widget, User* user, QJsonObject usersFile, bool resume = false, int level = 1, QGraphicsScene *parent = nullptr);
     void gameOver(bool result);
     bool saveProgress();
     QJsonDocument read(QString type);

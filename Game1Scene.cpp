@@ -2,7 +2,7 @@
 
 #include "Message.h"
 
-Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool resume, QGraphicsScene *parent) : QGraphicsScene(parent)
+Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool resume, int level, QGraphicsScene *parent) : QGraphicsScene(parent)
 {
     this->widget = widget;
     this->user = user;
@@ -16,7 +16,7 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
                 aquariumSave["maxTime"].toInt(), aquariumSave["currentTime"].toInt(),
                 aquariumSave["score"].toInt());
     } else {
-        aquarium = new Aquarium(1, 10, 1, 0, 1, 300000, 0, 0);
+        aquarium = new Aquarium(level, 10, 1, 0, 1, 300000, 0, 0);
     }
 
     setBackgroundBrush(QBrush(QImage("background2.JPG").scaledToHeight(600).scaledToWidth(1000)));
