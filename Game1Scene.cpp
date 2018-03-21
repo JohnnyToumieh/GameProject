@@ -40,6 +40,12 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     scoreLabel->adjustSize();
     addWidget(scoreLabel);
 
+    pixmapNeedle = new QGraphicsPixmapItem();
+    QPixmap *picNeedle  = new QPixmap("needle.png");
+    pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
+    pixmapNeedle->setPos(850,80);
+    addItem(pixmapNeedle);
+
     spongeBob = new SpongeBob(aquarium, pixmapNeedle, pixmapLifeList);
 
     if (resume) {
@@ -58,12 +64,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
 
     spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
     spongeBob->setFocus();
-
-    pixmapNeedle = new QGraphicsPixmapItem();
-    QPixmap *picNeedle  = new QPixmap("needle.png");
-    pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
-    pixmapNeedle->setPos(850,80);
-    addItem(pixmapNeedle);
 
     pixmapLife1 = new QGraphicsPixmapItem();
     pixmapLife2 = new QGraphicsPixmapItem();
