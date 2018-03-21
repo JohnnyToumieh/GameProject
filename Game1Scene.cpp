@@ -166,8 +166,25 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     addWidget(quit);
     quit->hide();
 
+    gameOverLabel = new QLabel("GAME OVER");
+    gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
+    gameOverLabel->move(90, 150);
+    addWidget(gameOverLabel);
+    gameOverLabel->hide();
+
+    scoreLabel2 = new QLabel();
+    scoreLabel2->setStyleSheet("QLabel { background-color : black; color : white; font: 80px; }");
+    addWidget(scoreLabel2);
+    scoreLabel2->hide();
+
+    nextLevelButton = new QPushButton("Next Level");
+    nextLevelButton->move(this->width() / 2 - 50, this->height() / 2 + 150);
+    addWidget(nextLevelButton);
+    nextLevelButton->hide();
+
     QObject::connect(unpause, SIGNAL(clicked()), SLOT(unpauseClicked()));
     QObject::connect(quit, SIGNAL(clicked()), SLOT(quitClicked()));
+    QObject::connect(nextLevelButton, SIGNAL(clicked()), SLOT(nextLevel()));
 
     checkGameStateTimer = new QTimer(this);
     connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
@@ -198,6 +215,44 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         timeUpdater->start(500);
     }
 
+    updateTimer();
+}
+
+void Game1Scene::nextLevel() {
+    scoreLabel2->hide();
+    greyForeground->hide();
+    gameOverLabel->hide();
+    nextLevelButton->hide();
+
+    aquarium->level++;
+    aquarium->currentCleanliness = 0;
+    aquarium->currentTime = 0;
+    aquarium->immunityFactor = 0;
+
+    spongeBob->immunityLevel = 1;
+    spongeBob->immunityLevelDegree = 1;
+    if (spongeBob->lives < 3) {
+        addItem(pixmapLife1);
+    }
+    if (spongeBob->lives < 2) {
+        addItem(pixmapLife2);
+    }
+    spongeBob->lives = 3;
+    spongeBob->setPos(500,100);
+    spongeBob->setFocus();
+
+    greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->maxCleanliness) * aquarium->currentCleanliness, 20));
+    pixmapNeedle->setPos(850,80);
+
+    updateBacterias();
+
+    checkGameStateTimer->start(100);
+    updateBacteriasTimer->start(5000);
+    updateItemsTimer->start(3000);
+    timeUpdater->start(500);
+
+    pausedTime = 0;
+    time->restart();
     updateTimer();
 }
 
@@ -531,6 +586,10 @@ void Game1Scene::checkGameState() {
     scoreLabel->setText(QStringLiteral("Score: %1").arg(aquarium->score));
     scoreLabel->adjustSize();
 
+    // Update level
+    levelLabel->setText(QStringLiteral("Level: %1").arg(aquarium->level));
+    levelLabel->adjustSize();
+
     // Check if spongebob is dead
     if (spongeBob->lives == 0) {
         gameOver(false);
@@ -560,6 +619,7 @@ void Game1Scene::gameOver(bool result) {
     timeUpdater->stop();
     updateItemsTimer->stop();
     updateBacteriasTimer->stop();
+    checkGameStateTimer->stop();
 
     for (int i = 0; i < 20; i++) {
         if (bacterias[i] != NULL) {
@@ -568,6 +628,7 @@ void Game1Scene::gameOver(bool result) {
             bacterias[i] = NULL;
         }
     }
+    bacteriasIndex = 0;
 
     for (int i = 0; i < 20; i++) {
         if (items[i] != NULL) {
@@ -576,6 +637,7 @@ void Game1Scene::gameOver(bool result) {
             items[i] = NULL;
         }
     }
+    itemsIndex = 0;
 
     if (result) {
         aquarium->score += aquarium->maxTime / aquarium->currentTime - 1;
@@ -586,14 +648,22 @@ void Game1Scene::gameOver(bool result) {
     greyForeground->activateWindow();
     greyForeground->raise();
 
-    QLabel* gameOver = new QLabel("GAME OVER");
-    gameOver->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
-    gameOver->move(90, 150);
-    addWidget(gameOver);
+    gameOverLabel->show();
+    gameOverLabel->activateWindow();
+    gameOverLabel->raise();
 
-    QLabel* score = new QLabel(QStringLiteral("Score: %1").arg(aquarium->score));
-    score->setWordWrap(true);
-    score->setStyleSheet("QLabel { background-color : black; color : white; font: 80px; }");
-    score->move((this->width() + 250 - score->width()) / 2, 330);
-    addWidget(score);
+    scoreLabel2->setText(QStringLiteral("Score: %1").arg(aquarium->score));
+    scoreLabel2->adjustSize();
+    scoreLabel2->move((this->width() - scoreLabel2->width()) / 2, 330);
+    scoreLabel2->show();
+    scoreLabel2->activateWindow();
+    scoreLabel2->raise();
+
+    // Fix quit and resume interaction
+
+    if (result) {
+        nextLevelButton->show();
+        nextLevelButton->activateWindow();
+        nextLevelButton->raise();
+    }
 }

@@ -37,6 +37,8 @@ public:
     int itemsIndex;
 
     QLabel* timeLabel;
+    QLabel* scoreLabel2;
+    QLabel* gameOverLabel;
 
     QTime* time;
     int pausedTime;
@@ -55,6 +57,7 @@ public:
 
     QPushButton* unpause;
     QPushButton* quit;
+    QPushButton* nextLevelButton;
 
     QLabel* levelLabel;
     QLabel* scoreLabel;
@@ -79,6 +82,7 @@ public slots:
     void checkGameState();
     void unpauseClicked();
     void quitClicked();
+    void nextLevel();
 };
 
 #endif // GAME1SCENE_H
