@@ -528,7 +528,7 @@ bool Game1Scene::saveScore() {
         if (games.size() > 0 && games[0].isObject()) {
             QJsonObject gameData = games[0].toObject();
 
-            if (gameData.contains("top_score") && gameData["top_score"].isArray()) {
+            if (gameData.contains("top_score") && gameData["top_score"].isObject()) {
                 QJsonObject userObject = gameData["top_score"].toObject();
                 if (userObject.contains("score") && userObject["score"].toInt() < aquarium->score) {
                     userObject["score"] = aquarium->score;
@@ -774,6 +774,8 @@ void Game1Scene::gameOver(bool result) {
         quit2->move(this->width() / 2 - 110, this->height() / 2 + 150);
         nextLevelButton->move(this->width() / 2 + 10, this->height() / 2 + 150);
     } else {
+        // Should i also save when he overrides a resume game?
+
         saveScore();
         saveFile();
     }
