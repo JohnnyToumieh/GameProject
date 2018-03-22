@@ -23,9 +23,9 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObjec
 
     selectLevel = new QComboBox();
     selectLevel->addItem("Select Level");
-    selectLevel->addItem("Easy");
-    selectLevel->addItem("Medium");
-    selectLevel->addItem("Hard");
+    selectLevel->addItem("1");
+    selectLevel->addItem("2");
+    selectLevel->addItem("3");
 
     profilePictureL = new QLabel();
 
@@ -70,10 +70,18 @@ void GameOnePage::descriptionClicked(){
 }
 
 void GameOnePage::startNewGameClicked(){
+    QString levelSelected = selectLevel->currentText();
+    int level = 1;
+    if (levelSelected == "2") {
+        level = 2;
+    } else if (levelSelected == "3") {
+        level = 3;
+    }
+
     qDeleteAll(widget->children());
     widget->close();
 
-    Game1Scene *game1scene = new Game1Scene(widget, user, usersFile);
+    Game1Scene *game1scene = new Game1Scene(widget, user, usersFile, false, level);
 
     QGraphicsView *view = new QGraphicsView(game1scene);
     view->setFixedSize(1000,600);

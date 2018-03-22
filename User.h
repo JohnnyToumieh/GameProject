@@ -21,9 +21,9 @@ public:
     QString lastName;
     QString email;
     QString gender;
-    QString DoBday;
-    QString DoBmonth;
-    QString DoByear;
+    int DoBday;
+    int DoBmonth;
+    int DoByear;
 
     bool isGuest;
 

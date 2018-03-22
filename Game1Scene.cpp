@@ -2,21 +2,21 @@
 
 #include "Message.h"
 
-Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool resume, QGraphicsScene *parent) : QGraphicsScene(parent)
+Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool resume, int level, QGraphicsScene *parent) : QGraphicsScene(parent)
 {
     this->widget = widget;
     this->user = user;
     this->usersFile = usersFile;
 
     if (resume) {
-        QJsonObject aquariumSave = read("aquarium");
+        QJsonObject aquariumSave = read("aquarium").object();
         aquarium = new Aquarium(aquariumSave["level"].toInt(),
                 aquariumSave["maxCleanliness"].toInt(), aquariumSave["incrementCleanliness"].toInt(), aquariumSave["currentCleanliness"].toInt(),
                 aquariumSave["immunityFactor"].toInt(),
                 aquariumSave["maxTime"].toInt(), aquariumSave["currentTime"].toInt(),
                 aquariumSave["score"].toInt());
     } else {
-        aquarium = new Aquarium(1, 10, 1, 0, 1, 300000, 0, 0);
+        aquarium = new Aquarium(level, 10, 1, 0, 1, 300000, 0, 0);
     }
 
 
@@ -41,7 +41,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     scoreLabel->adjustSize();
     addWidget(scoreLabel);
 
-
     pixmapNeedle = new QGraphicsPixmapItem();
     QPixmap *picNeedle  = new QPixmap("needle.png");
     pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
@@ -56,40 +55,12 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     pixmapLife1->setPixmap(picLife->scaled(50,50));
     pixmapLife1->setPos(600,30);
     addItem(pixmapLife1);
-
     pixmapLife2->setPixmap(picLife->scaled(50,50));
     pixmapLife2->setPos(650,30);
     addItem(pixmapLife2);
-
     pixmapLife3->setPixmap(picLife->scaled(50,50));
     pixmapLife3->setPos(700,30);
     addItem(pixmapLife3);
-
-    pixmapLifeList = new QGraphicsPixmapItem*[3];
-
-    pixmapLifeList[0]=pixmapLife1;
-    pixmapLifeList[1]=pixmapLife2;
-    pixmapLifeList[2]=pixmapLife3;
-
-
-    spongeBob = new SpongeBob(aquarium, pixmapNeedle, pixmapLifeList);
-
-    if (resume) {
-        QJsonObject spongeBobSave = read("spongeBob");
-        spongeBob->immunityLevel = spongeBobSave["immunityLevel"].toInt();
-        spongeBob->immunityLevelDegree = spongeBobSave["immunityLevelDegree"].toInt();
-        spongeBob->lives = spongeBobSave["lives"].toInt();
-        spongeBob->setX(spongeBobSave["x"].toInt());
-        spongeBob->setY(spongeBobSave["y"].toInt());
-        spongeBob->numCollisionsWithBacterias[0] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions1"].toInt();
-        spongeBob->numCollisionsWithBacterias[1] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions2"].toInt();
-        spongeBob->numCollisionsWithBacterias[2] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions3"].toInt();
-    }
-
-    addItem(spongeBob);
-
-    spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
-    spongeBob->setFocus();
 
     greenColorItem= new QGraphicsPixmapItem();
     greenColorItem->setPos(15,51);
@@ -104,32 +75,74 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     }
     virusesIndex = 0;
 
+    spongeBob = new SpongeBob(aquarium, pixmapNeedle, pixmapLifeList);
+
+    if (resume) {
+        QJsonObject spongeBobSave = read("spongeBob").object();
+        spongeBob->immunityLevel = spongeBobSave["immunityLevel"].toInt();
+        spongeBob->immunityLevelDegree = spongeBobSave["immunityLevelDegree"].toInt();
+        spongeBob->lives = spongeBobSave["lives"].toInt();
+        spongeBob->setX(spongeBobSave["x"].toInt());
+        spongeBob->setY(spongeBobSave["y"].toInt());
+        spongeBob->numCollisionsWithBacterias[0] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions1"].toInt();
+        spongeBob->numCollisionsWithBacterias[1] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions2"].toInt();
+        spongeBob->numCollisionsWithBacterias[2] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions3"].toInt();
+
+        if (spongeBob->lives < 3) {
+            removeItem(pixmapLifeList[0]);
+        }
+        if (spongeBob->lives < 2) {
+            removeItem(pixmapLifeList[1]);
+        }
+
+        QJsonObject needleSave = read("needle").object();
+        pixmapNeedle->setTransformOriginPoint(needleSave["x"].toInt(), needleSave["y"].toInt());
+        pixmapNeedle->setRotation(needleSave["rotation"].toInt());
+    }
+
+    addItem(spongeBob);
+
+    spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
+    spongeBob->setFocus();
+
     bacterias = new Bacteria*[20];
     for (int i = 0; i < 20; i++) {
         bacterias[i] = NULL;
     }
     bacteriasIndex = 0;
 
-
     updateBacteriasTimer = new QTimer(this);
-    updateBacterias();
-    connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
-    updateBacteriasTimer->start(5000);
 
-    healthyItems = new HealthyItem*[10];
-    for (int i = 0; i < 10; i++) {
-        healthyItems[i] = NULL;
+    if (resume) {
+        QJsonArray bacteriasSave = read("bacterias").array();
+        for (bacteriasIndex = 0; bacteriasIndex < bacteriasSave.size(); bacteriasIndex++) {
+            QJsonObject currentBacteria = bacteriasSave[bacteriasIndex].toObject();
+            bacterias[bacteriasIndex] = new Bacteria(currentBacteria["type"].toInt(),spongeBob,aquarium,greenColorItem,pixmapLifeList);
+            bacterias[bacteriasIndex]->speed = currentBacteria["speed"].toInt();
+            bacterias[bacteriasIndex]->setX(currentBacteria["x"].toInt());
+            bacterias[bacteriasIndex]->setY(currentBacteria["y"].toInt());
+            addItem(bacterias[bacteriasIndex]);
+        }
+    } else {
+        updateBacterias();
     }
-    healthyItemsIndex = 0;
-    unhealthyItems = new UnhealthyItem*[10];
-    for (int i = 0; i < 10; i++) {
-        unhealthyItems[i] = NULL;
-    }
-    unhealthyItemsIndex = 0;
 
-    updateItemsTimer = new QTimer(this);
-    connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
-    updateItemsTimer->start(3000);
+    items = new Item*[20];
+    for (int i = 0; i < 20; i++) {
+        items[i] = NULL;
+    }
+    itemsIndex = 0;
+
+    if (resume) {
+        QJsonArray itemsSave = read("items").array();
+        for (itemsIndex = 0; itemsIndex < itemsSave.size(); itemsIndex++) {
+            QJsonObject currentItem = itemsSave[itemsIndex].toObject();
+            items[itemsIndex] = new Item(aquarium, spongeBob, currentItem["isHealthy"].toBool(), currentItem["type"].toInt());
+            items[itemsIndex]->setX(currentItem["x"].toInt());
+            items[itemsIndex]->setY(currentItem["y"].toInt());
+            addItem(items[itemsIndex]);
+        }
+    }
 
    if (resume) {
         pausedTime = aquarium->currentTime;
@@ -155,8 +168,31 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     addWidget(quit);
     quit->hide();
 
+    quit2 = new QPushButton("Quit");
+    quit2->move(this->width() / 2 - 50, this->height() / 2 + 150);
+    addWidget(quit2);
+    quit2->hide();
+
+    gameOverLabel = new QLabel("GAME OVER");
+    gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
+    gameOverLabel->move(90, 150);
+    addWidget(gameOverLabel);
+    gameOverLabel->hide();
+
+    scoreLabel2 = new QLabel();
+    scoreLabel2->setStyleSheet("QLabel { background-color : black; color : white; font: 80px; }");
+    addWidget(scoreLabel2);
+    scoreLabel2->hide();
+
+    nextLevelButton = new QPushButton("Next Level");
+    nextLevelButton->move(this->width() / 2 - 50, this->height() / 2 + 150);
+    addWidget(nextLevelButton);
+    nextLevelButton->hide();
+
     QObject::connect(unpause, SIGNAL(clicked()), SLOT(unpauseClicked()));
     QObject::connect(quit, SIGNAL(clicked()), SLOT(quitClicked()));
+    QObject::connect(quit2, SIGNAL(clicked()), SLOT(quitClicked()));
+    QObject::connect(nextLevelButton, SIGNAL(clicked()), SLOT(nextLevel()));
 
     checkGameStateTimer = new QTimer(this);
     connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
@@ -169,10 +205,73 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     time = new QTime();
     time->start();
 
+    connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
+    updateItemsTimer = new QTimer(this);
+    connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
     timeUpdater = new QTimer(this);
-    updateTimer();
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
+
+    if (resume) {
+        QJsonObject pausedTimesSave = read("pausedTimes").object();
+
+        timeUpdater->setSingleShot(true);
+        updateItemsTimer->setSingleShot(true);
+        updateBacteriasTimer->setSingleShot(true);
+
+        timeUpdater->start(pausedTimesSave["pausedTimeUpdater"].toInt());
+        updateItemsTimer->start(pausedTimesSave["pausedUpdateItemsTimer"].toInt());
+        updateBacteriasTimer->start(pausedTimesSave["pausedUpdateBacteriasTimer"].toInt());
+    } else {
+        updateBacteriasTimer->start(5000);
+        updateItemsTimer->start(3000);
+        timeUpdater->start(500);
+    }
+
+    updateTimer();
+}
+
+void Game1Scene::nextLevel() {
+    scoreLabel2->hide();
+    quit2->hide();
+    greyForeground->hide();
+    gameOverLabel->hide();
+    nextLevelButton->hide();
+
+    spongeBob->setFocus();
+
+    updateBacterias();
+
+    checkGameStateTimer->start(100);
+    updateBacteriasTimer->start(5000);
+    updateItemsTimer->start(3000);
     timeUpdater->start(500);
+
+    pausedTime = 0;
+    time->restart();
+    updateTimer();
+}
+
+void Game1Scene::setUpNextLevel() {
+    aquarium->level++;
+    aquarium->currentCleanliness = 0;
+    aquarium->currentTime = 0;
+    aquarium->immunityFactor = 0;
+
+    spongeBob->immunityLevel = 1;
+    spongeBob->immunityLevelDegree = 1;
+    if (spongeBob->lives < 3) {
+        addItem(pixmapLife1);
+    }
+    if (spongeBob->lives < 2) {
+        addItem(pixmapLife2);
+    }
+    spongeBob->lives = 3;
+    spongeBob->setPos(500,100);
+
+    QPixmap *greenColor = new QPixmap("needle.png");
+    greenColor->fill(Qt::green);
+    greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->maxCleanliness) * aquarium->currentCleanliness, 20));
+    pixmapNeedle->setPos(850,80);
 }
 
 void Game1Scene::virusUpdate(){
@@ -222,31 +321,23 @@ void Game1Scene::updateItems(){
 
     int random_number = (rand() % 2) + 1;
 
-    for (int i = 0; i < 10; i++) {
-        if (healthyItems[i] != NULL && healthyItems[i]->toDelete) {
-            delete healthyItems[i];
-            healthyItems[i] = NULL;
-        }
-    }
-    for (int i = 0; i < 10; i++) {
-        if (unhealthyItems[i] != NULL && unhealthyItems[i]->toDelete) {
-            delete unhealthyItems[i];
-            unhealthyItems[i] = NULL;
+    for (int i = 0; i < 20; i++) {
+        if (items[i] != NULL && items[i]->toDelete) {
+            delete items[i];
+            items[i] = NULL;
         }
     }
 
+    if (itemsIndex >= 20) {
+        itemsIndex = 0;
+    }
+
     if(random_number==1) {
-        if (healthyItemsIndex >= 10) {
-            healthyItemsIndex = 0;
-        }
-        healthyItems[healthyItemsIndex] = new HealthyItem(aquarium, spongeBob);
-        addItem(healthyItems[healthyItemsIndex++]);
+        items[itemsIndex] = new Item(aquarium, spongeBob, true);
+        addItem(items[itemsIndex++]);
     } else if(random_number==2) {
-        if (unhealthyItemsIndex >= 10) {
-            unhealthyItemsIndex = 0;
-        }
-        unhealthyItems[unhealthyItemsIndex] = new UnhealthyItem(aquarium, spongeBob);
-        addItem(unhealthyItems[unhealthyItemsIndex++]);
+        items[itemsIndex] = new Item(aquarium, spongeBob, false);
+        addItem(items[itemsIndex++]);
     }
 }
 
@@ -261,8 +352,18 @@ void Game1Scene::unpauseClicked() {
 }
 
 void Game1Scene::quitClicked() {
-    saveProgress();
+    if (spongeBob->lives > 0) {
+        saveProgress();
 
+        saveFile();
+    }
+
+    views()[0]->close();
+    GameOnePage *gameOnePage = new GameOnePage(widget, 1, user, usersFile);
+    widget->show();
+}
+
+void Game1Scene::saveFile() {
     QFile saveFile(QStringLiteral("Data.json"));
 
     if (!saveFile.open(QIODevice::WriteOnly)) {
@@ -272,13 +373,9 @@ void Game1Scene::quitClicked() {
 
     QJsonDocument saveDoc(usersFile);
     saveFile.write(saveDoc.toJson());
-
-    views()[0]->close();
-    GameOnePage *gameOnePage = new GameOnePage(widget, 1, user, usersFile);
-    widget->show();
 }
 
-QJsonObject Game1Scene::read(QString type) {
+QJsonDocument Game1Scene::read(QString type) {
     QJsonObject save;
     if (usersFile.contains("games") && usersFile["games"].isArray()) {
         QJsonArray games = usersFile["games"].toArray();
@@ -292,13 +389,17 @@ QJsonObject Game1Scene::read(QString type) {
                     QJsonObject userObject = userArray[userIndex].toObject();
                     if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
                         save = userObject["save"].toObject();
-                        return save[type].toObject();
+                        if (save[type].isObject()) {
+                            return (QJsonDocument) save[type].toObject();
+                        } else if (save[type].isArray()) {
+                            return (QJsonDocument) save[type].toArray();
+                        }
                     }
                 }
             }
         }
     }
-    return save;
+    return (QJsonDocument) save;
 }
 
 bool Game1Scene::saveProgress() {
@@ -336,7 +437,7 @@ bool Game1Scene::saveProgress() {
                 usersFile["games"] = games;
                 return true;
             } else {
-                // If no users have ever been created before, create new list and create the user
+                // If no save of any users have ever been created before, create new list and create the save of the user
                 QJsonArray userArray;
                 QJsonObject userObject;
                 QJsonObject saveObject;
@@ -410,45 +511,130 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
         saveObject["bacterias"] = bacterias;
     }
 
-    // Add healthyitems fields
-    QJsonArray healthyItems;
+    // Add items fields
+    QJsonArray items;
 
-    for (int i = 0; i < 10; i++) {
-        if (this->healthyItems[i] != NULL) {
-            QJsonObject currentHealthyItem;
+    for (int i = 0; i < 20; i++) {
+        if (this->items[i] != NULL) {
+            QJsonObject currentItem;
 
-            currentHealthyItem["x"] = this->healthyItems[i]->x();
-            currentHealthyItem["y"] = this->healthyItems[i]->y();
-            currentHealthyItem["type"] = this->healthyItems[i]->type;
+            currentItem["x"] = this->items[i]->x();
+            currentItem["y"] = this->items[i]->y();
+            currentItem["type"] = this->items[i]->type;
+            currentItem["isHealthy"] = this->items[i]->isHealthy;
 
-            healthyItems.append(currentHealthyItem);
+            items.append(currentItem);
         }
     }
 
-    if (!healthyItems.empty()) {
-        saveObject["healthyItems"] = healthyItems;
+    if (!items.empty()) {
+        saveObject["items"] = items;
     }
 
-    // Add unhealthyitems fields
-    QJsonArray unhealthyItems;
+    // Add paused times
+    QJsonObject pausedTimes;
 
-    for (int i = 0; i < 10; i++) {
-        if (this->unhealthyItems[i] != NULL) {
-            QJsonObject currentUnhealthyItem;
+    pausedTimes["pausedTimeUpdater"] = this->pausedTimeUpdater;
+    pausedTimes["pausedUpdateItemsTimer"] = this->pausedUpdateItemsTimer;
+    pausedTimes["pausedUpdateBacteriasTimer"] = this->pausedUpdateBacteriasTimer;
 
-            currentUnhealthyItem["x"] = this->unhealthyItems[i]->x();
-            currentUnhealthyItem["y"] = this->unhealthyItems[i]->y();
-            currentUnhealthyItem["type"] = this->unhealthyItems[i]->type;
+    saveObject["pausedTimes"] = pausedTimes;
 
-            unhealthyItems.append(currentUnhealthyItem);
-        }
-    }
+    // Add needle orientation
+    QJsonObject needle;
 
-    if (!unhealthyItems.empty()) {
-        saveObject["unhealthyItems"] = unhealthyItems;
-    }
+    needle["x"] = this->pixmapNeedle->boundingRect().center().x();
+    needle["y"] = this->pixmapNeedle->boundingRect().center().y();
+    needle["rotation"] = this->pixmapNeedle->rotation();
+
+    saveObject["needle"] = needle;
 }
 
+bool Game1Scene::saveScore() {
+    if (usersFile.contains("games") && usersFile["games"].isArray()) {
+        QJsonArray games = usersFile["games"].toArray();
+        if (games.size() > 0 && games[0].isObject()) {
+            QJsonObject gameData = games[0].toObject();
+
+            if (gameData.contains("top_score") && gameData["top_score"].isObject()) {
+                QJsonObject userObject = gameData["top_score"].toObject();
+                if (userObject.contains("score") && userObject["score"].toInt() < aquarium->score) {
+                    userObject["score"] = aquarium->score;
+                    userObject["username"] = user->username;
+                    gameData["top_score"] = userObject;
+                    games[0] = gameData;
+                    usersFile["games"] = games;
+                }
+            } else {
+                QJsonObject userObject;
+                userObject["score"] = aquarium->score;
+                userObject["username"] = user->username;
+                gameData["top_score"] = userObject;
+                games[0] = gameData;
+                usersFile["games"] = games;
+            }
+
+            if (gameData.contains("users_score") && gameData["users_score"].isArray()) {
+                QJsonArray userArray = gameData["users_score"].toArray();
+
+                // If score for user already created, add another
+                for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
+                    QJsonObject userObject = userArray[userIndex].toObject();
+                    if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
+                        QJsonObject saveObject;
+                        saveScoreHelper(saveObject);
+                        QJsonArray scoresArray = userObject["scores"].toArray();
+                        scoresArray.append(saveObject);
+                        userObject["scores"] = scoresArray;
+                        userArray[userIndex] = userObject;
+                        gameData["users_score"] = userArray;
+                        games[0] = gameData;
+                        usersFile["games"] = games;
+                        return true;
+                    }
+                }
+
+                // If score for user never created before, create it
+                QJsonObject userObject;
+                QJsonObject saveObject;
+                saveScoreHelper(saveObject);
+                QJsonArray scoresArray = userObject["scores"].toArray();
+                scoresArray.append(saveObject);
+                userObject["scores"] = scoresArray;
+                userObject["username"] = this->user->username;
+                userArray.append(userObject);
+                gameData["users_score"] = userArray;
+                games[0] = gameData;
+                usersFile["games"] = games;
+                return true;
+            } else {
+                // If no score of any users have ever been created before, create new list and create the score of the user
+                QJsonArray userArray;
+                QJsonObject userObject;
+                QJsonObject saveObject;
+                saveScoreHelper(saveObject);
+                QJsonArray scoresArray;
+                scoresArray.append(saveObject);
+                userObject["scores"] = scoresArray;
+                userObject["username"] = this->user->username;
+                userArray.append(userObject);
+                gameData["users_score"] = userArray;
+                games[0] = gameData;
+                usersFile["games"] = games;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void Game1Scene::saveScoreHelper(QJsonObject &saveObject) const
+{
+    saveObject["score"] = aquarium->score;
+    saveObject["day"] = QDate::currentDate().day();
+    saveObject["month"] = QDate::currentDate().month();
+    saveObject["year"] = QDate::currentDate().year();
+}
 
 void Game1Scene::updateBacterias() {
     if (updateBacteriasTimer->isSingleShot()) {
@@ -494,8 +680,14 @@ void Game1Scene::checkGameState() {
             justPaused = false;
 
             greyForeground->show();
+            greyForeground->activateWindow();
+            greyForeground->raise();
             unpause->show();
+            unpause->activateWindow();
+            unpause->raise();
             quit->show();
+            quit->activateWindow();
+            quit->raise();
         }
 
         return;
@@ -525,6 +717,10 @@ void Game1Scene::checkGameState() {
     scoreLabel->setText(QStringLiteral("Score: %1").arg(aquarium->score));
     scoreLabel->adjustSize();
 
+    // Update level
+    levelLabel->setText(QStringLiteral("Level: %1").arg(aquarium->level));
+    levelLabel->adjustSize();
+
     // Check if spongebob is dead
     if (spongeBob->lives == 0) {
         gameOver(false);
@@ -552,8 +748,63 @@ void Game1Scene::checkGameState() {
 
 void Game1Scene::gameOver(bool result) {
     timeUpdater->stop();
+    updateItemsTimer->stop();
+    updateBacteriasTimer->stop();
+    checkGameStateTimer->stop();
+
+    for (int i = 0; i < 20; i++) {
+        if (bacterias[i] != NULL) {
+            delete bacterias[i];
+            bacterias[i] = NULL;
+        }
+    }
+    bacteriasIndex = 0;
+
+    for (int i = 0; i < 20; i++) {
+        if (items[i] != NULL) {
+            delete items[i];
+            items[i] = NULL;
+        }
+    }
+    itemsIndex = 0;
 
     if (result) {
         aquarium->score += aquarium->maxTime / aquarium->currentTime - 1;
+    }
+
+    greyForeground->setStyleSheet("background-color: rgba(0, 0, 0, 255);");
+    greyForeground->show();
+    greyForeground->activateWindow();
+    greyForeground->raise();
+
+    gameOverLabel->show();
+    gameOverLabel->activateWindow();
+    gameOverLabel->raise();
+
+    scoreLabel2->setText(QStringLiteral("Score: %1").arg(aquarium->score));
+    scoreLabel2->adjustSize();
+    scoreLabel2->move((this->width() - scoreLabel2->width()) / 2, 330);
+    scoreLabel2->show();
+    scoreLabel2->activateWindow();
+    scoreLabel2->raise();
+
+    quit2->show();
+    quit2->activateWindow();
+    quit2->raise();
+
+    if (result) {
+        setUpNextLevel();
+
+        nextLevelButton->show();
+        nextLevelButton->activateWindow();
+        nextLevelButton->raise();
+
+        quit2->move(this->width() / 2 - 110, this->height() / 2 + 150);
+        nextLevelButton->move(this->width() / 2 + 10, this->height() / 2 + 150);
+    } else {
+        // Should i also save when he overrides a resume game?
+
+        saveScore();
+        saveFile();
     }
 }

@@ -12,18 +12,20 @@
 #include "Bacteria.h"
 #include "Aquarium.h"
 #include "GameOnePage.h"
-#include "HealthyItem.h"
-#include "UnhealthyItem.h"
+#include "Item.h"
 #include "Virus.h"
 
 class Game1Scene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit Game1Scene(QWidget* widget, User* user, QJsonObject usersFile, bool resume = false, QGraphicsScene *parent = nullptr);
+    explicit Game1Scene(QWidget* widget, User* user, QJsonObject usersFile, bool resume = false, int level = 1, QGraphicsScene *parent = nullptr);
     void gameOver(bool result);
     bool saveProgress();
-    QJsonObject read(QString type);
+    bool saveScore();
+    void saveFile();
+    QJsonDocument read(QString type);
+    void setUpNextLevel();
 
     QWidget* widget;
     User* user;
@@ -35,16 +37,15 @@ public:
     Bacteria** bacterias;
     int bacteriasIndex;
 
-    HealthyItem** healthyItems;
-    int healthyItemsIndex;
-
-    UnhealthyItem** unhealthyItems;
-    int unhealthyItemsIndex;
+    Item** items;
+    int itemsIndex;
 
     Virus** viruses;
     int virusesIndex;
 
     QLabel* timeLabel;
+    QLabel* scoreLabel2;
+    QLabel* gameOverLabel;
 
     QTime* time;
     int pausedTime;
@@ -64,6 +65,8 @@ public:
 
     QPushButton* unpause;
     QPushButton* quit;
+    QPushButton* nextLevelButton;
+    QPushButton* quit2;
 
     QLabel* levelLabel;
     QLabel* scoreLabel;
@@ -78,6 +81,7 @@ public:
 
 private:
     void saveProgressHelper(QJsonObject &userObject) const;
+    void saveScoreHelper(QJsonObject &userObject) const;
 
 signals:
 
@@ -88,6 +92,7 @@ public slots:
     void checkGameState();
     void unpauseClicked();
     void quitClicked();
+    void nextLevel();
     void virusUpdate();
 };
 
