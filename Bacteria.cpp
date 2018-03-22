@@ -118,7 +118,7 @@ void Bacteria::update(){
 
             int speed = 4;
 
-            if (spongeBobX > currentX + 50 || spongeBobX < currentX - 50) {
+            if (spongeBobX != currentX) {
                 qreal a = (spongeBobY - currentY) / (spongeBobX - currentX);
                 qreal b = currentY - a * currentX;
 
@@ -130,7 +130,7 @@ void Bacteria::update(){
                 qreal newX2 = (- coBoX - sqrt(pow(coBoX, 2) - 4 * coAoX * coCoX)) / (2 * coAoX);
 
                 qreal newY1 = a * newX1 + b;
-                qreal newY2 = a * newX1 + b;
+                qreal newY2 = a * newX2 + b;
 
                 qreal dist1 = sqrt(pow((newX1 - spongeBobX), 2) + pow((newY1 - spongeBobY), 2));
                 qreal dist2 = sqrt(pow((newX2 - spongeBobX), 2) + pow((newY2 - spongeBobY), 2));

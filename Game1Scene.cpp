@@ -304,19 +304,18 @@ void Game1Scene::virusUpdate(){
     if (virusesIndex >= 9) {
         virusesIndex = 0;
     }
-    if(aquarium->level==3){
+    if (aquarium->level == 3) {
         int random_number=(rand() % 2) + 1;
         if(random_number==1){
             viruses[virusesIndex] = new Virus(1,spongeBob,aquarium);
         }else{
             viruses[virusesIndex] = new Virus(2,spongeBob,aquarium);
         }
-    }else if(aquarium->level==2){
-           viruses[virusesIndex] = new Virus(1,spongeBob,aquarium);
+        addItem(viruses[virusesIndex++]);
+    } else if (aquarium->level == 1) {
+        viruses[virusesIndex] = new Virus(1,spongeBob,aquarium);
+        addItem(viruses[virusesIndex++]);
     }
-
-
-    addItem(viruses[virusesIndex++]);
 }
 
 void Game1Scene::updateTimer() {
