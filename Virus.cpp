@@ -9,7 +9,7 @@ Virus::Virus(SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
     this->justPaused = true;
     this->toDelete = false;
 
-    QPixmap *pic  = new QPixmap("virus.png");
+    QPixmap *pic  = new QPixmap("life.png");
     setPixmap(pic->scaled(60,60));
     setPos(0,150);
 
@@ -50,7 +50,6 @@ void Virus::checkGameState() {
         }
     }
 }
-
 
 void Virus::update(){
     if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){

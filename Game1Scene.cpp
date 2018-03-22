@@ -292,7 +292,7 @@ void Game1Scene::setUpNextLevel() {
 void Game1Scene::virusUpdate(){
     if (virusTimer->isSingleShot()) {
         virusTimer->setSingleShot(false);
-        virusTimer->start(3000);
+        virusTimer->start(10000);
     }
 
     for (int i = 0; i < 10; i++) {
