@@ -19,6 +19,7 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void collisionWithBacteria(int bacteriaType);
     void setVulnerable(int type);
+    void reset();
 
     Aquarium* aquarium;
 

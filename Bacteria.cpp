@@ -21,17 +21,17 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
     if(type==1){
         QPixmap *pic  = new QPixmap("bacteria1.png");
         setPixmap(pic->scaled(80,80));
-        setPos(0,200);
     }
     else if(type==2){
         QPixmap *pic  = new QPixmap("bacteria2.png");
         setPixmap(pic->scaled(80,80));
-        setPos(0,300);
     }else{
         QPixmap *pic  = new QPixmap("bacteria3.png");
         setPixmap(pic->scaled(80,80));
-        setPos(0,400);
     }
+
+    baseY = (rand() % 400) + 100;
+    setPos(0, baseY);
 
     int random_number= (rand()%3)+1;
 
@@ -150,13 +150,7 @@ void Bacteria::update(){
                        (dist1 < dist2) ? ((dist < dist1) ? spongeBobY : newY1) : ((dist < dist2) ? spongeBobY : newY2));
             }
         } else {
-            if (type == 1) {
-                setPos(x()+30,200+20*qSin(x()+30));
-            } else if (type == 2) {
-                setPos(x()+30,300+30*qSin(x()+30));
-            } else {
-                setPos(x()+30,400+20*qSin(x()+30));
-            }
+            setPos(x()+30, baseY +20*qSin(x()+30));
         }
     }
 }

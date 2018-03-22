@@ -22,8 +22,6 @@ Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, Q
         } else {
             setPixmap((QPixmap("unhealthy1.png")).scaled(40,40));
         }
-        setPos(200,100);
-
     }
     else if(this->type==2){
         if (this->isHealthy) {
@@ -31,7 +29,6 @@ Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, Q
         } else {
             setPixmap((QPixmap("unhealthy2.png")).scaled(40,40));
         }
-        setPos(400,100);
     }
     else{
         if (this->isHealthy) {
@@ -39,8 +36,8 @@ Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, Q
         } else {
             setPixmap((QPixmap("unhealthy3.png")).scaled(40,40));
         }
-        setPos(600,100);
     }
+    setPos((rand() % 800) + 100, 100);
 
     speedTimer = new QTimer(this);
     connect(speedTimer, SIGNAL(timeout()), this, SLOT(update()));

@@ -9,16 +9,6 @@ Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
     this->justPaused = true;
     this->toDelete = false;
 
-    if(type==1){
-        QPixmap *pic  = new QPixmap("virus.png");
-        setPixmap(pic->scaled(60,60));
-        setPos(0,150);
-    }else{
-        QPixmap *pic  = new QPixmap("evil-virus.png");
-        setPixmap(pic->scaled(60,60));
-        setPos(0,150);
-    }
-
     int random_number= (rand()%3)+1;
 
     if (random_number==1) {
@@ -28,6 +18,20 @@ Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
     } else {
         this->speed = 300;
     }
+
+    if(type==1){
+        QPixmap *pic  = new QPixmap("virus.png");
+        setPixmap(pic->scaled(60,60));
+    }else if (type==2){
+        QPixmap *pic  = new QPixmap("evil-virus.png");
+        setPixmap(pic->scaled(60,60));
+    }else if (type==3){
+        QPixmap *pic  = new QPixmap("pestilence.png");
+        setPixmap(pic->scaled(120,120));
+        this->speed = 50;
+    }
+    baseY = (rand() % 300) + 300;
+    setPos(0, baseY);
 
     speedTimer = new QTimer(this);
     connect(speedTimer, SIGNAL(timeout()), this, SLOT(update()));
@@ -78,6 +82,10 @@ void Virus::update(){
         speedTimer->stop();
         return;
     } else {
-        setPos(x()+30,100+20*qSin(x()+30));
+        if (this->type == 3) {
+            setPos(x()+30, baseY +60*qSin(x()+30));
+        } else {
+            setPos(x()+30, baseY +20*qSin(x()+30));
+        }
     }
 }

@@ -13,6 +13,7 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
 
     this->immunityLevel=1;
     this->savedImmunityLevel=-1;
+    this->savedImmunityLevelDegree=-1;
     this->unchangeableImmunityLevel=false;
     this->immunityLevelDegree=1;
     this->lives=3;
@@ -38,6 +39,23 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
     vulnerableTimer = new QTimer(this);
     vulnerableTimer->setSingleShot(true);
     connect(vulnerableTimer, SIGNAL(timeout()), this, SLOT(resetVulnerability()));
+}
+
+void SpongeBob::reset() {
+    // Not resetting numCollisionsWithBacterias
+
+    this->vulnerable=false;
+    this->immunityLevel=1;
+    this->savedImmunityLevel=-1;
+    this->savedImmunityLevelDegree=-1;
+    this->unchangeableImmunityLevel=false;
+    this->immunityLevelDegree=1;
+    this->lives=3;
+    this->canCollide = true;
+    this->blinkerStatus = false;
+
+    changeGlow();
+    setPos(500,100);
 }
 
 void SpongeBob::changeGlow(){
@@ -66,7 +84,7 @@ void SpongeBob::keyPressEvent(QKeyEvent *event){
             setPos(x()-10,y());
         if (event->key() == Qt::Key_Up && y()-10 > 80)
             setPos(x(),y()-10);
-        if (event->key() == Qt::Key_Down && y()+10 < 550)
+        if (event->key() == Qt::Key_Down && y()+10 < 470)
             setPos(x(),y()+10);
     }
 }
@@ -133,6 +151,8 @@ void SpongeBob::setVulnerable(int type) {
 
         needle->setTransformOriginPoint(0, 0);
         needle->setRotation(0);
+    } else if (type == 3) {
+        lives = 0;
     }
 }
 

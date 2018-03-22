@@ -44,6 +44,8 @@ public:
     int virusesIndex;
 
     QLabel* timeLabel;
+    QLabel* pestilenceTimeLabel;
+    QLabel* pestilenceTimeLabel2;
     QLabel* scoreLabel2;
     QLabel* gameOverLabel;
 
@@ -59,6 +61,8 @@ public:
     QTimer* checkGameStateTimer;
     QTimer* virusTimer;
     int pausedVirusTimer;
+    QTimer* pestilenceTimer;
+    int pausedPestilenceTimer;
 
     bool justPaused;
 
@@ -95,6 +99,7 @@ public slots:
     void quitClicked();
     void nextLevel();
     void virusUpdate();
+    void summonPestilence();
 };
 
 #endif // GAME1SCENE_H
