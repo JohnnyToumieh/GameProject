@@ -228,23 +228,24 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     timeUpdater = new QTimer(this);
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
 
+    updateItemsTimer->setSingleShot(true);
+    updateBacteriasTimer->setSingleShot(true);
+    virusTimer->setSingleShot(true);
+
     if (resume) {
         QJsonObject pausedTimesSave = read("pausedTimes").object();
 
         timeUpdater->setSingleShot(true);
-        updateItemsTimer->setSingleShot(true);
-        updateBacteriasTimer->setSingleShot(true);
-        virusTimer->setSingleShot(true);
 
         timeUpdater->start(pausedTimesSave["pausedTimeUpdater"].toInt());
         updateItemsTimer->start(pausedTimesSave["pausedUpdateItemsTimer"].toInt());
         updateBacteriasTimer->start(pausedTimesSave["pausedUpdateBacteriasTimer"].toInt());
         virusTimer->start(pausedTimesSave["virusTimer"].toInt());
     } else {
-        updateBacteriasTimer->start(5000);
+        updateBacteriasTimer->start(2000);
         updateItemsTimer->start(3000);
-        timeUpdater->start(500);
         virusTimer->start(10000);
+        timeUpdater->start(500);
     }
 
     updateTimer();
@@ -262,7 +263,7 @@ void Game1Scene::nextLevel() {
     updateBacterias();
 
     checkGameStateTimer->start(100);
-    updateBacteriasTimer->start(5000);
+    updateBacteriasTimer->start(2000);
     updateItemsTimer->start(3000);
     timeUpdater->start(500);
     virusTimer->start(10000);
@@ -295,10 +296,8 @@ void Game1Scene::setUpNextLevel() {
 }
 
 void Game1Scene::virusUpdate(){
-    if (virusTimer->isSingleShot()) {
-        virusTimer->setSingleShot(false);
-        virusTimer->start(10000);
-    }
+    int time = (rand() % 2000) + 8000;
+    virusTimer->start(time);
 
     if (virusesIndex >= 9) {
         virusesIndex = 0;
@@ -335,10 +334,8 @@ void Game1Scene::updateTimer() {
 }
 
 void Game1Scene::updateItems(){
-    if (updateItemsTimer->isSingleShot()) {
-        updateItemsTimer->setSingleShot(false);
-        updateItemsTimer->start(3000);
-    }
+    int time = (rand() % 500) + 3000;
+    updateItemsTimer->start(time);
 
     int random_number = (rand() % 2) + 1;
 
@@ -672,20 +669,16 @@ void Game1Scene::saveScoreHelper(QJsonObject &saveObject) const
 }
 
 void Game1Scene::updateBacterias() {
-    if (updateBacteriasTimer->isSingleShot()) {
-        updateBacteriasTimer->setSingleShot(false);
-        updateBacteriasTimer->start(5000);
-    }
+    int time = (rand() % 1000) + 2000;
+    updateBacteriasTimer->start(time);
 
-    if (bacteriasIndex >= 17) {
+    if (bacteriasIndex >= 19) {
         bacteriasIndex = 0;
     }
 
-    bacterias[bacteriasIndex] = new Bacteria(1,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacterias[bacteriasIndex++]);
-    bacterias[bacteriasIndex] = new Bacteria(2,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacterias[bacteriasIndex++]);
-    bacterias[bacteriasIndex] = new Bacteria(3,spongeBob,aquarium,greenColorItem,pixmapLifeList);
+    int type = (rand() % 3) + 1;
+
+    bacterias[bacteriasIndex] = new Bacteria(type,spongeBob,aquarium,greenColorItem,pixmapLifeList);
     addItem(bacterias[bacteriasIndex++]);
 }
 
@@ -726,9 +719,6 @@ void Game1Scene::checkGameState() {
             time->restart();
 
             timeUpdater->setSingleShot(true);
-            updateItemsTimer->setSingleShot(true);
-            updateBacteriasTimer->setSingleShot(true);
-            virusTimer->setSingleShot(true);
 
             timeUpdater->start(pausedTimeUpdater);
             updateItemsTimer->start(pausedUpdateItemsTimer);

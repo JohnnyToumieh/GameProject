@@ -12,12 +12,12 @@ Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
     if(type==1){
         QPixmap *pic  = new QPixmap("virus.png");
         setPixmap(pic->scaled(60,60));
-        setPos(0,150);
     }else{
         QPixmap *pic  = new QPixmap("evil-virus.png");
         setPixmap(pic->scaled(60,60));
-        setPos(0,150);
     }
+    baseY = (rand() % 400) + 500;
+    setPos(0, baseY);
 
     int random_number= (rand()%3)+1;
 
@@ -78,6 +78,6 @@ void Virus::update(){
         speedTimer->stop();
         return;
     } else {
-        setPos(x()+30,100+20*qSin(x()+30));
+        setPos(x()+30, baseY +20*qSin(x()+30));
     }
 }

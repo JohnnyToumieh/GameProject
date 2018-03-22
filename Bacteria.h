@@ -19,6 +19,8 @@ public:
     int type;
     int speed;
 
+    int baseY;
+
     bool toDelete;
 
     SpongeBob *spongeBob;
