@@ -1,17 +1,23 @@
 #include "Virus.h"
 #include <qmath.h>
 #include <QPixmap>
-Virus::Virus(SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
+Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
 {
     this->spongeBob=spongeBob;
     this->aquarium=aquarium;
-
+    this->type=type;
     this->justPaused = true;
     this->toDelete = false;
 
-    QPixmap *pic  = new QPixmap("virus.png");
-    setPixmap(pic->scaled(60,60));
-    setPos(0,150);
+    if(type==1){
+        QPixmap *pic  = new QPixmap("virus.png");
+        setPixmap(pic->scaled(60,60));
+        setPos(0,150);
+    }else{
+        QPixmap *pic  = new QPixmap("evil-virus.png");
+        setPixmap(pic->scaled(60,60));
+        setPos(0,150);
+    }
 
     int random_number= (rand()%3)+1;
 

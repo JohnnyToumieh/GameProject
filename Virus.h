@@ -14,9 +14,10 @@ class Virus : public QObject,public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    explicit Virus(SpongeBob *spongeBob,Aquarium *aquarium,QObject *parent = nullptr);
+    explicit Virus(int type,SpongeBob *spongeBob,Aquarium *aquarium,QObject *parent = nullptr);
 
     int speed;
+    int type;
 
     bool toDelete;
 
