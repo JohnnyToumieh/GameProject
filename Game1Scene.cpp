@@ -257,6 +257,9 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         updateItemsTimer->start(pausedTimesSave["pausedUpdateItemsTimer"].toInt());
         updateBacteriasTimer->start(pausedTimesSave["pausedUpdateBacteriasTimer"].toInt());
         virusTimer->start(pausedTimesSave["virusTimer"].toInt());
+        if (pausedTimesSave.contains("pestilenceTimer")) {
+           pestilenceTimer->start(pausedTimesSave["pestilenceTimer"].toInt());
+        }
     } else {
         updateBacteriasTimer->start(2000);
         updateItemsTimer->start(3000);
@@ -614,6 +617,9 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
     pausedTimes["pausedUpdateItemsTimer"] = this->pausedUpdateItemsTimer;
     pausedTimes["pausedUpdateBacteriasTimer"] = this->pausedUpdateBacteriasTimer;
     pausedTimes["pausedVirusTimer"] = this->pausedVirusTimer;
+    if (this->pausedPestilenceTimer != 0) {
+        pausedTimes["pausedPestilenceTimer"] = this->pausedPestilenceTimer;
+    }
 
     saveObject["pausedTimes"] = pausedTimes;
 
@@ -739,6 +745,10 @@ void Game1Scene::checkGameState() {
             pausedUpdateItemsTimer = updateItemsTimer->remainingTime();
             pausedUpdateBacteriasTimer = updateBacteriasTimer->remainingTime();
             pausedVirusTimer = virusTimer->remainingTime();
+            if (pestilenceTimer->isActive()) {
+                pausedPestilenceTimer = pestilenceTimer->remainingTime();
+                pestilenceTimer->stop();
+            }
 
             timeUpdater->stop();
             updateItemsTimer->stop();
@@ -769,6 +779,10 @@ void Game1Scene::checkGameState() {
             updateItemsTimer->start(pausedUpdateItemsTimer);
             updateBacteriasTimer->start(pausedUpdateBacteriasTimer);
             virusTimer->start(pausedVirusTimer);
+            if (pausedPestilenceTimer != 0) {
+                pestilenceTimer->start(pausedPestilenceTimer);
+                pausedPestilenceTimer = 0;
+            }
 
             justPaused = true;
 
@@ -843,6 +857,9 @@ void Game1Scene::gameOver(bool result) {
     updateBacteriasTimer->stop();
     checkGameStateTimer->stop();
     virusTimer->stop();
+    if (pestilenceTimer->isActive()) {
+        pestilenceTimer->stop();
+    }
 
     for (int i = 0; i < 20; i++) {
         if (bacterias[i] != NULL) {
