@@ -6,6 +6,8 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
     this->pixmapLifeList = pixmapLifeList;
     this->needle=needle;
 
+    vulnerable=false;
+
     setPixmap((QPixmap("bob1.png")).scaled(80,80));
     setPos(500,100);
 
@@ -53,7 +55,7 @@ void SpongeBob::keyPressEvent(QKeyEvent *event){
             setPos(x()+10,y());
         if (event->key() == Qt::Key_Left && x()-10 > -30)
             setPos(x()-10,y());
-        if (event->key() == Qt::Key_Up && y()-10 > 0)
+        if (event->key() == Qt::Key_Up && y()-10 > 80)
             setPos(x(),y()-10);
         if (event->key() == Qt::Key_Down && y()+10 < 550)
             setPos(x(),y()+10);

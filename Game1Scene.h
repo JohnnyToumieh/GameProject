@@ -14,6 +14,7 @@
 #include "GameOnePage.h"
 #include "HealthyItem.h"
 #include "UnhealthyItem.h"
+#include "Virus.h"
 
 class Game1Scene : public QGraphicsScene
 {
@@ -40,6 +41,9 @@ public:
     UnhealthyItem** unhealthyItems;
     int unhealthyItemsIndex;
 
+    Virus** viruses;
+    int virusesIndex;
+
     QLabel* timeLabel;
 
     QTime* time;
@@ -52,6 +56,7 @@ public:
     QTimer* updateBacteriasTimer;
     int pausedUpdateBacteriasTimer;
     QTimer* checkGameStateTimer;
+    QTimer* virusTimer;
 
     bool justPaused;
 
@@ -83,6 +88,7 @@ public slots:
     void checkGameState();
     void unpauseClicked();
     void quitClicked();
+    void virusUpdate();
 };
 
 #endif // GAME1SCENE_H

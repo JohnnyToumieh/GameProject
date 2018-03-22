@@ -100,18 +100,37 @@ void Bacteria::update(){
          }
     }
 
-    if (x() + 30 >= 950) {
-        scene()->removeItem(this);
-        toDelete = true;
-        speedTimer->stop();
-        return;
-    } else {
-        if (type == 1) {
-            setPos(x()+30,200+20*qSin(x()+30));
-        } else if (type == 2) {
-            setPos(x()+30,300+30*qSin(x()+30));
-        } else {
-            setPos(x()+30,400+20*qSin(x()+30));
-        }
+    if(spongeBob->vulnerable==true){
+        int a = ( spongeBob->y() - y() ) / (spongeBob->x() - x());
+        int b = y() - a*x();
+        setPos((spongeBob->y() + y()/10),(spongeBob->x() + x())/10);
+      /*  int minY = abs(y() - spongeBob->y());
+        int yToSetTo = y();
+        yToSetTo = (minY > abs(y() - spongeBob->y() + speed)) ? y() + speed : yToSetTo;
+        minY = (minY > abs(y() - spongeBob->y() + speed)) ? abs(y() - spongeBob->y() + speed) : minY;
+        yToSetTo = (minY > abs(y() - spongeBob->y() - speed)) ? y() - speed : yToSetTo;
+        minY = (minY > abs(y() - spongeBob->y() - speed)) ? abs(y() - spongeBob->y() - speed) : minY;
+        setY(yToSetTo);
+        setX(x()+speed);*/
+
     }
+    else{
+        if (x() + 30 >= 950) {
+            scene()->removeItem(this);
+            toDelete = true;
+            speedTimer->stop();
+            return;
+        } else {
+            if (type == 1) {
+                setPos(x()+30,200+20*qSin(x()+30));
+            } else if (type == 2) {
+                setPos(x()+30,300+30*qSin(x()+30));
+            } else {
+                setPos(x()+30,400+20*qSin(x()+30));
+            }
+        }
+
+    }
+
+
 }

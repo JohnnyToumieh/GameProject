@@ -27,6 +27,7 @@ public:
     int immunityLevelDegree;
     int lives;
 
+    bool vulnerable;
     bool canCollide;
     QTimer* collisionTimer;
     bool blinkerStatus;

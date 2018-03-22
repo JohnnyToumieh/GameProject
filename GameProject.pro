@@ -15,7 +15,8 @@ SOURCES += \
     Bacteria.cpp \
     HealthyItem.cpp \
     UnhealthyItem.cpp \
-    Aquarium.cpp
+    Aquarium.cpp \
+    Virus.cpp
 
 HEADERS += \
     HomePage.h \
@@ -31,4 +32,5 @@ HEADERS += \
     Bacteria.h \
     HealthyItem.h \
     UnhealthyItem.h \
-    Aquarium.h
+    Aquarium.h \
+    Virus.h

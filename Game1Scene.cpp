@@ -19,6 +19,7 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         aquarium = new Aquarium(1, 10, 1, 0, 1, 300000, 0, 0);
     }
 
+
     setBackgroundBrush(QBrush(QImage("background2.JPG").scaledToHeight(600).scaledToWidth(1000)));
     setSceneRect(0,0,1000,600);
 
@@ -40,6 +41,37 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     scoreLabel->adjustSize();
     addWidget(scoreLabel);
 
+
+    pixmapNeedle = new QGraphicsPixmapItem();
+    QPixmap *picNeedle  = new QPixmap("needle.png");
+    pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
+    pixmapNeedle->setPos(850,80);
+    addItem(pixmapNeedle);
+
+    pixmapLife1 = new QGraphicsPixmapItem();
+    pixmapLife2 = new QGraphicsPixmapItem();
+    pixmapLife3 = new QGraphicsPixmapItem();
+    QPixmap *picLife  = new QPixmap("life.png");
+
+    pixmapLife1->setPixmap(picLife->scaled(50,50));
+    pixmapLife1->setPos(600,30);
+    addItem(pixmapLife1);
+
+    pixmapLife2->setPixmap(picLife->scaled(50,50));
+    pixmapLife2->setPos(650,30);
+    addItem(pixmapLife2);
+
+    pixmapLife3->setPixmap(picLife->scaled(50,50));
+    pixmapLife3->setPos(700,30);
+    addItem(pixmapLife3);
+
+    pixmapLifeList = new QGraphicsPixmapItem*[3];
+
+    pixmapLifeList[0]=pixmapLife1;
+    pixmapLifeList[1]=pixmapLife2;
+    pixmapLifeList[2]=pixmapLife3;
+
+
     spongeBob = new SpongeBob(aquarium, pixmapNeedle, pixmapLifeList);
 
     if (resume) {
@@ -59,32 +91,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
     spongeBob->setFocus();
 
-    pixmapNeedle = new QGraphicsPixmapItem();
-    QPixmap *picNeedle  = new QPixmap("needle.png");
-    pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
-    pixmapNeedle->setPos(850,80);
-    addItem(pixmapNeedle);
-
-    pixmapLife1 = new QGraphicsPixmapItem();
-    pixmapLife2 = new QGraphicsPixmapItem();
-    pixmapLife3 = new QGraphicsPixmapItem();
-    QPixmap *picLife  = new QPixmap("life.png");
-    if (spongeBob->lives >= 3) {
-        pixmapLife1->setPixmap(picLife->scaled(50,50));
-        pixmapLife1->setPos(600,30);
-        addItem(pixmapLife1);
-    }
-    if (spongeBob->lives >= 2) {
-        pixmapLife2->setPixmap(picLife->scaled(50,50));
-        pixmapLife2->setPos(650,30);
-        addItem(pixmapLife2);
-    }
-    if (spongeBob->lives >= 1) {
-        pixmapLife3->setPixmap(picLife->scaled(50,50));
-        pixmapLife3->setPos(700,30);
-        addItem(pixmapLife3);
-    }
-
     greenColorItem= new QGraphicsPixmapItem();
     greenColorItem->setPos(15,51);
     QPixmap *greenColor = new QPixmap("needle.png");
@@ -92,11 +98,11 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->maxCleanliness) * aquarium->currentCleanliness, 20));
     addItem(greenColorItem);
 
-    pixmapLifeList = new QGraphicsPixmapItem*[3];
-
-    pixmapLifeList[0]=pixmapLife1;
-    pixmapLifeList[1]=pixmapLife2;
-    pixmapLifeList[2]=pixmapLife3;
+    viruses = new Virus*[10];
+    for (int i = 0; i < 10; i++) {
+        viruses[i] = NULL;
+    }
+    virusesIndex = 0;
 
     bacterias = new Bacteria*[20];
     for (int i = 0; i < 20; i++) {
@@ -104,8 +110,9 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     }
     bacteriasIndex = 0;
 
-    updateBacterias();
+
     updateBacteriasTimer = new QTimer(this);
+    updateBacterias();
     connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
     updateBacteriasTimer->start(5000);
 
@@ -124,7 +131,7 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
     updateItemsTimer->start(3000);
 
-    if (resume) {
+   if (resume) {
         pausedTime = aquarium->currentTime;
     } else {
         pausedTime = 0;
@@ -155,6 +162,10 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
     checkGameStateTimer->start(100);
 
+    virusTimer = new QTimer(this);
+    connect(virusTimer, SIGNAL(timeout()), this, SLOT(virusUpdate()));
+    virusTimer->start(10000);
+
     time = new QTime();
     time->start();
 
@@ -162,6 +173,28 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     updateTimer();
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
     timeUpdater->start(500);
+}
+
+void Game1Scene::virusUpdate(){
+    if (virusTimer->isSingleShot()) {
+        virusTimer->setSingleShot(false);
+        virusTimer->start(3000);
+    }
+
+    for (int i = 0; i < 10; i++) {
+        if (viruses[i] != NULL && viruses[i]->toDelete) {
+            delete viruses[i];
+            viruses[i] = NULL;
+        }
+    }
+
+    if (virusesIndex >= 19) {
+        virusesIndex = 0;
+    }
+
+    viruses[virusesIndex] = new Virus(spongeBob,aquarium);
+    addItem(viruses[virusesIndex++]);
+
 }
 
 void Game1Scene::updateTimer() {
