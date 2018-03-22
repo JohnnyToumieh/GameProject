@@ -28,6 +28,18 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     timeLabel->move(this->width() / 2 - 30, 25);
     addWidget(timeLabel);
 
+    pestilenceTimeLabel = new QLabel();
+    pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");
+    pestilenceTimeLabel->move(this->width() / 2 + 320, 140);
+    addWidget(pestilenceTimeLabel);
+    pestilenceTimeLabel->hide();
+
+    pestilenceTimeLabel2 = new QLabel("Pestilence will get summoned after:");
+    pestilenceTimeLabel2->setStyleSheet("QLabel { color : black; font: 20px; }");
+    pestilenceTimeLabel2->move(this->width() / 2 + 320, 100);
+    addWidget(pestilenceTimeLabel2);
+    pestilenceTimeLabel2->hide();
+
     levelLabel = new QLabel();
     levelLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
     levelLabel->move(300, 20);
@@ -134,6 +146,7 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     virusesIndex = 0;
 
     virusTimer = new QTimer(this);
+    pestilenceTimer = new QTimer(this);
 
     if (resume) {
         QJsonArray virusesSave = read("viruses").array();
@@ -227,10 +240,12 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
     timeUpdater = new QTimer(this);
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
+    connect(pestilenceTimer, SIGNAL(timeout()), this, SLOT(summonPestilence()));
 
     updateItemsTimer->setSingleShot(true);
     updateBacteriasTimer->setSingleShot(true);
     virusTimer->setSingleShot(true);
+    pestilenceTimer->setSingleShot(true);
 
     if (resume) {
         QJsonObject pausedTimesSave = read("pausedTimes").object();
@@ -302,18 +317,37 @@ void Game1Scene::virusUpdate(){
     if (virusesIndex >= 9) {
         virusesIndex = 0;
     }
-    if (aquarium->level == 3) {
-        int random_number=(rand() % 2) + 1;
-        if(random_number==1){
+    if (aquarium->level == 1) {
+        int random_number=(rand() % 20) + 1;
+        random_number = 10;
+        if(random_number == 10 && !pestilenceTimer->isActive()){
+            pestilenceTimer->start(10000);
+            updateTimer();
+            pestilenceTimeLabel->show();
+            pestilenceTimeLabel2->show();
+        } else if(random_number > 10){
             viruses[virusesIndex] = new Virus(1,spongeBob,aquarium);
-        }else{
+            addItem(viruses[virusesIndex++]);
+        } else {
             viruses[virusesIndex] = new Virus(2,spongeBob,aquarium);
+            addItem(viruses[virusesIndex++]);
         }
-        addItem(viruses[virusesIndex++]);
     } else if (aquarium->level == 2) {
         viruses[virusesIndex] = new Virus(1,spongeBob,aquarium);
         addItem(viruses[virusesIndex++]);
     }
+}
+
+void Game1Scene::summonPestilence() {
+    pestilenceTimeLabel->hide();
+    pestilenceTimeLabel2->hide();
+
+    if (virusesIndex >= 9) {
+        virusesIndex = 0;
+    }
+
+    viruses[virusesIndex] = new Virus(3,spongeBob,aquarium);
+    addItem(viruses[virusesIndex++]);
 }
 
 void Game1Scene::updateTimer() {
@@ -331,6 +365,16 @@ void Game1Scene::updateTimer() {
     .arg(secs, 2, 10, QLatin1Char('0')) );
 
     aquarium->currentTime = time->elapsed() + pausedTime;
+
+    if (pestilenceTimer->isActive()) {
+        secs = (pestilenceTimer->remainingTime()) / 1000;
+        mins = (secs / 60) % 60;
+        secs = secs % 60;
+
+        pestilenceTimeLabel->setText(QString("%1:%2")
+        .arg(mins, 2, 10, QLatin1Char('0'))
+        .arg(secs, 2, 10, QLatin1Char('0')) );
+    }
 }
 
 void Game1Scene::updateItems(){

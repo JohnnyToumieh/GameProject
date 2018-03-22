@@ -151,6 +151,8 @@ void SpongeBob::setVulnerable(int type) {
 
         needle->setTransformOriginPoint(0, 0);
         needle->setRotation(0);
+    } else if (type == 3) {
+        lives = 0;
     }
 }
 
