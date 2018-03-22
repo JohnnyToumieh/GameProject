@@ -30,13 +30,14 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
 
     pestilenceTimeLabel = new QLabel();
     pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");
-    pestilenceTimeLabel->move(this->width() / 2 + 320, 140);
+    pestilenceTimeLabel->move(this->width() / 2 + 320, 160);
     addWidget(pestilenceTimeLabel);
     pestilenceTimeLabel->hide();
 
     pestilenceTimeLabel2 = new QLabel("Pestilence will get summoned after:");
-    pestilenceTimeLabel2->setStyleSheet("QLabel { color : black; font: 20px; }");
-    pestilenceTimeLabel2->move(this->width() / 2 + 320, 100);
+    pestilenceTimeLabel2->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : black; font: 20px; }");
+    pestilenceTimeLabel2->move(this->width() / 2 + 310, 110);
+    pestilenceTimeLabel2->setWordWrap(true);
     addWidget(pestilenceTimeLabel2);
     pestilenceTimeLabel2->hide();
 
