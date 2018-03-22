@@ -118,7 +118,7 @@ void Bacteria::update(){
 
             int speed = 4;
 
-            if ((int) spongeBobX != (int) currentX) {
+            if (spongeBobX > currentX + 50 || spongeBobX < currentX - 50) {
                 qreal a = (spongeBobY - currentY) / (spongeBobX - currentX);
                 qreal b = currentY - a * currentX;
 

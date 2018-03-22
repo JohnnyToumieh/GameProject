@@ -19,7 +19,6 @@ Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
         setPos(0,150);
     }
 
-
     int random_number= (rand()%3)+1;
 
     if (random_number==1) {
@@ -64,7 +63,7 @@ void Virus::update(){
         for (int i = 0; i < collisions.size(); i++) {
             if (collisions.at(i)->hasFocus()) {
                 //make SpongeBob vulnerable to all bacteria
-                spongeBob->vulnerable=true;
+                spongeBob->setVulnerable(1);
 
                 //delete this Virus
                 toDelete = true;

@@ -12,6 +12,8 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
     setPos(500,100);
 
     this->immunityLevel=1;
+    this->savedImmunityLevel=-1;
+    this->unchangeableImmunityLevel=false;
     this->immunityLevelDegree=1;
     this->lives=3;
     this->canCollide = true;
@@ -32,9 +34,16 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
 
     collisionBlinker = new QTimer(this);
     connect(collisionBlinker, SIGNAL(timeout()), this, SLOT(toggleVisibility()));
+
+    vulnerableTimer = new QTimer(this);
+    vulnerableTimer->setSingleShot(true);
+    connect(vulnerableTimer, SIGNAL(timeout()), this, SLOT(resetVulnerability()));
 }
 
 void SpongeBob::changeGlow(){
+    if(immunityLevel==0){
+        setPixmap((QPixmap("bob.png")).scaled(80,80));
+    }
     if(immunityLevel==1){
         setPixmap((QPixmap("bob1.png")).scaled(80,80));
     }
@@ -101,4 +110,39 @@ void SpongeBob::collisionWithBacteria(int bacteriaType){
             collisionBlinker->start(500);
         }
     }
+}
+
+void SpongeBob::setVulnerable(int type) {
+    if (type == 1) {
+        vulnerable = true;
+        savedImmunityLevel = immunityLevel;
+        savedImmunityLevelDegree = immunityLevelDegree;
+        immunityLevel = 0;
+        immunityLevelDegree = 0;
+        unchangeableImmunityLevel = true;
+
+        changeGlow();
+
+        needle->setTransformOriginPoint(0, 0);
+        needle->setRotation(0);
+
+        vulnerableTimer->start(5000);
+    } else if (type == 2) {
+        immunityLevel = 1;
+        immunityLevelDegree = 0;
+
+        needle->setTransformOriginPoint(0, 0);
+        needle->setRotation(0);
+    }
+}
+
+void SpongeBob::resetVulnerability() {
+    vulnerable = false;
+    immunityLevel = savedImmunityLevel;
+    immunityLevelDegree = savedImmunityLevelDegree;
+    unchangeableImmunityLevel = false;
+
+    needle->setTransformOriginPoint(needle->boundingRect().center().x() + 20 * immunityLevelDegree,
+                                               needle->boundingRect().center().y());
+    needle->setRotation(needle->rotation() + 8 * immunityLevelDegree);
 }

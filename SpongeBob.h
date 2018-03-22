@@ -18,13 +18,17 @@ public:
     explicit SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsPixmapItem** pixmapLifeList, QObject *parent = nullptr);
     void keyPressEvent(QKeyEvent *event);
     void collisionWithBacteria(int bacteriaType);
+    void setVulnerable(int type);
 
     Aquarium* aquarium;
 
     QGraphicsPixmapItem** pixmapLifeList;
     QGraphicsPixmapItem *needle;
     int immunityLevel;
+    int savedImmunityLevel;
+    bool unchangeableImmunityLevel;
     int immunityLevelDegree;
+    int savedImmunityLevelDegree;
     int lives;
 
     bool vulnerable;
@@ -32,6 +36,7 @@ public:
     QTimer* collisionTimer;
     bool blinkerStatus;
     QTimer* collisionBlinker;
+    QTimer* vulnerableTimer;
 
     int* numCollisionsWithBacterias;
 
@@ -41,6 +46,7 @@ public slots:
      void changeGlow();
      void setCanCollide();
      void toggleVisibility();
+     void resetVulnerability();
 };
 
 #endif // SPONGEBOB_H
