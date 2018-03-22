@@ -71,41 +71,46 @@ void Item::checkGameState() {
 }
 
 void Item::update(){
-    if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){
-        int degree=spongeBob->immunityLevelDegree;
+    if(!scene()->collidingItems(this).isEmpty()){
+        QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
+        for (int i = 0; i < collisions.size(); i++) {
+            if (collisions.at(i)->hasFocus()) {
+                int degree=spongeBob->immunityLevelDegree;
 
-        if (isHealthy) {
-            if(!(degree>=6 && spongeBob->immunityLevel==3)){
-                degree=spongeBob->immunityLevelDegree++;
-                spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
-                                                           spongeBob->needle->boundingRect().center().y());
-                spongeBob->needle->setRotation(spongeBob->needle->rotation()+8);
-            }
+                if (isHealthy) {
+                    if(!(degree>=6 && spongeBob->immunityLevel==3)){
+                        degree=spongeBob->immunityLevelDegree++;
+                        spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
+                                                                   spongeBob->needle->boundingRect().center().y());
+                        spongeBob->needle->setRotation(spongeBob->needle->rotation()+8);
+                    }
 
-            if((degree>=6 && spongeBob->immunityLevel==1) ||
-               (degree>=9 && spongeBob->immunityLevel==2)){
-               spongeBob->immunityLevelDegree=1;
+                    if((degree>=6 && spongeBob->immunityLevel==1) ||
+                       (degree>=9 && spongeBob->immunityLevel==2)){
+                       spongeBob->immunityLevelDegree=1;
 
-               spongeBob->immunityLevel++;
-            }
-        } else {
-            if(!(degree==1 && spongeBob->immunityLevel==1)){
-                degree=spongeBob->immunityLevelDegree--;
-                spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
-                                                           spongeBob->needle->boundingRect().center().y());
-                spongeBob->needle->setRotation(spongeBob->needle->rotation()-8);
-            }
+                       spongeBob->immunityLevel++;
+                    }
+                } else {
+                    if(!(degree==1 && spongeBob->immunityLevel==1)){
+                        degree=spongeBob->immunityLevelDegree--;
+                        spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
+                                                                   spongeBob->needle->boundingRect().center().y());
+                        spongeBob->needle->setRotation(spongeBob->needle->rotation()-8);
+                    }
 
-            if((degree==1 && spongeBob->immunityLevel==2) ||
-               (degree==1 && spongeBob->immunityLevel==3)){
-               spongeBob->immunityLevelDegree=8;
+                    if((degree==1 && spongeBob->immunityLevel==2) ||
+                       (degree==1 && spongeBob->immunityLevel==3)){
+                       spongeBob->immunityLevelDegree=8;
 
-               spongeBob->immunityLevel--;
+                       spongeBob->immunityLevel--;
+                    }
+                }
+                speedTimer->stop();
+                toDelete = true;
+                return;
             }
         }
-        speedTimer->stop();
-        toDelete = true;
-        return;
     }
 
     if((y()+30) >= 500) {

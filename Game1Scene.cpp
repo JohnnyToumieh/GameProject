@@ -62,6 +62,12 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     pixmapLife3->setPos(700,30);
     addItem(pixmapLife3);
 
+    pixmapLifeList = new QGraphicsPixmapItem*[3];
+
+    pixmapLifeList[0]=pixmapLife1;
+    pixmapLifeList[1]=pixmapLife2;
+    pixmapLifeList[2]=pixmapLife3;
+
     greenColorItem= new QGraphicsPixmapItem();
     greenColorItem->setPos(15,51);
     QPixmap *greenColor = new QPixmap("needle.png");

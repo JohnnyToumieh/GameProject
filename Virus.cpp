@@ -52,14 +52,19 @@ void Virus::checkGameState() {
 }
 
 void Virus::update(){
-    if(!(scene()->collidingItems(this).isEmpty())&& scene()->collidingItems(this).at(0)->hasFocus()){
-        //make SpongeBob vulnerable to all bacteria
-        spongeBob->vulnerable=true;
+    if(!scene()->collidingItems(this).isEmpty()){
+        QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
+        for (int i = 0; i < collisions.size(); i++) {
+            if (collisions.at(i)->hasFocus()) {
+                //make SpongeBob vulnerable to all bacteria
+                spongeBob->vulnerable=true;
 
-        //delete this Virus
-        toDelete = true;
-        speedTimer->stop();
-        return;
+                //delete this Virus
+                toDelete = true;
+                speedTimer->stop();
+                return;
+            }
+        }
     }
 
     if (x() + 30 >= 950) {
