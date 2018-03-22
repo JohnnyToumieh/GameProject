@@ -13,6 +13,7 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
 
     this->immunityLevel=1;
     this->savedImmunityLevel=-1;
+    this->savedImmunityLevelDegree=-1;
     this->unchangeableImmunityLevel=false;
     this->immunityLevelDegree=1;
     this->lives=3;
@@ -46,6 +47,7 @@ void SpongeBob::reset() {
     this->vulnerable=false;
     this->immunityLevel=1;
     this->savedImmunityLevel=-1;
+    this->savedImmunityLevelDegree=-1;
     this->unchangeableImmunityLevel=false;
     this->immunityLevelDegree=1;
     this->lives=3;
