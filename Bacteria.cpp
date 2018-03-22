@@ -93,7 +93,6 @@ void Bacteria::update(){
             greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->maxCleanliness) * aquarium->currentCleanliness, 20));
 
             //delete this bacteria
-            scene()->removeItem(this);
             toDelete = true;
             speedTimer->stop();
             return;
@@ -116,7 +115,6 @@ void Bacteria::update(){
     }
     else{
         if (x() + 30 >= 950) {
-            scene()->removeItem(this);
             toDelete = true;
             speedTimer->stop();
             return;
