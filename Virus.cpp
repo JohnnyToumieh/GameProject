@@ -9,7 +9,7 @@ Virus::Virus(SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
     this->justPaused = true;
     this->toDelete = false;
 
-    QPixmap *pic  = new QPixmap("life.png");
+    QPixmap *pic  = new QPixmap("virus.png");
     setPixmap(pic->scaled(60,60));
     setPos(0,150);
 

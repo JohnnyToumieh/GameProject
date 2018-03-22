@@ -41,6 +41,9 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
 }
 
 void SpongeBob::changeGlow(){
+    if(immunityLevel==0){
+        setPixmap((QPixmap("bob.png")).scaled(80,80));
+    }
     if(immunityLevel==1){
         setPixmap((QPixmap("bob1.png")).scaled(80,80));
     }
@@ -118,6 +121,8 @@ void SpongeBob::setVulnerable(int type) {
         immunityLevelDegree = 0;
         unchangeableImmunityLevel = true;
 
+        changeGlow();
+
         needle->setTransformOriginPoint(0, 0);
         needle->setRotation(0);
 
@@ -125,6 +130,9 @@ void SpongeBob::setVulnerable(int type) {
     } else if (type == 2) {
         immunityLevel = 1;
         immunityLevelDegree = 0;
+
+        needle->setTransformOriginPoint(0, 0);
+        needle->setRotation(0);
     }
 }
 
