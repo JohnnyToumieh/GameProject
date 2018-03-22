@@ -225,9 +225,9 @@ void SignUp::submitClicked(){
         user->lastName = lastName->text();
         user->email = email->text();
         user->gender = group.checkedButton()->text();
-        user->DoBday = day->currentText();
-        user->DoBmonth = month->currentText();
-        user->DoByear = year->currentText();
+        user->DoBday = day->currentText().toInt();
+        user->DoBmonth = month->currentText().toInt();
+        user->DoByear = year->currentText().toInt();
 
         QPixmap const* profilePicture = profilePictureL->pixmap();
         profilePicture->save(QDir::currentPath()+"/user_photos/" + user->username + ".png","png");

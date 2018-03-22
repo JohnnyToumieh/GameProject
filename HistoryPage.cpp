@@ -40,6 +40,7 @@ HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObjec
 
 void HistoryPage::backClicked(){
     qDeleteAll(widget->children());
+
     GameOnePage *chooseGamePage = new GameOnePage(widget, gameNumber, user, usersFile);
 }
 

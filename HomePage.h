@@ -4,7 +4,6 @@
 #include <QWidget>
 #include <QObject>
 #include <QtWidgets>
-
 class HomePage : public QVBoxLayout
 {
     Q_OBJECT

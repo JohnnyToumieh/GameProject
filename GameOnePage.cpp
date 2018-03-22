@@ -2,6 +2,7 @@
 #include "ChooseGamePage.h"
 #include "Message.h"
 #include "HistoryPage.h"
+#include "Game1Scene.h"
 
 GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile)
 {
@@ -21,13 +22,14 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObjec
     checkHistory = new QPushButton("Check your history");
 
     selectLevel = new QComboBox();
-    selectLevel->addItem("Select level");
-    selectLevel->addItem("Easy");
-    selectLevel->addItem("Medium");
-    selectLevel->addItem("Hard");
+    selectLevel->addItem("Select Level");
+    selectLevel->addItem("1");
+    selectLevel->addItem("2");
+    selectLevel->addItem("3");
 
     profilePictureL = new QLabel();
 
+    //TODO: get specific user's image according to his username
     profilePictureL->setFixedHeight(100);
     profilePictureL->setFixedWidth(100);
     QPixmap profilePicture;
@@ -52,6 +54,8 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObjec
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
     QObject::connect(description, SIGNAL(clicked()), SLOT(descriptionClicked()));
     QObject::connect(checkHistory, SIGNAL(clicked()), SLOT(checkHistoryClicked()));
+    QObject::connect(newGame, SIGNAL(clicked()), SLOT(startNewGameClicked()));
+    QObject::connect(resumeGame, SIGNAL(clicked()), SLOT(resumeGameClicked()));
 }
 
 void GameOnePage::descriptionClicked(){
@@ -65,13 +69,63 @@ void GameOnePage::descriptionClicked(){
     }
 }
 
+void GameOnePage::startNewGameClicked(){
+    QString levelSelected = selectLevel->currentText();
+    int level = 1;
+    if (levelSelected == "2") {
+        level = 2;
+    } else if (levelSelected == "3") {
+        level = 3;
+    }
+
+    qDeleteAll(widget->children());
+    widget->close();
+
+    Game1Scene *game1scene = new Game1Scene(widget, user, usersFile, false, level);
+
+    QGraphicsView *view = new QGraphicsView(game1scene);
+    view->setFixedSize(1000,600);
+    view->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    view->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    view->setGeometry(
+                QStyle::alignedRect(
+                           Qt::LeftToRight,
+                           Qt::AlignCenter,
+                           view->size(),
+                           qApp->desktop()->availableGeometry()
+                    ));
+    view->show();
+}
+
+void GameOnePage::resumeGameClicked(){
+    qDeleteAll(widget->children());
+    widget->close();
+
+    Game1Scene *game1scene = new Game1Scene(widget, user, usersFile, true);
+
+    QGraphicsView *view = new QGraphicsView(game1scene);
+    view->setFixedSize(1000,600);
+    view->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    view->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    view->setGeometry(
+                QStyle::alignedRect(
+                           Qt::LeftToRight,
+                           Qt::AlignCenter,
+                           view->size(),
+                           qApp->desktop()->availableGeometry()
+                    ));
+    view->show();
+}
+
 void GameOnePage::backClicked(){
     qDeleteAll(widget->children());
+
     ChooseGamePage *chooseGamePage = new ChooseGamePage(widget, user, usersFile);
 }
 
 void GameOnePage::checkHistoryClicked(){
     qDeleteAll(widget->children());
+
     HistoryPage *historyPage = new HistoryPage(widget, gameNumber, user, usersFile);
 }
 

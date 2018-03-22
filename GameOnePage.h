@@ -13,7 +13,6 @@ public:
     explicit GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile);
 
     int gameNumber;
-    
     QVBoxLayout* verticalLayout;
     QGridLayout* gridLayout;
     QGridLayout *grid;
@@ -43,6 +42,8 @@ public slots:
     void backClicked();
     void descriptionClicked();
     void checkHistoryClicked();
+    void startNewGameClicked();
+    void resumeGameClicked();
 };
 
 #endif // GAMEONEPAGE_H
