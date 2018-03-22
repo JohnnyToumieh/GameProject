@@ -26,13 +26,13 @@ bool User::read(const QJsonObject &json)
                     this->gender = userObject["gender"].toString();
                 }
                 if (userObject.contains("DoBday") && userObject["DoBday"].isString()) {
-                    this->DoBday = userObject["DoBday"].toString();
+                    this->DoBday = userObject["DoBday"].toInt();
                 }
                 if (userObject.contains("DoBmonth") && userObject["DoBmonth"].isString()) {
-                    this->DoBmonth = userObject["DoBmonth"].toString();
+                    this->DoBmonth = userObject["DoBmonth"].toInt();
                 }
                 if (userObject.contains("DoByear") && userObject["DoByear"].isString()) {
-                    this->DoByear = userObject["DoByear"].toString();
+                    this->DoByear = userObject["DoByear"].toInt();
                 }
                 return true;
             }
@@ -83,9 +83,9 @@ void User::clear() {
     this->lastName = QString();
     this->email = QString();
     this->gender = QString();
-    this->DoBday = QString();
-    this->DoBmonth = QString();
-    this->DoByear = QString();
+    this->DoBday = -1;
+    this->DoBmonth = -1;
+    this->DoByear = -1;
 }
 
 void User::writeHelper(QJsonObject &userObject) const
