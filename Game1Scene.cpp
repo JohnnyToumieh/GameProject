@@ -189,7 +189,7 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     quit->hide();
 
     quit2 = new QPushButton("Quit");
-    quit2->move(this->width() / 2 - 50, this->height() / 2 + 150);
+    quit2->move(this->width() / 2 + 100, this->height() / 2 + 150);
     addWidget(quit2);
     quit2->hide();
 
@@ -278,21 +278,20 @@ void Game1Scene::setUpNextLevel() {
     aquarium->currentTime = 0;
     aquarium->immunityFactor = 0;
 
-    spongeBob->immunityLevel = 1;
-    spongeBob->immunityLevelDegree = 1;
+    spongeBob->reset();
     if (spongeBob->lives < 3) {
         addItem(pixmapLife1);
     }
     if (spongeBob->lives < 2) {
         addItem(pixmapLife2);
     }
-    spongeBob->lives = 3;
-    spongeBob->setPos(500,100);
 
     QPixmap *greenColor = new QPixmap("needle.png");
     greenColor->fill(Qt::green);
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->maxCleanliness) * aquarium->currentCleanliness, 20));
-    pixmapNeedle->setPos(850,80);
+
+    pixmapNeedle->setTransformOriginPoint(0, 0);
+    pixmapNeedle->setRotation(0);
 }
 
 void Game1Scene::virusUpdate(){
@@ -858,7 +857,7 @@ void Game1Scene::gameOver(bool result) {
     quit2->activateWindow();
     quit2->raise();
 
-    if (result) {
+    if (result && aquarium->level < 3) {
         setUpNextLevel();
 
         nextLevelButton->show();

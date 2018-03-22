@@ -40,6 +40,22 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
     connect(vulnerableTimer, SIGNAL(timeout()), this, SLOT(resetVulnerability()));
 }
 
+void SpongeBob::reset() {
+    // Not resetting numCollisionsWithBacterias
+
+    this->vulnerable=false;
+    this->immunityLevel=1;
+    this->savedImmunityLevel=-1;
+    this->unchangeableImmunityLevel=false;
+    this->immunityLevelDegree=1;
+    this->lives=3;
+    this->canCollide = true;
+    this->blinkerStatus = false;
+
+    changeGlow();
+    setPos(500,100);
+}
+
 void SpongeBob::changeGlow(){
     if(immunityLevel==0){
         setPixmap((QPixmap("bob.png")).scaled(80,80));
