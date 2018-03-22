@@ -69,12 +69,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->maxCleanliness) * aquarium->currentCleanliness, 20));
     addItem(greenColorItem);
 
-    viruses = new Virus*[10];
-    for (int i = 0; i < 10; i++) {
-        viruses[i] = NULL;
-    }
-    virusesIndex = 0;
-
     spongeBob = new SpongeBob(aquarium, pixmapNeedle, pixmapLifeList);
 
     if (resume) {
@@ -125,6 +119,26 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         }
     } else {
         updateBacterias();
+    }
+
+    viruses = new Virus*[10];
+    for (int i = 0; i < 10; i++) {
+        viruses[i] = NULL;
+    }
+    virusesIndex = 0;
+
+    virusTimer = new QTimer(this);
+
+    if (resume) {
+        QJsonArray virusesSave = read("viruses").array();
+        for (virusesIndex = 0; virusesIndex < virusesSave.size(); virusesIndex++) {
+            QJsonObject currentVirus = virusesSave[virusesIndex].toObject();
+            viruses[virusesIndex] = new Virus(spongeBob,aquarium);
+            viruses[virusesIndex]->speed = currentVirus["speed"].toInt();
+            viruses[virusesIndex]->setX(currentVirus["x"].toInt());
+            viruses[virusesIndex]->setY(currentVirus["y"].toInt());
+            addItem(viruses[virusesIndex]);
+        }
     }
 
     items = new Item*[20];
@@ -198,13 +212,10 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
     checkGameStateTimer->start(100);
 
-    virusTimer = new QTimer(this);
-    connect(virusTimer, SIGNAL(timeout()), this, SLOT(virusUpdate()));
-    virusTimer->start(10000);
-
     time = new QTime();
     time->start();
 
+    connect(virusTimer, SIGNAL(timeout()), this, SLOT(virusUpdate()));
     connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
     updateItemsTimer = new QTimer(this);
     connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
@@ -217,14 +228,17 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         timeUpdater->setSingleShot(true);
         updateItemsTimer->setSingleShot(true);
         updateBacteriasTimer->setSingleShot(true);
+        virusTimer->setSingleShot(true);
 
         timeUpdater->start(pausedTimesSave["pausedTimeUpdater"].toInt());
         updateItemsTimer->start(pausedTimesSave["pausedUpdateItemsTimer"].toInt());
         updateBacteriasTimer->start(pausedTimesSave["pausedUpdateBacteriasTimer"].toInt());
+        virusTimer->start(pausedTimesSave["virusTimer"].toInt());
     } else {
         updateBacteriasTimer->start(5000);
         updateItemsTimer->start(3000);
         timeUpdater->start(500);
+        virusTimer->start(10000);
     }
 
     updateTimer();
@@ -245,6 +259,7 @@ void Game1Scene::nextLevel() {
     updateBacteriasTimer->start(5000);
     updateItemsTimer->start(3000);
     timeUpdater->start(500);
+    virusTimer->start(10000);
 
     pausedTime = 0;
     time->restart();
@@ -287,13 +302,12 @@ void Game1Scene::virusUpdate(){
         }
     }
 
-    if (virusesIndex >= 19) {
+    if (virusesIndex >= 9) {
         virusesIndex = 0;
     }
 
     viruses[virusesIndex] = new Virus(spongeBob,aquarium);
     addItem(viruses[virusesIndex++]);
-
 }
 
 void Game1Scene::updateTimer() {
@@ -511,6 +525,25 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
         saveObject["bacterias"] = bacterias;
     }
 
+    // Add viruses fields
+    QJsonArray viruses;
+
+    for (int i = 0; i < 10; i++) {
+        if (this->viruses[i] != NULL) {
+            QJsonObject currentVirus;
+
+            currentVirus["x"] = this->viruses[i]->x();
+            currentVirus["y"] = this->viruses[i]->y();
+            currentVirus["speed"] = this->viruses[i]->speed;
+
+            viruses.append(currentVirus);
+        }
+    }
+
+    if (!viruses.empty()) {
+        saveObject["viruses"] = viruses;
+    }
+
     // Add items fields
     QJsonArray items;
 
@@ -537,6 +570,7 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
     pausedTimes["pausedTimeUpdater"] = this->pausedTimeUpdater;
     pausedTimes["pausedUpdateItemsTimer"] = this->pausedUpdateItemsTimer;
     pausedTimes["pausedUpdateBacteriasTimer"] = this->pausedUpdateBacteriasTimer;
+    pausedTimes["pausedVirusTimer"] = this->pausedVirusTimer;
 
     saveObject["pausedTimes"] = pausedTimes;
 
@@ -672,10 +706,12 @@ void Game1Scene::checkGameState() {
             pausedTimeUpdater = timeUpdater->remainingTime();
             pausedUpdateItemsTimer = updateItemsTimer->remainingTime();
             pausedUpdateBacteriasTimer = updateBacteriasTimer->remainingTime();
+            pausedVirusTimer = virusTimer->remainingTime();
 
             timeUpdater->stop();
             updateItemsTimer->stop();
             updateBacteriasTimer->stop();
+            virusTimer->stop();
 
             justPaused = false;
 
@@ -698,10 +734,12 @@ void Game1Scene::checkGameState() {
             timeUpdater->setSingleShot(true);
             updateItemsTimer->setSingleShot(true);
             updateBacteriasTimer->setSingleShot(true);
+            virusTimer->setSingleShot(true);
 
             timeUpdater->start(pausedTimeUpdater);
             updateItemsTimer->start(pausedUpdateItemsTimer);
             updateBacteriasTimer->start(pausedUpdateBacteriasTimer);
+            virusTimer->start(pausedVirusTimer);
 
             justPaused = true;
 
@@ -751,6 +789,7 @@ void Game1Scene::gameOver(bool result) {
     updateItemsTimer->stop();
     updateBacteriasTimer->stop();
     checkGameStateTimer->stop();
+    virusTimer->stop();
 
     for (int i = 0; i < 20; i++) {
         if (bacterias[i] != NULL) {
@@ -759,6 +798,14 @@ void Game1Scene::gameOver(bool result) {
         }
     }
     bacteriasIndex = 0;
+
+    for (int i = 0; i < 10; i++) {
+        if (viruses[i] != NULL) {
+            delete viruses[i];
+            viruses[i] = NULL;
+        }
+    }
+    virusesIndex = 0;
 
     for (int i = 0; i < 20; i++) {
         if (items[i] != NULL) {

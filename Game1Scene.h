@@ -58,6 +58,7 @@ public:
     int pausedUpdateBacteriasTimer;
     QTimer* checkGameStateTimer;
     QTimer* virusTimer;
+    int pausedVirusTimer;
 
     bool justPaused;
 
