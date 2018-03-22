@@ -527,6 +527,25 @@ bool Game1Scene::saveScore() {
         QJsonArray games = usersFile["games"].toArray();
         if (games.size() > 0 && games[0].isObject()) {
             QJsonObject gameData = games[0].toObject();
+
+            if (gameData.contains("top_score") && gameData["top_score"].isArray()) {
+                QJsonObject userObject = gameData["top_score"].toObject();
+                if (userObject.contains("score") && userObject["score"].toInt() < aquarium->score) {
+                    userObject["score"] = aquarium->score;
+                    userObject["username"] = user->username;
+                    gameData["top_score"] = userObject;
+                    games[0] = gameData;
+                    usersFile["games"] = games;
+                }
+            } else {
+                QJsonObject userObject;
+                userObject["score"] = aquarium->score;
+                userObject["username"] = user->username;
+                gameData["top_score"] = userObject;
+                games[0] = gameData;
+                usersFile["games"] = games;
+            }
+
             if (gameData.contains("users_score") && gameData["users_score"].isArray()) {
                 QJsonArray userArray = gameData["users_score"].toArray();
 
