@@ -118,25 +118,37 @@ void Bacteria::update(){
 
             int speed = 4;
 
-            qreal a = (spongeBobY - currentY) / (spongeBobX - currentX);
-            qreal b = currentY - a * currentX;
+            if ((int) spongeBobX != (int) currentX) {
+                qreal a = (spongeBobY - currentY) / (spongeBobX - currentX);
+                qreal b = currentY - a * currentX;
 
-            qreal coAoX = pow(a, 2) + 1;
-            qreal coBoX = 2 * a * (b - currentY) - 2 * currentX;
-            qreal coCoX = pow(currentX, 2) + pow((b - currentY), 2) - pow(speed, 2);
+                qreal coAoX = pow(a, 2) + 1;
+                qreal coBoX = 2 * a * (b - currentY) - 2 * currentX;
+                qreal coCoX = pow(currentX, 2) + pow((b - currentY), 2) - pow(speed, 2);
 
-            qreal newX1 = (- coBoX + sqrt(pow(coBoX, 2) - 4 * coAoX * coCoX)) / (2 * coAoX);
-            qreal newX2 = (- coBoX - sqrt(pow(coBoX, 2) - 4 * coAoX * coCoX)) / (2 * coAoX);
+                qreal newX1 = (- coBoX + sqrt(pow(coBoX, 2) - 4 * coAoX * coCoX)) / (2 * coAoX);
+                qreal newX2 = (- coBoX - sqrt(pow(coBoX, 2) - 4 * coAoX * coCoX)) / (2 * coAoX);
 
-            qreal newY1 = a * newX1 + b;
-            qreal newY2 = a * newX1 + b;
+                qreal newY1 = a * newX1 + b;
+                qreal newY2 = a * newX1 + b;
 
-            qreal dist1 = sqrt(pow((newX1 - spongeBobX), 2) + pow((newY1 - spongeBobY), 2));
-            qreal dist2 = sqrt(pow((newX2 - spongeBobX), 2) + pow((newY2 - spongeBobY), 2));
-            qreal dist = sqrt(pow((currentX - spongeBobX), 2) + pow((currentY - spongeBobY), 2));
+                qreal dist1 = sqrt(pow((newX1 - spongeBobX), 2) + pow((newY1 - spongeBobY), 2));
+                qreal dist2 = sqrt(pow((newX2 - spongeBobX), 2) + pow((newY2 - spongeBobY), 2));
+                qreal dist = sqrt(pow((currentX - spongeBobX), 2) + pow((currentY - spongeBobY), 2));
 
-            setPos((dist1 < dist2) ? ((dist < dist1) ? spongeBobX : newX1) : ((dist < dist2) ? spongeBobX : newX2),
-                   (dist1 < dist2) ? ((dist < dist1) ? spongeBobY : newY1) : ((dist < dist2) ? spongeBobY : newY2));
+                setPos((dist1 < dist2) ? ((dist < dist1) ? spongeBobX : newX1) : ((dist < dist2) ? spongeBobX : newX2),
+                       (dist1 < dist2) ? ((dist < dist1) ? spongeBobY : newY1) : ((dist < dist2) ? spongeBobY : newY2));
+            } else {
+                qreal newY1 = currentY + speed;
+                qreal newY2 = currentY - speed;
+
+                qreal dist1 = sqrt(pow((newY1 - spongeBobY), 2));
+                qreal dist2 = sqrt(pow((newY2 - spongeBobY), 2));
+                qreal dist = sqrt(pow((currentY - spongeBobY), 2));
+
+                setPos(currentX,
+                       (dist1 < dist2) ? ((dist < dist1) ? spongeBobY : newY1) : ((dist < dist2) ? spongeBobY : newY2));
+            }
         } else {
             if (type == 1) {
                 setPos(x()+30,200+20*qSin(x()+30));

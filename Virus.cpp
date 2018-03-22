@@ -72,8 +72,6 @@ void Virus::update(){
         speedTimer->stop();
         return;
     } else {
-
-            setPos(x()+30,100+20*qSin(x()+30));
-
+        setPos(x()+30,100+20*qSin(x()+30));
     }
 }
