@@ -57,14 +57,12 @@ void Virus::update(){
         spongeBob->vulnerable=true;
 
         //delete this Virus
-        scene()->removeItem(this);
         toDelete = true;
         speedTimer->stop();
         return;
     }
 
     if (x() + 30 >= 950) {
-        scene()->removeItem(this);
         toDelete = true;
         speedTimer->stop();
         return;

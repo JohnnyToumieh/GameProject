@@ -295,13 +295,6 @@ void Game1Scene::virusUpdate(){
         virusTimer->start(10000);
     }
 
-    for (int i = 0; i < 10; i++) {
-        if (viruses[i] != NULL && viruses[i]->toDelete) {
-            delete viruses[i];
-            viruses[i] = NULL;
-        }
-    }
-
     if (virusesIndex >= 9) {
         virusesIndex = 0;
     }
@@ -750,6 +743,14 @@ void Game1Scene::checkGameState() {
         if (items[i] != NULL && items[i]->toDelete) {
             delete items[i];
             items[i] = NULL;
+        }
+    }
+
+    // Remove viruses
+    for (int i = 0; i < 10; i++) {
+        if (viruses[i] != NULL && viruses[i]->toDelete) {
+            delete viruses[i];
+            viruses[i] = NULL;
         }
     }
 
