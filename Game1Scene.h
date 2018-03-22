@@ -21,6 +21,8 @@ public:
     explicit Game1Scene(QWidget* widget, User* user, QJsonObject usersFile, bool resume = false, int level = 1, QGraphicsScene *parent = nullptr);
     void gameOver(bool result);
     bool saveProgress();
+    bool saveScore();
+    void saveFile();
     QJsonDocument read(QString type);
     void setUpNextLevel();
 
@@ -74,6 +76,7 @@ public:
 
 private:
     void saveProgressHelper(QJsonObject &userObject) const;
+    void saveScoreHelper(QJsonObject &userObject) const;
 
 signals:
 
