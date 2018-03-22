@@ -84,7 +84,7 @@ void SpongeBob::keyPressEvent(QKeyEvent *event){
             setPos(x()-10,y());
         if (event->key() == Qt::Key_Up && y()-10 > 80)
             setPos(x(),y()-10);
-        if (event->key() == Qt::Key_Down && y()+10 < 550)
+        if (event->key() == Qt::Key_Down && y()+10 < 470)
             setPos(x(),y()+10);
     }
 }
