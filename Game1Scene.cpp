@@ -311,7 +311,7 @@ void Game1Scene::virusUpdate(){
         }else{
             viruses[virusesIndex] = new Virus(2,spongeBob,aquarium);
         }
-    }else{
+    }else if(aquarium->level==2){
            viruses[virusesIndex] = new Virus(1,spongeBob,aquarium);
     }
 
