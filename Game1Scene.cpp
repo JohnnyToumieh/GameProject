@@ -139,7 +139,7 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         QJsonArray virusesSave = read("viruses").array();
         for (virusesIndex = 0; virusesIndex < virusesSave.size(); virusesIndex++) {
             QJsonObject currentVirus = virusesSave[virusesIndex].toObject();
-            viruses[virusesIndex] = new Virus(spongeBob,aquarium);
+            viruses[virusesIndex] = new Virus(currentVirus["type"].toInt(),spongeBob,aquarium);
             viruses[virusesIndex]->speed = currentVirus["speed"].toInt();
             viruses[virusesIndex]->setX(currentVirus["x"].toInt());
             viruses[virusesIndex]->setY(currentVirus["y"].toInt());
@@ -298,14 +298,24 @@ void Game1Scene::setUpNextLevel() {
 void Game1Scene::virusUpdate(){
     if (virusTimer->isSingleShot()) {
         virusTimer->setSingleShot(false);
-        virusTimer->start(10000);
+        virusTimer->start(1000);
     }
 
     if (virusesIndex >= 9) {
         virusesIndex = 0;
     }
+    if(aquarium->level==3){
+        int random_number=(rand() % 2) + 1;
+        if(random_number==1){
+            viruses[virusesIndex] = new Virus(1,spongeBob,aquarium);
+        }else{
+            viruses[virusesIndex] = new Virus(2,spongeBob,aquarium);
+        }
+    }else{
+           viruses[virusesIndex] = new Virus(1,spongeBob,aquarium);
+    }
 
-    viruses[virusesIndex] = new Virus(spongeBob,aquarium);
+
     addItem(viruses[virusesIndex++]);
 }
 
@@ -527,6 +537,7 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
             currentVirus["x"] = this->viruses[i]->x();
             currentVirus["y"] = this->viruses[i]->y();
             currentVirus["speed"] = this->viruses[i]->speed;
+            currentVirus["type"]= this->viruses[i]->type;
 
             viruses.append(currentVirus);
         }
