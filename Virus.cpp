@@ -57,7 +57,7 @@ void Virus::update(){
         for (int i = 0; i < collisions.size(); i++) {
             if (collisions.at(i)->hasFocus()) {
                 //make SpongeBob vulnerable to all bacteria
-                spongeBob->vulnerable=true;
+                spongeBob->setVulnerable(1);
 
                 //delete this Virus
                 toDelete = true;

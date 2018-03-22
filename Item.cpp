@@ -77,7 +77,7 @@ void Item::update(){
             if (collisions.at(i)->hasFocus()) {
                 int degree=spongeBob->immunityLevelDegree;
 
-                if (isHealthy) {
+                if (isHealthy && spongeBob->unchangeableImmunityLevel == false) {
                     if(!(degree>=6 && spongeBob->immunityLevel==3)){
                         degree=spongeBob->immunityLevelDegree++;
                         spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
@@ -91,7 +91,7 @@ void Item::update(){
 
                        spongeBob->immunityLevel++;
                     }
-                } else {
+                } else if (!isHealthy && spongeBob->unchangeableImmunityLevel == false) {
                     if(!(degree==1 && spongeBob->immunityLevel==1)){
                         degree=spongeBob->immunityLevelDegree--;
                         spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
