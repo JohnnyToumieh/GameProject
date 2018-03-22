@@ -321,9 +321,8 @@ void Game1Scene::virusUpdate(){
     if (virusesIndex >= 9) {
         virusesIndex = 0;
     }
-    if (aquarium->level == 1) {
+    if (aquarium->level == 3) {
         int random_number=(rand() % 20) + 1;
-        random_number = 10;
         if(random_number == 10 && !pestilenceTimer->isActive()){
             pestilenceTimer->start(10000);
             updateTimer();
