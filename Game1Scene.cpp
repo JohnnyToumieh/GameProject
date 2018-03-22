@@ -293,13 +293,6 @@ void Game1Scene::updateItems(){
 
     int random_number = (rand() % 2) + 1;
 
-    for (int i = 0; i < 20; i++) {
-        if (items[i] != NULL && items[i]->toDelete) {
-            delete items[i];
-            items[i] = NULL;
-        }
-    }
-
     if (itemsIndex >= 20) {
         itemsIndex = 0;
     }
@@ -614,13 +607,6 @@ void Game1Scene::updateBacterias() {
         updateBacteriasTimer->start(5000);
     }
 
-    for (int i = 0; i < 20; i++) {
-        if (bacterias[i] != NULL && bacterias[i]->toDelete) {
-            delete bacterias[i];
-            bacterias[i] = NULL;
-        }
-    }
-
     if (bacteriasIndex >= 17) {
         bacteriasIndex = 0;
     }
@@ -684,6 +670,22 @@ void Game1Scene::checkGameState() {
     }
 
     spongeBob->setFocus();
+
+    // Remove bacterias
+    for (int i = 0; i < 20; i++) {
+        if (bacterias[i] != NULL && bacterias[i]->toDelete) {
+            delete bacterias[i];
+            bacterias[i] = NULL;
+        }
+    }
+
+    // Remove items
+    for (int i = 0; i < 20; i++) {
+        if (items[i] != NULL && items[i]->toDelete) {
+            delete items[i];
+            items[i] = NULL;
+        }
+    }
 
     // Update score
     scoreLabel->setText(QStringLiteral("Score: %1").arg(aquarium->score));

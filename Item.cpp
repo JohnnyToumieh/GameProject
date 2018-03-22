@@ -103,14 +103,12 @@ void Item::update(){
                spongeBob->immunityLevel--;
             }
         }
-        scene()->removeItem(this);
         speedTimer->stop();
         toDelete = true;
         return;
     }
 
     if((y()+30) >= 500) {
-        scene()->removeItem(this);
         speedTimer->stop();
         toDelete = true;
         return;
