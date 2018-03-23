@@ -268,6 +268,9 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         virusTimer->start(pausedTimesSave["virusTimer"].toInt());
         if (pausedTimesSave.contains("pestilenceTimer")) {
            pestilenceTimer->start(pausedTimesSave["pestilenceTimer"].toInt());
+           updateTimer();
+           pestilenceTimeLabel->show();
+           pestilenceTimeLabel2->show();
         }
     } else {
         updateBacteriasTimer->start(2000);
