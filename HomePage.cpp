@@ -1,8 +1,5 @@
 #include "HomePage.h"
-#include <QtWidgets>
-#include "SignUp.h"
-#include "ChooseGamePage.h"
-#include "SignIn.h"
+
 #include "Message.h"
 
 HomePage::HomePage(QWidget *widget)

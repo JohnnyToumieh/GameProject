@@ -7,6 +7,8 @@
 #include <QFile>
 #include <QIODevice>
 
+#include "HomePage.h"
+#include "ChooseGamePage.h"
 #include "User.h"
 
 class SignUp : public QVBoxLayout

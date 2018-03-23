@@ -1,5 +1,5 @@
 #include "SpongeBob.h"
-#include <QTimer>
+
 SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsPixmapItem** pixmapLifeList, QObject *parent) : QObject(parent)
 {
     this->aquarium = aquarium;

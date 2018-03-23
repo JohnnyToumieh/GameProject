@@ -1,9 +1,15 @@
 #ifndef HOMEPAGE_H
 #define HOMEPAGE_H
-#include "SignUp.h"
+
 #include <QWidget>
 #include <QObject>
 #include <QtWidgets>
+#include <QtWidgets>
+
+#include "SignUp.h"
+#include "ChooseGamePage.h"
+#include "SignIn.h"
+
 class HomePage : public QVBoxLayout
 {
     Q_OBJECT

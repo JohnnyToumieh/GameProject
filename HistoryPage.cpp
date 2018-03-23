@@ -1,5 +1,4 @@
 #include "HistoryPage.h"
-#include "GameOnePage.h"
 
 HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile)
 {

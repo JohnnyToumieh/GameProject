@@ -1,8 +1,9 @@
 #include "Virus.h"
-#include <qmath.h>
-#include <QPixmap>
+
 Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
 {
+    srand(QTime::currentTime().msec());
+
     this->spongeBob=spongeBob;
     this->aquarium=aquarium;
     this->type=type;
