@@ -206,7 +206,7 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     quit->hide();
 
     quit2 = new QPushButton("Quit");
-    quit2->move(this->width() / 2 + 100, this->height() / 2 + 150);
+    quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
     proxyWidget = addWidget(quit2);
     proxyWidget->setZValue(10000);
     quit2->hide();
@@ -929,6 +929,8 @@ void Game1Scene::gameOver(bool result) {
         nextLevelButton->move(this->width() / 2 + 10, this->height() / 2 + 150);
     } else {
         // Should i also save when he overrides a resume game?
+
+        quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
 
         saveScore();
         saveFile();
