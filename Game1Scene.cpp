@@ -751,8 +751,27 @@ void Game1Scene::checkGameState() {
             pausedUpdateItemsTimer = updateItemsTimer->remainingTime();
             pausedUpdateBacteriasTimer = updateBacteriasTimer->remainingTime();
             pausedVirusTimer = virusTimer->remainingTime();
+
+            if (pausedTimeUpdater < 0) {
+                pausedTimeUpdater = 0;
+            }
+            if (pausedUpdateItemsTimer < 0) {
+                pausedUpdateItemsTimer = 0;
+            }
+            if (pausedUpdateBacteriasTimer < 0) {
+                pausedUpdateBacteriasTimer = 0;
+            }
+            if (pausedVirusTimer < 0) {
+                pausedVirusTimer = 0;
+            }
+
             if (pestilenceTimer->isActive()) {
                 pausedPestilenceTimer = pestilenceTimer->remainingTime();
+
+                if (pausedPestilenceTimer < 0) {
+                    pausedPestilenceTimer = 0;
+                }
+
                 pestilenceTimer->stop();
             }
 
