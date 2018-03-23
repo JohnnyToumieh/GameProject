@@ -66,9 +66,7 @@ void Item::checkGameState() {
             justPaused = true;
         }
     }
-}
 
-void Item::update(){
     if(!scene()->collidingItems(this).isEmpty()){
         QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
         for (int i = 0; i < collisions.size(); i++) {
@@ -105,14 +103,18 @@ void Item::update(){
                     }
                 }
                 speedTimer->stop();
+                checkGameStateTimer->stop();
                 toDelete = true;
                 return;
             }
         }
     }
+}
 
+void Item::update(){
     if((y()+30) >= 500) {
         speedTimer->stop();
+        checkGameStateTimer->stop();
         toDelete = true;
         return;
     }

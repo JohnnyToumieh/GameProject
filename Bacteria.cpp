@@ -64,9 +64,7 @@ void Bacteria::checkGameState() {
             justPaused = true;
         }
     }
-}
 
-void Bacteria::update(){
     if(!scene()->collidingItems(this).isEmpty()){
         QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
         for (int i = 0; i < collisions.size(); i++) {
@@ -93,16 +91,20 @@ void Bacteria::update(){
                     //delete this bacteria
                     toDelete = true;
                     speedTimer->stop();
+                    checkGameStateTimer->stop();
                     return;
                 }
                 break;
             }
         }
     }
+}
 
+void Bacteria::update(){
     if (x() + 30 >= 950) {
         toDelete = true;
         speedTimer->stop();
+        checkGameStateTimer->stop();
         return;
     } else {
         if(spongeBob->vulnerable){

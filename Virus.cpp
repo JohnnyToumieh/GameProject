@@ -60,9 +60,7 @@ void Virus::checkGameState() {
             justPaused = true;
         }
     }
-}
 
-void Virus::update(){
     if(!scene()->collidingItems(this).isEmpty()){
         QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
         for (int i = 0; i < collisions.size(); i++) {
@@ -73,14 +71,18 @@ void Virus::update(){
                 //delete this Virus
                 toDelete = true;
                 speedTimer->stop();
+                checkGameStateTimer->stop();
                 return;
             }
         }
     }
+}
 
+void Virus::update(){
     if (x() + 30 >= 950) {
         toDelete = true;
         speedTimer->stop();
+        checkGameStateTimer->stop();
         return;
     } else {
         if (this->type == 3) {
