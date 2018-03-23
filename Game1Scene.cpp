@@ -64,19 +64,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     scoreLabel->adjustSize();
     addWidget(scoreLabel);
 
-    gameOverLabel = new QLabel("GAME OVER");
-    gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
-    gameOverLabel->move(90, 150);
-    proxyWidget = addWidget(gameOverLabel);
-    proxyWidget->setZValue(10000);
-    gameOverLabel->hide();
-
-    scoreLabel2 = new QLabel();
-    scoreLabel2->setStyleSheet("QLabel { background-color : black; color : white; font: 80px; }");
-    proxyWidget = addWidget(scoreLabel2);
-    proxyWidget->setZValue(10000);
-    scoreLabel2->hide();
-
     pixmapNeedle = new QGraphicsPixmapItem();
     QPixmap *picNeedle  = new QPixmap("needle.png");
     pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
@@ -227,6 +214,19 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     proxyWidget = addWidget(quit);
     proxyWidget->setZValue(10000);
     quit->hide();
+
+    gameOverLabel = new QLabel("GAME OVER");
+    gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
+    gameOverLabel->move(90, 150);
+    proxyWidget = addWidget(gameOverLabel);
+    proxyWidget->setZValue(10000);
+    gameOverLabel->hide();
+
+    scoreLabel2 = new QLabel();
+    scoreLabel2->setStyleSheet("QLabel { background-color : black; color : white; font: 80px; }");
+    proxyWidget = addWidget(scoreLabel2);
+    proxyWidget->setZValue(10000);
+    scoreLabel2->hide();
 
     quit2 = new QPushButton("Quit");
     quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
