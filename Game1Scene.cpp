@@ -319,7 +319,7 @@ void Game1Scene::setUpNextLevel() {
     aquarium->level++;
     aquarium->currentCleanliness = 0;
     aquarium->currentTime = 0;
-    aquarium->immunityFactor = 0;
+    aquarium->immunityFactor = 1;
 
     spongeBob->reset();
     if (spongeBob->lives < 3) {
