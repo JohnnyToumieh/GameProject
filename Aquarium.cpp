@@ -13,4 +13,5 @@ Aquarium::Aquarium(int level, int maxCleanliness, int incrementCleanliness, int 
     this->score = score;
 
     this->gamePaused = false;
+    this->requestForUnpause = false;
 }

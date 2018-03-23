@@ -23,6 +23,7 @@ public:
     int score;
 
     bool gamePaused;
+    bool requestForUnpause;
 signals:
 
 public slots:
