@@ -189,38 +189,45 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     greyForeground->setStyleSheet("background-color: rgba(105, 105, 105, 100);");
     greyForeground->setFixedHeight(this->height());
     greyForeground->setFixedWidth(this->width());
-    addWidget(greyForeground);
+    QGraphicsProxyWidget *proxyWidget = addWidget(greyForeground);
+    proxyWidget->setZValue(10000);
     greyForeground->hide();
 
     unpause = new QPushButton("Unpause");
     unpause->move(this->width() / 2 - 30, this->height() / 2 - 20);
-    addWidget(unpause);
+    proxyWidget = addWidget(unpause);
+    proxyWidget->setZValue(10000);
     unpause->hide();
 
     quit = new QPushButton("Quit");
     quit->move(this->width() / 2 - 30, this->height() / 2 + 10);
-    addWidget(quit);
+    proxyWidget = addWidget(quit);
+    proxyWidget->setZValue(10000);
     quit->hide();
 
     quit2 = new QPushButton("Quit");
     quit2->move(this->width() / 2 + 100, this->height() / 2 + 150);
-    addWidget(quit2);
+    proxyWidget = addWidget(quit2);
+    proxyWidget->setZValue(10000);
     quit2->hide();
 
     gameOverLabel = new QLabel("GAME OVER");
     gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
     gameOverLabel->move(90, 150);
-    addWidget(gameOverLabel);
+    proxyWidget = addWidget(gameOverLabel);
+    proxyWidget->setZValue(10000);
     gameOverLabel->hide();
 
     scoreLabel2 = new QLabel();
     scoreLabel2->setStyleSheet("QLabel { background-color : black; color : white; font: 80px; }");
-    addWidget(scoreLabel2);
+    proxyWidget = addWidget(scoreLabel2);
+    proxyWidget->setZValue(10000);
     scoreLabel2->hide();
 
     nextLevelButton = new QPushButton("Next Level");
     nextLevelButton->move(this->width() / 2 - 50, this->height() / 2 + 150);
-    addWidget(nextLevelButton);
+    proxyWidget = addWidget(nextLevelButton);
+    proxyWidget->setZValue(10000);
     nextLevelButton->hide();
 
     QObject::connect(unpause, SIGNAL(clicked()), SLOT(unpauseClicked()));
@@ -757,14 +764,8 @@ void Game1Scene::checkGameState() {
             justPaused = false;
 
             greyForeground->show();
-            greyForeground->activateWindow();
-            greyForeground->raise();
             unpause->show();
-            unpause->activateWindow();
-            unpause->raise();
             quit->show();
-            quit->activateWindow();
-            quit->raise();
         }
 
         return;
@@ -890,30 +891,20 @@ void Game1Scene::gameOver(bool result) {
 
     greyForeground->setStyleSheet("background-color: rgba(0, 0, 0, 255);");
     greyForeground->show();
-    greyForeground->activateWindow();
-    greyForeground->raise();
 
     gameOverLabel->show();
-    gameOverLabel->activateWindow();
-    gameOverLabel->raise();
 
     scoreLabel2->setText(QStringLiteral("Score: %1").arg(aquarium->score));
     scoreLabel2->adjustSize();
     scoreLabel2->move((this->width() - scoreLabel2->width()) / 2, 330);
     scoreLabel2->show();
-    scoreLabel2->activateWindow();
-    scoreLabel2->raise();
 
     quit2->show();
-    quit2->activateWindow();
-    quit2->raise();
 
     if (result && aquarium->level < 3) {
         setUpNextLevel();
 
         nextLevelButton->show();
-        nextLevelButton->activateWindow();
-        nextLevelButton->raise();
 
         quit2->move(this->width() / 2 - 110, this->height() / 2 + 150);
         nextLevelButton->move(this->width() / 2 + 10, this->height() / 2 + 150);
