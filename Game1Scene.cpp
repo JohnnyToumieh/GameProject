@@ -803,7 +803,7 @@ void Game1Scene::checkGameState() {
             updateItemsTimer->start(pausedUpdateItemsTimer);
             updateBacteriasTimer->start(pausedUpdateBacteriasTimer);
             virusTimer->start(pausedVirusTimer);
-            if (pausedPestilenceTimer != 0) {
+            if (pausedPestilenceTimer > 0) {
                 pestilenceTimer->start(pausedPestilenceTimer);
                 pausedPestilenceTimer = 0;
             }
