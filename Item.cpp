@@ -1,8 +1,9 @@
 #include "Item.h"
-#include <QTimer>
-#include <QGraphicsScene>
+
 Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, QObject *parent)
 {
+    srand(QTime::currentTime().msec());
+
     this->aquarium = aquarium;
     this->spongeBob = spongeBob;
 

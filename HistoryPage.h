@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QtWidgets>
 #include <QObject>
+
+#include "GameOnePage.h"
 #include "User.h"
 
 class HistoryPage : public QVBoxLayout

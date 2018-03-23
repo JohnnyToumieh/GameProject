@@ -1,8 +1,6 @@
 #include "GameOnePage.h"
-#include "ChooseGamePage.h"
+
 #include "Message.h"
-#include "HistoryPage.h"
-#include "Game1Scene.h"
 
 GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile)
 {

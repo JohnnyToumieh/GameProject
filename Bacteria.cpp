@@ -1,14 +1,9 @@
 #include "Bacteria.h"
-#include <QtMath>
-#include <QPainter>
-#include<QBrush>
-#include<QWidget>
-#include <QGraphicsScene>
-#include <QList>
-#include <QDebug>
 
 Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPixmapItem* greenColorItem, QGraphicsPixmapItem** pixmapLifeList,QObject *parent)
 {
+    srand(QTime::currentTime().msec());
+
     this->type=type;
     this->spongeBob=spongeBob;
     this->aquarium=aquarium;

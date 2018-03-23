@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QGraphicsScene>
 #include<QKeyEvent>
+#include <QTimer>
 
 #include "Aquarium.h"
 

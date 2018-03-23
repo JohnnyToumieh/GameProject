@@ -7,6 +7,15 @@
 #include <QTimer>
 #include <QPainter>
 #include <QGraphicsScene>
+#include <QtMath>
+#include <QPainter>
+#include <QBrush>
+#include <QWidget>
+#include <QGraphicsScene>
+#include <QList>
+#include <QDebug>
+#include <QTime>
+
 #include "SpongeBob.h"
 #include "Aquarium.h"
 

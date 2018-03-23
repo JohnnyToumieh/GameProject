@@ -4,6 +4,8 @@
 
 Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool resume, int level, QGraphicsScene *parent) : QGraphicsScene(parent)
 {
+    srand(QTime::currentTime().msec());
+
     this->widget = widget;
     this->user = user;
     this->usersFile = usersFile;
