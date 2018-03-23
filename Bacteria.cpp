@@ -83,10 +83,10 @@ void Bacteria::checkGameState() {
                     aquarium->score += type * 100;
 
                     //increase cleanliness
-                    aquarium->currentCleanliness += aquarium->incrementCleanliness;
+                    aquarium->currentCleanliness += aquarium->levels[aquarium->level]["incrementCleanliness"];
                     QPixmap *greenColor = new QPixmap("needle.png");
                     greenColor->fill(Qt::green);
-                    greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->maxCleanliness) * aquarium->currentCleanliness, 20));
+                    greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
 
                     //delete this bacteria
                     toDelete = true;
