@@ -11,6 +11,27 @@ public:
 
     int level;
 
+    /*Array for each level containing:
+     * maxCleanliness
+     * incrementCleanliness
+     *
+     * immunityDegree
+     *
+     * bacteriaGenerationRate
+     * bacteriaWeight1
+     * bacteriaWeight2
+     * bacteriaWeight3
+     *
+     * itemsDropRate
+     * healthyItemWeight
+     * unhealthyItemWeight
+     *
+     * virusGenerationRate
+     * virusWeight1
+     * virusWeight2
+     * virusWeight3
+     */
+
     int maxCleanliness;
     int incrementCleanliness;
     int currentCleanliness;
@@ -23,6 +44,7 @@ public:
     int score;
 
     bool gamePaused;
+    bool requestForUnpause;
 signals:
 
 public slots:

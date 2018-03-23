@@ -75,7 +75,13 @@ void SpongeBob::changeGlow(){
 
 void SpongeBob::keyPressEvent(QKeyEvent *event){
     if (event->key() == Qt::Key_Escape) {
-        aquarium->gamePaused = !aquarium->gamePaused;
+        if (aquarium->gamePaused && !aquarium->requestForUnpause) {
+            aquarium->requestForUnpause = true;
+        } else if (aquarium->gamePaused && aquarium->requestForUnpause) {
+            aquarium->requestForUnpause = false;
+        } else {
+            aquarium->gamePaused = !aquarium->gamePaused;
+        }
     }
     if (!aquarium->gamePaused) {
         if (event->key() == Qt::Key_Right && x()+10 < 930)

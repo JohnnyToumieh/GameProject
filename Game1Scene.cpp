@@ -43,6 +43,14 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     addWidget(pestilenceTimeLabel2);
     pestilenceTimeLabel2->hide();
 
+    unpauseLabel = new QLabel();
+    unpauseLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : white; font: 140px; }");
+    unpauseLabel->move(this->width() / 2 - 90, this->height() / 2 - 90);
+    unpauseLabel->setWordWrap(true);
+    QGraphicsProxyWidget* proxyWidget = addWidget(unpauseLabel);
+    proxyWidget->setZValue(10000);
+    unpauseLabel->hide();
+
     levelLabel = new QLabel();
     levelLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
     levelLabel->move(300, 20);
@@ -191,7 +199,7 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     greyForeground->setStyleSheet("background-color: rgba(105, 105, 105, 100);");
     greyForeground->setFixedHeight(this->height());
     greyForeground->setFixedWidth(this->width());
-    QGraphicsProxyWidget *proxyWidget = addWidget(greyForeground);
+    proxyWidget = addWidget(greyForeground);
     proxyWidget->setZValue(10000);
     greyForeground->hide();
 
@@ -207,12 +215,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     proxyWidget->setZValue(10000);
     quit->hide();
 
-    quit2 = new QPushButton("Quit");
-    quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
-    proxyWidget = addWidget(quit2);
-    proxyWidget->setZValue(10000);
-    quit2->hide();
-
     gameOverLabel = new QLabel("GAME OVER");
     gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
     gameOverLabel->move(90, 150);
@@ -225,6 +227,12 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     proxyWidget = addWidget(scoreLabel2);
     proxyWidget->setZValue(10000);
     scoreLabel2->hide();
+
+    quit2 = new QPushButton("Quit");
+    quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
+    proxyWidget = addWidget(quit2);
+    proxyWidget->setZValue(10000);
+    quit2->hide();
 
     nextLevelButton = new QPushButton("Next Level");
     nextLevelButton->move(this->width() / 2 - 50, this->height() / 2 + 150);
@@ -251,11 +259,14 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     timeUpdater = new QTimer(this);
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
     connect(pestilenceTimer, SIGNAL(timeout()), this, SLOT(summonPestilence()));
+    unpauseTimer = new QTimer(this);
+    connect(unpauseTimer, SIGNAL(timeout()), this, SLOT(unpauseGame()));
 
     updateItemsTimer->setSingleShot(true);
     updateBacteriasTimer->setSingleShot(true);
     virusTimer->setSingleShot(true);
     pestilenceTimer->setSingleShot(true);
+    unpauseTimer->setSingleShot(true);
 
     if (resume) {
         QJsonObject pausedTimesSave = read("pausedTimes").object();
@@ -308,7 +319,7 @@ void Game1Scene::setUpNextLevel() {
     aquarium->level++;
     aquarium->currentCleanliness = 0;
     aquarium->currentTime = 0;
-    aquarium->immunityFactor = 0;
+    aquarium->immunityFactor = 1;
 
     spongeBob->reset();
     if (spongeBob->lives < 3) {
@@ -412,13 +423,7 @@ void Game1Scene::updateItems(){
 }
 
 void Game1Scene::unpauseClicked() {
-    aquarium->gamePaused = false;
-
-    greyForeground->hide();
-    unpause->hide();
-    quit->hide();
-
-    spongeBob->setFocus();
+   aquarium->requestForUnpause = true;
 }
 
 void Game1Scene::quitClicked() {
@@ -744,76 +749,107 @@ void Game1Scene::updateBacterias() {
     addItem(bacterias[bacteriasIndex++]);
 }
 
+void Game1Scene::unpauseGame() {
+    time->restart();
+
+    timeUpdater->setSingleShot(true);
+
+    timeUpdater->start(pausedTimeUpdater);
+    updateItemsTimer->start(pausedUpdateItemsTimer);
+    updateBacteriasTimer->start(pausedUpdateBacteriasTimer);
+    virusTimer->start(pausedVirusTimer);
+    if (pausedPestilenceTimer > 0) {
+        pestilenceTimer->start(pausedPestilenceTimer);
+        pausedPestilenceTimer = 0;
+    }
+
+    greyForeground->hide();
+    unpauseLabel->hide();
+
+    aquarium->gamePaused = false;
+    aquarium->requestForUnpause = false;
+}
+
 void Game1Scene::checkGameState() {
     // Check if game paused
     if (aquarium->gamePaused) {
        // Pause everything. We need those stats anw for the save functionality
 
-        if (justPaused) {
-            pausedTime += time->elapsed();
+        if (aquarium->requestForUnpause) {
+            if (!justPaused) {
+                unpauseTimer->start(3000);
 
-            pausedTimeUpdater = timeUpdater->remainingTime();
-            pausedUpdateItemsTimer = updateItemsTimer->remainingTime();
-            pausedUpdateBacteriasTimer = updateBacteriasTimer->remainingTime();
-            pausedVirusTimer = virusTimer->remainingTime();
+                justPaused = true;
 
-            if (pausedTimeUpdater < 0) {
-                pausedTimeUpdater = 0;
-            }
-            if (pausedUpdateItemsTimer < 0) {
-                pausedUpdateItemsTimer = 0;
-            }
-            if (pausedUpdateBacteriasTimer < 0) {
-                pausedUpdateBacteriasTimer = 0;
-            }
-            if (pausedVirusTimer < 0) {
-                pausedVirusTimer = 0;
+                greyForeground->hide();
+                unpause->hide();
+                quit->hide();
+
+                unpauseLabel->show();
             }
 
-            if (pestilenceTimer->isActive()) {
-                pausedPestilenceTimer = pestilenceTimer->remainingTime();
-
-                if (pausedPestilenceTimer < 0) {
-                    pausedPestilenceTimer = 0;
+            if (unpauseTimer->isActive()) {
+                int secs = (unpauseTimer->remainingTime()) / 1000;
+                secs = secs % 60 + 1;
+                if (secs == 4) {
+                    secs = 3;
                 }
 
-                pestilenceTimer->stop();
+                unpauseLabel->setText(QString("%1")
+                .arg(secs, 2, 10, QLatin1Char('0')) );
             }
+        } else {
+            if (justPaused) {
+                pausedTime += time->elapsed();
 
-            timeUpdater->stop();
-            updateItemsTimer->stop();
-            updateBacteriasTimer->stop();
-            virusTimer->stop();
+                if (unpauseTimer->isActive()) {
+                    unpauseTimer->stop();
+                }
 
-            justPaused = false;
+                pausedTimeUpdater = timeUpdater->remainingTime();
+                pausedUpdateItemsTimer = updateItemsTimer->remainingTime();
+                pausedUpdateBacteriasTimer = updateBacteriasTimer->remainingTime();
+                pausedVirusTimer = virusTimer->remainingTime();
 
-            greyForeground->show();
-            unpause->show();
-            quit->show();
+                if (pausedTimeUpdater < 0) {
+                    pausedTimeUpdater = 0;
+                }
+                if (pausedUpdateItemsTimer < 0) {
+                    pausedUpdateItemsTimer = 0;
+                }
+                if (pausedUpdateBacteriasTimer < 0) {
+                    pausedUpdateBacteriasTimer = 0;
+                }
+                if (pausedVirusTimer < 0) {
+                    pausedVirusTimer = 0;
+                }
+
+                if (pestilenceTimer->isActive()) {
+                    pausedPestilenceTimer = pestilenceTimer->remainingTime();
+
+                    if (pausedPestilenceTimer < 0) {
+                        pausedPestilenceTimer = 0;
+                    }
+
+                    pestilenceTimer->stop();
+                }
+
+                timeUpdater->stop();
+                updateItemsTimer->stop();
+                updateBacteriasTimer->stop();
+                virusTimer->stop();
+
+                justPaused = false;
+
+                unpauseLabel->hide();
+
+                greyForeground->show();
+                unpause->show();
+                quit->show();
+            }
         }
 
         return;
-    } else {
-        if (!justPaused) {
-            time->restart();
-
-            timeUpdater->setSingleShot(true);
-
-            timeUpdater->start(pausedTimeUpdater);
-            updateItemsTimer->start(pausedUpdateItemsTimer);
-            updateBacteriasTimer->start(pausedUpdateBacteriasTimer);
-            virusTimer->start(pausedVirusTimer);
-            if (pausedPestilenceTimer > 0) {
-                pestilenceTimer->start(pausedPestilenceTimer);
-                pausedPestilenceTimer = 0;
-            }
-
-            justPaused = true;
-
-            greyForeground->hide();
-            unpause->hide();
-            quit->hide();
-        }
     }
 
     spongeBob->setFocus();
