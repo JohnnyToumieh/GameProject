@@ -40,9 +40,15 @@ Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, Q
     }
     setPos((rand() % 800) + 100, 100);
 
+    if (this->type == 1) {
+        this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["healthyItemSpeed"] - 50;
+    } else if (this->type == 2) {
+        this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["unhealthyItemSpeed"] - 50;
+    }
+
     speedTimer = new QTimer(this);
     connect(speedTimer, SIGNAL(timeout()), this, SLOT(update()));
-    speedTimer->start(500);
+    speedTimer->start(this->speed);
 
     checkGameStateTimer = new QTimer(this);
     connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
@@ -61,7 +67,7 @@ void Item::checkGameState() {
         return;
     } else {
         if (!justPaused) {
-            speedTimer->start(500);
+            speedTimer->start(this->speed);
 
             justPaused = true;
         }

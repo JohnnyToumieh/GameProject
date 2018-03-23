@@ -28,14 +28,12 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
     baseY = (rand() % 400) + 100;
     setPos(0, baseY);
 
-    int random_number= (rand()%3)+1;
-
-    if (random_number==1) {
-        this->speed = 200;
-    } else if (random_number==2) {
-        this->speed = 250;
-    } else {
-        this->speed = 300;
+    if (this->type == 1) {
+        this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["bacteriaSpeed1"] - 50;
+    } else if (this->type == 2) {
+        this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["bacteriaSpeed2"] - 50;
+    } else if (this->type == 3) {
+        this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["bacteriaSpeed3"] - 50;
     }
 
     speedTimer = new QTimer(this);

@@ -18,6 +18,7 @@ public:
 
     bool isHealthy;
     int type;
+    int speed;
 
     bool toDelete;
 
