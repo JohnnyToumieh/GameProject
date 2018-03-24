@@ -40,9 +40,9 @@ Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, Q
     }
     setPos((rand() % 800) + 100, 100);
 
-    if (this->type == 1) {
+    if (this->isHealthy) {
         this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["healthyItemSpeed"] - 50;
-    } else if (this->type == 2) {
+    } else if (!this->isHealthy) {
         this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["unhealthyItemSpeed"] - 50;
     }
 
