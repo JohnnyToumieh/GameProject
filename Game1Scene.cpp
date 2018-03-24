@@ -105,8 +105,8 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         spongeBob->immunityLevel = spongeBobSave["immunityLevel"].toInt();
         spongeBob->immunityLevelDegree = spongeBobSave["immunityLevelDegree"].toInt();
         spongeBob->lives = spongeBobSave["lives"].toInt();
-        spongeBob->setX(spongeBobSave["x"].toInt());
-        spongeBob->setY(spongeBobSave["y"].toInt());
+        spongeBob->setX(spongeBobSave["x"].toDouble());
+        spongeBob->setY(spongeBobSave["y"].toDouble());
         spongeBob->numCollisionsWithBacterias[0] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions1"].toInt();
         spongeBob->numCollisionsWithBacterias[1] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions2"].toInt();
         spongeBob->numCollisionsWithBacterias[2] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions3"].toInt();
@@ -141,8 +141,9 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
             QJsonObject currentBacteria = bacteriasSave[bacteriasIndex].toObject();
             bacterias[bacteriasIndex] = new Bacteria(currentBacteria["type"].toInt(),spongeBob,aquarium,greenColorItem,pixmapLifeList);
             bacterias[bacteriasIndex]->speed = currentBacteria["speed"].toInt();
-            bacterias[bacteriasIndex]->setX(currentBacteria["x"].toInt());
-            bacterias[bacteriasIndex]->setY(currentBacteria["y"].toInt());
+            bacterias[bacteriasIndex]->setX(currentBacteria["x"].toDouble());
+            bacterias[bacteriasIndex]->setY(currentBacteria["y"].toDouble());
+            bacterias[bacteriasIndex]->baseY = currentBacteria["y"].toDouble();
             addItem(bacterias[bacteriasIndex]);
         }
     } else {
@@ -164,8 +165,9 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
             QJsonObject currentVirus = virusesSave[virusesIndex].toObject();
             viruses[virusesIndex] = new Virus(currentVirus["type"].toInt(),spongeBob,aquarium);
             viruses[virusesIndex]->speed = currentVirus["speed"].toInt();
-            viruses[virusesIndex]->setX(currentVirus["x"].toInt());
-            viruses[virusesIndex]->setY(currentVirus["y"].toInt());
+            viruses[virusesIndex]->setX(currentVirus["x"].toDouble());
+            viruses[virusesIndex]->setY(currentVirus["y"].toDouble());
+            viruses[virusesIndex]->baseY = currentVirus["y"].toDouble();
             addItem(viruses[virusesIndex]);
         }
     }
@@ -181,8 +183,8 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         for (itemsIndex = 0; itemsIndex < itemsSave.size(); itemsIndex++) {
             QJsonObject currentItem = itemsSave[itemsIndex].toObject();
             items[itemsIndex] = new Item(aquarium, spongeBob, currentItem["isHealthy"].toBool(), currentItem["type"].toInt());
-            items[itemsIndex]->setX(currentItem["x"].toInt());
-            items[itemsIndex]->setY(currentItem["y"].toInt());
+            items[itemsIndex]->setX(currentItem["x"].toDouble());
+            items[itemsIndex]->setY(currentItem["y"].toDouble());
             addItem(items[itemsIndex]);
         }
     }
