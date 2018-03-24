@@ -3,6 +3,13 @@
 
 #include <QObject>
 
+/**
+ *\file Aquarium.h
+ *@brief The aquarium class, represents the Aquarium with its main indicators
+ * Including cleanliness,score, and time
+ *
+ */
+
 class Aquarium : public QObject
 {
     Q_OBJECT
@@ -10,17 +17,16 @@ public:
     explicit Aquarium(int level, int currentCleanliness, int currentTime, int score, QObject *parent = nullptr);
     void setUpLevels();
 
-    int level;
+    int level;//!<Integer member (1,2 or 3) that represents level of the game
+    std::map<int, std::map<std::string, int>> levels;//!<<Map member that holds a string key and Integer value represnting defferent attributes of the level
 
-    std::map<int, std::map<std::string, int>> levels;
+    int currentCleanliness;//!<Integer member that represents the current cleanliness of the aquarium
+    int currentTime;//!<Integer member that represents the current Time
 
-    int currentCleanliness;
-    int currentTime;
+    int score;//!<Integer member that represents the score
 
-    int score;
-
-    bool gamePaused;
-    bool requestForUnpause;
+    bool gamePaused;//!<Boolean member that state wether the game is paused or not
+    bool requestForUnpause;//!<Boolean member that state wether there is a request to unpause or not
 
 private:
     std::map<std::string, int> setUpLevelsHelper(int maxTime,
@@ -31,7 +37,7 @@ private:
                                                  int itemDropRate, int healthyItemWeight, int unhealthyItemWeight,
                                                  int healthyItemSpeed, int unhealthyItemSpeed,
                                                  int virusGenerationRate, int virusWeight1, int virusWeight2, int virusWeight3,
-                                                 int virusSpeed1, int virusSpeed2, int virusSpeed3);
+                                                 int virusSpeed1, int virusSpeed2, int virusSpeed3);//!<Member function sets up different levels according to passed parameters
 
 signals:
 

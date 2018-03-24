@@ -1,10 +1,26 @@
 #include "User.h"
+/**
+ *\file User.cpp
+ *@brief contains User class definition which represents the user that will be playing the games
+ *
+ */
 
+/**
+ * @brief User::User constructor of User class
+ *
+ */
 User::User()
 {
     this->isGuest = false;
 }
 
+/**
+ * @brief User::read member function: read the user's info from JSON file
+ *
+ * function that take a QJsonObject reference access it to read user's basic info.
+ * @param QJsonObject &json reference to the JSON file holding users info
+ * @return bool true if the read is successfull
+ */
 bool User::read(const QJsonObject &json)
 {
     if (json.contains("users") && json["users"].isArray()) {
@@ -41,6 +57,13 @@ bool User::read(const QJsonObject &json)
     return false;
 }
 
+/**
+ * @brief User::write member function: write the user's info to a JSON file
+ *
+ * function that take a QJsonObject reference access it to write user's basic info.
+ * @param QJsonObject &json reference to the JSON file holding users info
+ * @return bool true if the write is successfull
+ */
 bool User::write(QJsonObject &json) const
 {
     if (json.contains("users") && json["users"].isArray()) {
@@ -75,6 +98,9 @@ bool User::write(QJsonObject &json) const
     return false;
 }
 
+/**
+ * @brief User::clear member function: clear the info of the object user
+ */
 void User::clear() {
     this->username = QString();
     this->password = QString();
@@ -88,6 +114,9 @@ void User::clear() {
     this->DoByear = -1;
 }
 
+/**
+ * @brief User::writeHelper member function: helper function to write userObject in JSON file.
+ */
 void User::writeHelper(QJsonObject &userObject) const
 {
     userObject["username"] = this->username;

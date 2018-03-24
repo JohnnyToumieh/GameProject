@@ -14,33 +14,40 @@
 #include "SpongeBob.h"
 #include "Aquarium.h"
 
+/**
+ *\file Virus.h
+ *@brief The Virus class, represents the moving bacteria
+ *
+ */
+
+
 class Virus : public QObject,public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
     explicit Virus(int type,SpongeBob *spongeBob,Aquarium *aquarium,QObject *parent = nullptr);
 
-    int speed;
-    int type;
+    int speed;//!<Integer member type (1,2 or 3) that represents type of the virus
+    int type;//!<Integer member speed that represents the speed of the virus
 
-    int baseY;
+    int baseY;//!<Integer member that represents the base Y position of the virus
 
-    bool toDelete;
+    bool toDelete;//!<Boolean member that state if the virus is to be deleted from the saving list
 
-    SpongeBob *spongeBob;
-    Aquarium* aquarium;
+    SpongeBob *spongeBob;//!<SpongeBob member that represents spongebob
+    Aquarium* aquarium;//!<Aquarium member that represents the aquarium
 
-    bool justPaused;
+    bool justPaused;//!<Boolean member that state if the game is just paused
 
-    QTimer* checkGameStateTimer;
-    QTimer* speedTimer;
+    QTimer* checkGameStateTimer;//!<QTimer member trigger checking the game state
+    QTimer* speedTimer;//!<QTimer member that trigger moving the virus
 
 
 signals:
 
 public slots:
-    void update();
-    void checkGameState();
+    void update();//!<Member function updates the bactrium by moving/removing it
+    void checkGameState();//!<Member function check the game state (paused,unpaused);
 };
 
 #endif // VIRUS_H
