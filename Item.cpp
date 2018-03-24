@@ -1,8 +1,9 @@
 #include "Item.h"
-#include <QTimer>
-#include <QGraphicsScene>
+
 Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, QObject *parent)
 {
+    srand(QTime::currentTime().msec());
+
     this->aquarium = aquarium;
     this->spongeBob = spongeBob;
 
@@ -39,9 +40,15 @@ Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, Q
     }
     setPos((rand() % 800) + 100, 100);
 
+    if (this->isHealthy) {
+        this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["healthyItemSpeed"] - 50;
+    } else if (!this->isHealthy) {
+        this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["unhealthyItemSpeed"] - 50;
+    }
+
     speedTimer = new QTimer(this);
     connect(speedTimer, SIGNAL(timeout()), this, SLOT(update()));
-    speedTimer->start(500);
+    speedTimer->start(this->speed);
 
     checkGameStateTimer = new QTimer(this);
     connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
@@ -60,58 +67,63 @@ void Item::checkGameState() {
         return;
     } else {
         if (!justPaused) {
-            speedTimer->start(500);
+            speedTimer->start(this->speed);
 
             justPaused = true;
         }
     }
-}
 
-void Item::update(){
     if(!scene()->collidingItems(this).isEmpty()){
         QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
         for (int i = 0; i < collisions.size(); i++) {
             if (collisions.at(i)->hasFocus()) {
                 int degree=spongeBob->immunityLevelDegree;
 
+                int steps = aquarium->levels[aquarium->level]["stepsPerImmunity"];
                 if (isHealthy && spongeBob->unchangeableImmunityLevel == false) {
-                    if(!(degree>=6 && spongeBob->immunityLevel==3)){
+                    if(!(degree > steps && spongeBob->immunityLevel==3)){
                         degree=spongeBob->immunityLevelDegree++;
-                        spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
-                                                                   spongeBob->needle->boundingRect().center().y());
-                        spongeBob->needle->setRotation(spongeBob->needle->rotation()+8);
+                        if (spongeBob->immunityLevel == 2) {
+                            spongeBob->needle->setRotation(spongeBob->needle->rotation() + 80 / steps);
+                        } else {
+                            spongeBob->needle->setRotation(spongeBob->needle->rotation() + 48 / steps);
+                        }
                     }
 
-                    if((degree>=6 && spongeBob->immunityLevel==1) ||
-                       (degree>=9 && spongeBob->immunityLevel==2)){
-                       spongeBob->immunityLevelDegree=1;
+                    if(degree >= steps && (spongeBob->immunityLevel==1 || spongeBob->immunityLevel==2)){
+                       spongeBob->immunityLevelDegree = 1;
 
                        spongeBob->immunityLevel++;
                     }
                 } else if (!isHealthy && spongeBob->unchangeableImmunityLevel == false) {
                     if(!(degree==1 && spongeBob->immunityLevel==1)){
                         degree=spongeBob->immunityLevelDegree--;
-                        spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
-                                                                   spongeBob->needle->boundingRect().center().y());
-                        spongeBob->needle->setRotation(spongeBob->needle->rotation()-8);
+                        if ((spongeBob->immunityLevel == 2 && degree > 1) || (spongeBob->immunityLevel == 3 && degree == 1)) {
+                            spongeBob->needle->setRotation(spongeBob->needle->rotation() - 80 / steps);
+                        } else {
+                            spongeBob->needle->setRotation(spongeBob->needle->rotation() - 48 / steps);
+                        }
                     }
 
-                    if((degree==1 && spongeBob->immunityLevel==2) ||
-                       (degree==1 && spongeBob->immunityLevel==3)){
-                       spongeBob->immunityLevelDegree=8;
+                    if(degree==1 && (spongeBob->immunityLevel==2 || spongeBob->immunityLevel==3)){
+                       spongeBob->immunityLevelDegree = steps;
 
                        spongeBob->immunityLevel--;
                     }
                 }
                 speedTimer->stop();
+                checkGameStateTimer->stop();
                 toDelete = true;
                 return;
             }
         }
     }
+}
 
+void Item::update(){
     if((y()+30) >= 500) {
         speedTimer->stop();
+        checkGameStateTimer->stop();
         toDelete = true;
         return;
     }

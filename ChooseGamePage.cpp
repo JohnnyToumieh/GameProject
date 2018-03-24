@@ -1,9 +1,6 @@
 #include "ChooseGamePage.h"
-#include "HomePage.h"
-#include "GameOnePage.h"
-#include "Message.h"
 
-#include <ctime>
+#include "Message.h"
 
 ChooseGamePage::ChooseGamePage(QWidget *widget, User* user, QJsonObject usersFile)
 {

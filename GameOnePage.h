@@ -4,6 +4,10 @@
 #include <QWidget>
 #include <QtWidgets>
 #include <QObject>
+
+#include "ChooseGamePage.h"
+#include "HistoryPage.h"
+#include "Game1Scene.h"
 #include "User.h"
 
 class GameOnePage : public QVBoxLayout

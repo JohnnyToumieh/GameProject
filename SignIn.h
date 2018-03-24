@@ -4,6 +4,9 @@
 #include <QWidget>
 #include <QtWidgets>
 #include <QObject>
+
+#include "ChooseGamePage.h"
+#include "HomePage.h"
 #include "User.h"
 
 class SignIn : public QVBoxLayout

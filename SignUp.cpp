@@ -1,7 +1,6 @@
 #include "SignUp.h"
-#include "HomePage.h"
+
 #include "Message.h"
-#include "ChooseGamePage.h"
 
 SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
 {

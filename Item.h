@@ -3,6 +3,9 @@
 
 #include <QObject>
 #include <QGraphicsPixmapItem>
+#include <QTimer>
+#include <QGraphicsScene>
+#include <QTime>
 
 #include "SpongeBob.h"
 #include "Aquarium.h"
@@ -15,6 +18,7 @@ public:
 
     bool isHealthy;
     int type;
+    int speed;
 
     bool toDelete;
 

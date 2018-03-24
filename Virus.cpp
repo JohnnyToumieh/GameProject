@@ -1,22 +1,21 @@
 #include "Virus.h"
-#include <qmath.h>
-#include <QPixmap>
+
 Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
 {
+    srand(QTime::currentTime().msec());
+
     this->spongeBob=spongeBob;
     this->aquarium=aquarium;
     this->type=type;
     this->justPaused = true;
     this->toDelete = false;
 
-    int random_number= (rand()%3)+1;
-
-    if (random_number==1) {
-        this->speed = 200;
-    } else if (random_number==2) {
-        this->speed = 250;
-    } else {
-        this->speed = 300;
+    if (this->type == 1) {
+        this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["virusSpeed1"] - 50;
+    } else if (this->type == 2) {
+        this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["virusSpeed2"] - 50;
+    } else if (this->type == 3) {
+        this->speed = this->aquarium->levels[this->aquarium->level]["virusSpeed3"];
     }
 
     if(type==1){
@@ -28,9 +27,8 @@ Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
     }else if (type==3){
         QPixmap *pic  = new QPixmap("pestilence.png");
         setPixmap(pic->scaled(120,120));
-        this->speed = 50;
     }
-    baseY = (rand() % 300) + 300;
+    baseY = (rand() % 300) + 250;
     setPos(0, baseY);
 
     speedTimer = new QTimer(this);
@@ -59,9 +57,7 @@ void Virus::checkGameState() {
             justPaused = true;
         }
     }
-}
 
-void Virus::update(){
     if(!scene()->collidingItems(this).isEmpty()){
         QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
         for (int i = 0; i < collisions.size(); i++) {
@@ -72,14 +68,18 @@ void Virus::update(){
                 //delete this Virus
                 toDelete = true;
                 speedTimer->stop();
+                checkGameStateTimer->stop();
                 return;
             }
         }
     }
+}
 
+void Virus::update(){
     if (x() + 30 >= 950) {
         toDelete = true;
         speedTimer->stop();
+        checkGameStateTimer->stop();
         return;
     } else {
         if (this->type == 3) {
