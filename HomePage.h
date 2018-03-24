@@ -10,6 +10,12 @@
 #include "ChooseGamePage.h"
 #include "SignIn.h"
 
+/**
+ *\file HomePage.h
+ *@brief The HomePage class, represents the main hompe page of the application (Healthier)
+ *
+ */
+
 class HomePage : public QVBoxLayout
 {
     Q_OBJECT
@@ -27,8 +33,8 @@ public:
 
     QVBoxLayout *VerticalL;
 
-    User* user;
-    QJsonObject usersFile;
+    User* user;//!<User member user represents the signed in user
+    QJsonObject usersFile;//!QJsonObject member usersFile that holds information of the user
 
 signals:
 
@@ -36,9 +42,9 @@ private:
     void setVerticalLayout();
     void RemoveLayout (QWidget* widget);
 public slots:
-    void signUpClicked();
-    void signInClicked();
-    void playAsGuestClicked();
+    void signUpClicked();//!<Member function takes user to sigin page
+    void signInClicked();//!<Member function takes user to signup page
+    void playAsGuestClicked();//!<Member function takes user to choose game page (as a guest)
 };
 
 #endif // HOMEPAGE_H

@@ -4,15 +4,21 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+/**
+ *\file User.h
+ *@brief The User class, represents spongebob
+ *
+ */
+
 class User
 {
 public:
     User();
 
-    bool read(const QJsonObject &json);
-    bool write(QJsonObject &json) const;
+    bool read(const QJsonObject &json);//!<Member function reads users info
+    bool write(QJsonObject &json) const;//!<Member function writes users info
 
-    void clear();
+    void clear();//!<Member function clear users info
 
     QString username;
     QString password;
@@ -21,6 +27,7 @@ public:
     QString lastName;
     QString email;
     QString gender;
+
     int DoBday;
     int DoBmonth;
     int DoByear;

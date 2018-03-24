@@ -8,15 +8,21 @@
 #include "GameOnePage.h"
 #include "User.h"
 
+/**
+ *\file HistoryPage.h
+ *@brief The HistoryPage class, represents the page that display for the user his history in the game
+ *
+ */
+
 class HistoryPage : public QVBoxLayout
 {
     Q_OBJECT
 public:
     explicit HistoryPage(QWidget *widget,int gameNumber, User* user, QJsonObject usersFile);
 
-    bool read(const QJsonObject &json);
+    bool read(const QJsonObject &json);//!<Member function takes reads userfile
 
-    int gameNumber;
+    int gameNumber;//!<Integer member gameNumber (1,2) that represents number of the game chosen
 
     QListWidget *scores;
 
@@ -34,8 +40,8 @@ public:
 
     QPushButton *back;
 
-    User* user;
-    QJsonObject usersFile;
+    User* user;//!<User member user represents the signed in user
+    QJsonObject usersFile;//!QJsonObject member usersFile that holds information of the user
 
 signals:
 
@@ -43,7 +49,7 @@ private:
     void setVerticalLayout();
 
 public slots:
-    void backClicked();
+    void backClicked();//!<Member function takes user to previous page
 
 };
 
