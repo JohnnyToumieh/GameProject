@@ -27,7 +27,7 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(changeGlow()));
-    timer->start(500);
+    timer->start(100);
 
     collisionTimer = new QTimer(this);
     collisionTimer->setSingleShot(true);

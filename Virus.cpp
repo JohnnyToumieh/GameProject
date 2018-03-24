@@ -10,14 +10,12 @@ Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
     this->justPaused = true;
     this->toDelete = false;
 
-    int random_number= (rand()%3)+1;
-
-    if (random_number==1) {
-        this->speed = 200;
-    } else if (random_number==2) {
-        this->speed = 250;
-    } else {
-        this->speed = 300;
+    if (this->type == 1) {
+        this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["virusSpeed1"] - 50;
+    } else if (this->type == 2) {
+        this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["virusSpeed2"] - 50;
+    } else if (this->type == 3) {
+        this->speed = this->aquarium->levels[this->aquarium->level]["virusSpeed3"];
     }
 
     if(type==1){
@@ -29,7 +27,6 @@ Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
     }else if (type==3){
         QPixmap *pic  = new QPixmap("pestilence.png");
         setPixmap(pic->scaled(120,120));
-        this->speed = 50;
     }
     baseY = (rand() % 300) + 300;
     setPos(0, baseY);
