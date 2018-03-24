@@ -478,8 +478,8 @@ QJsonDocument Game1Scene::read(QString type) {
     QJsonObject save;
     if (usersFile.contains("games") && usersFile["games"].isArray()) {
         QJsonArray games = usersFile["games"].toArray();
-        if (games.size() > 0 && games[0].isObject()) {
-            QJsonObject gameData = games[0].toObject();
+        if (games.size() > 0 && games.at(0).isObject()) {
+            QJsonObject gameData = games.at(0).toObject();
             if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
                 QJsonArray userArray = gameData["users_save"].toArray();
 
@@ -502,56 +502,51 @@ QJsonDocument Game1Scene::read(QString type) {
 }
 
 bool Game1Scene::saveProgress() {
+    QJsonArray games;
     if (usersFile.contains("games") && usersFile["games"].isArray()) {
-        QJsonArray games = usersFile["games"].toArray();
-        if (games.size() > 0 && games[0].isObject()) {
-            QJsonObject gameData = games[0].toObject();
-            if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
-                QJsonArray userArray = gameData["users_save"].toArray();
+        games = usersFile["games"].toArray();
+    }
 
-                // If save for user already created, overwrite it
-                for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
-                    QJsonObject userObject = userArray[userIndex].toObject();
-                    if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
-                        QJsonObject saveObject;
-                        saveProgressHelper(saveObject);
-                        userObject["save"] = saveObject;
-                        userArray[userIndex] = userObject;
-                        gameData["users_save"] = userArray;
-                        games[0] = gameData;
-                        usersFile["games"] = games;
-                        return true;
-                    }
-                }
+    QJsonObject gameData;
+    if (games.size() > 0 && games.at(0).isObject()) {
+        gameData = games.at(0).toObject();
+    }
 
-                // If save for user never created before, create it
-                QJsonObject userObject;
-                QJsonObject saveObject;
-                saveProgressHelper(saveObject);
-                userObject["save"] = saveObject;
-                userObject["username"] = this->user->username;
-                userArray.append(userObject);
-                gameData["users_save"] = userArray;
-                games[0] = gameData;
-                usersFile["games"] = games;
-                return true;
-            } else {
-                // If no save of any users have ever been created before, create new list and create the save of the user
-                QJsonArray userArray;
-                QJsonObject userObject;
-                QJsonObject saveObject;
-                saveProgressHelper(saveObject);
-                userObject["save"] = saveObject;
-                userObject["username"] = this->user->username;
-                userArray.append(userObject);
-                gameData["users_save"] = userArray;
-                games[0] = gameData;
-                usersFile["games"] = games;
-                return true;
-            }
+    QJsonArray userArray;
+    if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
+        userArray = gameData["users_save"].toArray();
+    }
+
+    // If save for user already created, overwrite it
+    for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
+        QJsonObject userObject = userArray[userIndex].toObject();
+        if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
+            QJsonObject saveObject;
+            saveProgressHelper(saveObject);
+            userObject["save"] = saveObject;
+            userArray[userIndex] = userObject;
+            gameData["users_save"] = userArray;
+            games.replace(0, gameData);
+            usersFile["games"] = games;
+            return true;
         }
     }
-    return false;
+
+    // If save for user never created before, create it
+    QJsonObject userObject;
+    QJsonObject saveObject;
+    saveProgressHelper(saveObject);
+    userObject["save"] = saveObject;
+    userObject["username"] = this->user->username;
+    userArray.append(userObject);
+    gameData["users_save"] = userArray;
+    if (games.size() > 0) {
+        games.replace(0, gameData);
+    } else {
+        games.insert(0, gameData);
+    }
+    usersFile["games"] = games;
+    return true;
 }
 
 void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
@@ -669,81 +664,83 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
 }
 
 bool Game1Scene::saveScore() {
+    QJsonArray games;
     if (usersFile.contains("games") && usersFile["games"].isArray()) {
-        QJsonArray games = usersFile["games"].toArray();
-        if (games.size() > 0 && games[0].isObject()) {
-            QJsonObject gameData = games[0].toObject();
+        games = usersFile["games"].toArray();
+    }
 
-            if (gameData.contains("top_score") && gameData["top_score"].isObject()) {
-                QJsonObject userObject = gameData["top_score"].toObject();
-                if (userObject.contains("score") && userObject["score"].toInt() < aquarium->score) {
-                    userObject["score"] = aquarium->score;
-                    userObject["username"] = user->username;
-                    gameData["top_score"] = userObject;
-                    games[0] = gameData;
-                    usersFile["games"] = games;
-                }
-            } else {
-                QJsonObject userObject;
-                userObject["score"] = aquarium->score;
-                userObject["username"] = user->username;
-                gameData["top_score"] = userObject;
-                games[0] = gameData;
-                usersFile["games"] = games;
+    QJsonObject gameData;
+    if (games.size() > 0 && games.at(0).isObject()) {
+        gameData = games.at(0).toObject();
+    }
+
+    if (gameData.contains("top_score") && gameData["top_score"].isObject()) {
+        QJsonObject userObject = gameData["top_score"].toObject();
+        if (userObject.contains("score") && userObject["score"].toInt() < aquarium->score) {
+            userObject["score"] = aquarium->score;
+            userObject["username"] = user->username;
+            gameData["top_score"] = userObject;
+            games.replace(0, gameData);
+            usersFile["games"] = games;
+        }
+    } else {
+        QJsonObject userObject;
+        userObject["score"] = aquarium->score;
+        userObject["username"] = user->username;
+        gameData["top_score"] = userObject;
+        if (games.size() > 0) {
+            games.replace(0, gameData);
+        } else {
+            games.insert(0, gameData);
+        }
+        usersFile["games"] = games;
+    }
+
+    QJsonArray userArray;
+    if (gameData.contains("users_score") && gameData["users_score"].isArray()) {
+        userArray = gameData["users_score"].toArray();
+    }
+
+    // If score for user already created, add another
+    for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
+        QJsonObject userObject = userArray[userIndex].toObject();
+        if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
+            QJsonObject saveObject;
+            saveScoreHelper(saveObject);
+            QJsonArray scoresArray;
+            if (userObject.contains("scores") && userObject["scores"].isArray()) {
+                scoresArray = userObject["scores"].toArray();
             }
-
-            if (gameData.contains("users_score") && gameData["users_score"].isArray()) {
-                QJsonArray userArray = gameData["users_score"].toArray();
-
-                // If score for user already created, add another
-                for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
-                    QJsonObject userObject = userArray[userIndex].toObject();
-                    if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
-                        QJsonObject saveObject;
-                        saveScoreHelper(saveObject);
-                        QJsonArray scoresArray = userObject["scores"].toArray();
-                        scoresArray.append(saveObject);
-                        userObject["scores"] = scoresArray;
-                        userArray[userIndex] = userObject;
-                        gameData["users_score"] = userArray;
-                        games[0] = gameData;
-                        usersFile["games"] = games;
-                        return true;
-                    }
-                }
-
-                // If score for user never created before, create it
-                QJsonObject userObject;
-                QJsonObject saveObject;
-                saveScoreHelper(saveObject);
-                QJsonArray scoresArray = userObject["scores"].toArray();
-                scoresArray.append(saveObject);
-                userObject["scores"] = scoresArray;
-                userObject["username"] = this->user->username;
-                userArray.append(userObject);
-                gameData["users_score"] = userArray;
-                games[0] = gameData;
-                usersFile["games"] = games;
-                return true;
-            } else {
-                // If no score of any users have ever been created before, create new list and create the score of the user
-                QJsonArray userArray;
-                QJsonObject userObject;
-                QJsonObject saveObject;
-                saveScoreHelper(saveObject);
-                QJsonArray scoresArray;
-                scoresArray.append(saveObject);
-                userObject["scores"] = scoresArray;
-                userObject["username"] = this->user->username;
-                userArray.append(userObject);
-                gameData["users_score"] = userArray;
-                games[0] = gameData;
-                usersFile["games"] = games;
-                return true;
-            }
+            scoresArray.append(saveObject);
+            userObject["scores"] = scoresArray;
+            userArray[userIndex] = userObject;
+            gameData["users_score"] = userArray;
+            games.replace(0, gameData);
+            usersFile["games"] = games;
+            return true;
         }
     }
-    return false;
+
+    // If score for user never created before, create it
+    QJsonObject userObject;
+    QJsonObject saveObject;
+    saveScoreHelper(saveObject);
+    QJsonArray scoresArray;
+    if (userObject.contains("scores") && userObject["scores"].isArray()) {
+        scoresArray = userObject["scores"].toArray();
+    }
+    scoresArray.append(saveObject);
+    userObject["scores"] = scoresArray;
+    userObject["username"] = this->user->username;
+    userArray.append(userObject);
+    gameData["users_score"] = userArray;
+    if (games.size() > 0) {
+        games.replace(0, gameData);
+    } else {
+        games.insert(0, gameData);
+    }
+    usersFile["games"] = games;
+    return true;
 }
 
 void Game1Scene::saveScoreHelper(QJsonObject &saveObject) const
