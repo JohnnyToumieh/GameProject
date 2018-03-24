@@ -146,8 +146,6 @@ void SpongeBob::setVulnerable(int type) {
         unchangeableImmunityLevel = true;
 
         changeGlow();
-
-        needle->setTransformOriginPoint(0, 0);
         needle->setRotation(0);
 
         vulnerableTimer->start(5000);
@@ -155,7 +153,6 @@ void SpongeBob::setVulnerable(int type) {
         immunityLevel = 1;
         immunityLevelDegree = 0;
 
-        needle->setTransformOriginPoint(0, 0);
         needle->setRotation(0);
     } else if (type == 3) {
         lives = 0;
@@ -167,8 +164,14 @@ void SpongeBob::resetVulnerability() {
     immunityLevel = savedImmunityLevel;
     immunityLevelDegree = savedImmunityLevelDegree;
     unchangeableImmunityLevel = false;
+    int steps = aquarium->levels[aquarium->level]["stepsPerImmunity"];
+    if(immunityLevel==1){
+        needle->setRotation((48/steps) * immunityLevelDegree);
+    }else if(immunityLevel==2){
+        needle->setRotation(48+(80/steps) * immunityLevelDegree);
+    }else{
+        needle->setRotation(80+48+(48/steps) * immunityLevelDegree);
+    }
 
-    needle->setTransformOriginPoint(needle->boundingRect().center().x() + 20 * immunityLevelDegree,
-                                               needle->boundingRect().center().y());
-    needle->setRotation(needle->rotation() + 8 * immunityLevelDegree);
+
 }
