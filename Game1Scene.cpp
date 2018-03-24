@@ -880,6 +880,7 @@ void Game1Scene::checkGameState() {
 
                 unpauseLabel->hide();
 
+                greyForeground->setStyleSheet("background-color: rgba(105, 105, 105, 100);");
                 greyForeground->show();
                 unpause->show();
                 quit->show();
