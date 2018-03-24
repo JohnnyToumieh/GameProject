@@ -3,6 +3,13 @@
 
 #include <QObject>
 
+/**
+ *\file Aquarium.h
+ *@brief The aquarium class, represents the Aquarium with its main indicators
+ * Including cleanliness,score, and time
+ *
+ */
+
 class Aquarium : public QObject
 {
     Q_OBJECT
@@ -10,16 +17,15 @@ public:
     explicit Aquarium(int level, int currentCleanliness, int currentTime, int score, QObject *parent = nullptr);
     void setUpLevels();
 
-    int level;
+    int level;//!<Integer member (1,2 or 3) that represents level of the game
+    std::map<int, std::map<std::string, int>> levels;//!<<Map member that holds a string key and Integer value represnting defferent attributes of the level
 
-    std::map<int, std::map<std::string, int>> levels;
+    int currentCleanliness;//!<Integer member that represents the current cleanliness of the aquarium
+    int currentTime;//!<Integer member that represents the current Time
 
-    int currentCleanliness;
-    int currentTime;
+    int score;//!<Integer member that represents the score
 
-    int score;
-
-    bool gamePaused;
+    bool gamePaused;//!<Boolean member that state wether the game is paused or not
     bool requestForUnpause;
 
 private:

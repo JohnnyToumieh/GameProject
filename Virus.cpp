@@ -28,7 +28,7 @@ Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
         QPixmap *pic  = new QPixmap("pestilence.png");
         setPixmap(pic->scaled(120,120));
     }
-    baseY = (rand() % 300) + 300;
+    baseY = (rand() % 300) + 250;
     setPos(0, baseY);
 
     speedTimer = new QTimer(this);
