@@ -986,6 +986,7 @@ void Game1Scene::gameOver(bool result) {
 
     if (result) {
         aquarium->score += aquarium->levels[aquarium->level]["maxTime"] / aquarium->currentTime - 1;
+        aquarium->score += spongeBob->lives * 100;
     }
 
     greyForeground->setStyleSheet("background-color: rgba(0, 0, 0, 255);");
