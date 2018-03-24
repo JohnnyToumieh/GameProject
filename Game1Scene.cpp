@@ -331,13 +331,14 @@ void Game1Scene::setUpNextLevel() {
     aquarium->currentCleanliness = 0;
     aquarium->currentTime = 0;
 
-    spongeBob->reset();
+
     if (spongeBob->lives < 3) {
         addItem(pixmapLife1);
     }
     if (spongeBob->lives < 2) {
         addItem(pixmapLife2);
     }
+    spongeBob->reset();
 
     QPixmap *greenColor = new QPixmap("needle.png");
     greenColor->fill(Qt::green);
