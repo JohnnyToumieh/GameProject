@@ -95,7 +95,35 @@ void GameOnePage::startNewGameClicked(){
     view->show();
 }
 
+bool GameOnePage::resumeGameExists() {
+    if (usersFile.contains("games") && usersFile["games"].isArray()) {
+        QJsonArray games = usersFile["games"].toArray();
+        if (games.size() > 0 && games.at(0).isObject()) {
+            QJsonObject gameData = games.at(0).toObject();
+            if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
+                QJsonArray userArray = gameData["users_save"].toArray();
+
+                // If save for user already created, overwrite it
+                for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
+                    QJsonObject userObject = userArray[userIndex].toObject();
+                    if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
 void GameOnePage::resumeGameClicked(){
+    if (!resumeGameExists()) {
+        Message *msg = new Message("No game found to resume.");
+        msg->show();
+
+        return;
+    }
+
     qDeleteAll(widget->children());
     widget->close();
 

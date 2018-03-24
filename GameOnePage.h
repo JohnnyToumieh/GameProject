@@ -41,6 +41,7 @@ signals:
 
 private:
     void setVerticalLayout();
+    bool resumeGameExists();
 
 public slots:
     void backClicked();
