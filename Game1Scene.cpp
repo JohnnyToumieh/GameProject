@@ -20,7 +20,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         aquarium = new Aquarium(level, 0, 0, 0);
     }
 
-
     setBackgroundBrush(QBrush(QImage("background2.JPG").scaledToHeight(600).scaledToWidth(1000)));
     setSceneRect(0,0,1000,600);
 
@@ -66,7 +65,9 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     pixmapNeedle = new QGraphicsPixmapItem();
     QPixmap *picNeedle  = new QPixmap("needle.png");
     pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
-    pixmapNeedle->setPos(850,80);
+    pixmapNeedle->setPos(850, 80);
+    pixmapNeedle->setTransformOriginPoint(pixmapNeedle->boundingRect().center().x() + 20,
+                                               pixmapNeedle->boundingRect().center().y());
     addItem(pixmapNeedle);
 
     pixmapLife1 = new QGraphicsPixmapItem();
@@ -118,7 +119,6 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         }
 
         QJsonObject needleSave = read("needle").object();
-        pixmapNeedle->setTransformOriginPoint(needleSave["x"].toInt(), needleSave["y"].toInt());
         pixmapNeedle->setRotation(needleSave["rotation"].toInt());
     }
 
@@ -331,20 +331,21 @@ void Game1Scene::setUpNextLevel() {
     aquarium->currentCleanliness = 0;
     aquarium->currentTime = 0;
 
-
     if (spongeBob->lives < 3) {
         addItem(pixmapLife1);
     }
     if (spongeBob->lives < 2) {
         addItem(pixmapLife2);
     }
+
     spongeBob->reset();
 
     QPixmap *greenColor = new QPixmap("needle.png");
     greenColor->fill(Qt::green);
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
 
-    pixmapNeedle->setTransformOriginPoint(0, 0);
+    pixmapNeedle->setTransformOriginPoint(pixmapNeedle->boundingRect().center().x() + 20,
+                                               pixmapNeedle->boundingRect().center().y());
     pixmapNeedle->setRotation(0);
 }
 
@@ -662,8 +663,6 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
     // Add needle orientation
     QJsonObject needle;
 
-    needle["x"] = this->pixmapNeedle->boundingRect().center().x();
-    needle["y"] = this->pixmapNeedle->boundingRect().center().y();
     needle["rotation"] = this->pixmapNeedle->rotation();
 
     saveObject["needle"] = needle;

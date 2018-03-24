@@ -79,31 +79,34 @@ void Item::checkGameState() {
             if (collisions.at(i)->hasFocus()) {
                 int degree=spongeBob->immunityLevelDegree;
 
+                int steps = aquarium->levels[aquarium->level]["stepsPerImmunity"];
                 if (isHealthy && spongeBob->unchangeableImmunityLevel == false) {
-                    if(!(degree>=6 && spongeBob->immunityLevel==3)){
+                    if(!(degree > steps && spongeBob->immunityLevel==3)){
                         degree=spongeBob->immunityLevelDegree++;
-                        spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
-                                                                   spongeBob->needle->boundingRect().center().y());
-                        spongeBob->needle->setRotation(spongeBob->needle->rotation()+8);
+                        if (spongeBob->immunityLevel == 2) {
+                            spongeBob->needle->setRotation(spongeBob->needle->rotation() + 80 / steps);
+                        } else {
+                            spongeBob->needle->setRotation(spongeBob->needle->rotation() + 48 / steps);
+                        }
                     }
 
-                    if((degree>=6 && spongeBob->immunityLevel==1) ||
-                       (degree>=9 && spongeBob->immunityLevel==2)){
-                       spongeBob->immunityLevelDegree=1;
+                    if(degree >= steps && (spongeBob->immunityLevel==1 || spongeBob->immunityLevel==2)){
+                       spongeBob->immunityLevelDegree = 1;
 
                        spongeBob->immunityLevel++;
                     }
                 } else if (!isHealthy && spongeBob->unchangeableImmunityLevel == false) {
                     if(!(degree==1 && spongeBob->immunityLevel==1)){
                         degree=spongeBob->immunityLevelDegree--;
-                        spongeBob->needle->setTransformOriginPoint(spongeBob->needle->boundingRect().center().x()+20,
-                                                                   spongeBob->needle->boundingRect().center().y());
-                        spongeBob->needle->setRotation(spongeBob->needle->rotation()-8);
+                        if ((spongeBob->immunityLevel == 2 && degree > 1) || (spongeBob->immunityLevel == 3 && degree == 1)) {
+                            spongeBob->needle->setRotation(spongeBob->needle->rotation() - 80 / steps);
+                        } else {
+                            spongeBob->needle->setRotation(spongeBob->needle->rotation() - 48 / steps);
+                        }
                     }
 
-                    if((degree==1 && spongeBob->immunityLevel==2) ||
-                       (degree==1 && spongeBob->immunityLevel==3)){
-                       spongeBob->immunityLevelDegree=8;
+                    if(degree==1 && (spongeBob->immunityLevel==2 || spongeBob->immunityLevel==3)){
+                       spongeBob->immunityLevelDegree = steps;
 
                        spongeBob->immunityLevel--;
                     }

@@ -25,7 +25,7 @@ public:
 private:
     std::map<std::string, int> setUpLevelsHelper(int maxTime,
                                                  int maxCleanliness, int incrementCleanliness,
-                                                 int immunityDegree,
+                                                 int stepsPerImmunity,
                                                  int bacteriaGenerationRate, int bacteriaWeight1, int bacteriaWeight2, int bacteriaWeight3,
                                                  int bacteriaSpeed1, int bacteriaSpeed2, int bacteriaSpeed3,
                                                  int itemDropRate, int healthyItemWeight, int unhealthyItemWeight,

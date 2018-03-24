@@ -18,7 +18,7 @@ Aquarium::Aquarium(int level, int currentCleanliness, int currentTime, int score
 void Aquarium::setUpLevels() {
     this->levels[1] = setUpLevelsHelper(300000,
                                           10, 1,
-                                          8,
+                                          2,
                                           3000, 33, 33, 33, 500, 500, 500,
                                           3000, 50, 50, 500, 500,
                                           0, 0, 0, 0, 0, 0, 0);
@@ -40,7 +40,7 @@ void Aquarium::setUpLevels() {
 
 std::map<std::string, int> Aquarium::setUpLevelsHelper(int maxTime,
                                      int maxCleanliness, int incrementCleanliness,
-                                     int immunityDegree,
+                                     int stepsPerImmunity,
                                      int bacteriaGenerationRate, int bacteriaWeight1, int bacteriaWeight2, int bacteriaWeight3,
                                      int bacteriaSpeed1, int bacteriaSpeed2, int bacteriaSpeed3,
                                      int itemDropRate, int healthyItemWeight, int unhealthyItemWeight,
@@ -54,7 +54,7 @@ std::map<std::string, int> Aquarium::setUpLevelsHelper(int maxTime,
     level["maxCleanliness"] = maxCleanliness;
     level["incrementCleanliness"] = incrementCleanliness;
 
-    level["immunityDegree"] = immunityDegree;
+    level["stepsPerImmunity"] = stepsPerImmunity;
 
     level["bacteriaGenerationRate"] = bacteriaGenerationRate;
     level["bacteriaWeight1"] = bacteriaWeight1;
