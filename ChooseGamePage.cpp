@@ -2,6 +2,26 @@
 
 #include "Message.h"
 
+/**
+ *\file ChooseGamePage.cpp
+ *@brief contains ChooseGamePage class definition which represents the page where user chooses game
+ *
+ * ChooseGamePage class allow the user to choose game 1 or game 2
+ * it takes him to the common page between the two games.
+ *
+ */
+
+/**
+ * @brief ChooseGamePage::ChooseGamePage constructor of ChooseGamePage class
+ *
+ * A constructor that set page buttons and labels
+ * including game1,game2, and back buttons
+ * along with the user's name and picture.
+ * @param QWidget *widget represents the main widget holding all items
+ * @param User* user is the user signed in
+ * @param QJsonObject usersFile holds the info of the user
+ */
+
 ChooseGamePage::ChooseGamePage(QWidget *widget, User* user, QJsonObject usersFile)
 {
     this->widget=widget;
@@ -47,22 +67,41 @@ ChooseGamePage::ChooseGamePage(QWidget *widget, User* user, QJsonObject usersFil
     }
 }
 
+/**
+ * @brief ChooseGamePage::backToHomeClicked member function: takes user back
+ *
+ * function that respond to clicking back button by taking the user to the previous page
+ */
 void ChooseGamePage::backToHomeClicked(){
     qDeleteAll(widget->children());
     HomePage *homePage = new HomePage(widget);
 
 }
 
+/**
+ * @brief ChooseGamePage::game1Clicked member function: takes user to game 1 page
+ *
+ * function that respond to clicking game 1 button by taking the user to the game 1 page
+ */
 void ChooseGamePage::game1Clicked(){
     qDeleteAll(widget->children());
     GameOnePage *gameOnePage = new GameOnePage(widget, 1, user, usersFile);
 }
 
+/**
+ * @brief ChooseGamePage::game2Clicked member function: takes user to game 2 page
+ *
+ * function that respond to clicking game 2 button by taking the user to the game 2 page
+ */
 void ChooseGamePage::game2Clicked(){
     qDeleteAll(widget->children());
     GameOnePage *gameOnePage = new GameOnePage(widget, 2, user, usersFile);
 }
 
+/**
+ * @brief ChooseGamePage::setVerticalLayout member function: set the vertical layout by adding items to it
+ *
+ */
 void ChooseGamePage::setVerticalLayout()
 {
     gridLayout->addWidget(profilePictureL,0,0);

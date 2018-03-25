@@ -26,7 +26,7 @@ public:
     int score;//!<Integer member that represents the score
 
     bool gamePaused;//!<Boolean member that state wether the game is paused or not
-    bool requestForUnpause;
+    bool requestForUnpause;//!<Boolean member that state wether there is a request to unpause or not
 
 private:
     std::map<std::string, int> setUpLevelsHelper(int maxTime,
@@ -37,7 +37,7 @@ private:
                                                  int itemDropRate, int healthyItemWeight, int unhealthyItemWeight,
                                                  int healthyItemSpeed, int unhealthyItemSpeed,
                                                  int virusGenerationRate, int virusWeight1, int virusWeight2, int virusWeight3,
-                                                 int virusSpeed1, int virusSpeed2, int virusSpeed3);
+                                                 int virusSpeed1, int virusSpeed2, int virusSpeed3);//!<Member function sets up different levels according to passed parameters
 
 signals:
 

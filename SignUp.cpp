@@ -1,7 +1,23 @@
 #include "SignUp.h"
 
 #include "Message.h"
+/**
+ *\file SignUp.cpp
+ *@brief contains SignUp class definition which represents the page where user chooses game
+ *
+ * SignUp class allow the user to fill up his info
+ * and get signed up to our awsome gaming plaftorm (for free!!)
+ *
+ */
 
+/**
+ * @brief SignUp::SignUp constructor of SignUp class
+ *
+ * A constructor that set page buttons and labels
+ * @param QWidget *widget represents the main widget holding all items
+ * @param User* user is the user signed in
+ * @param QJsonObject usersFile holds the info of the user
+ */
 SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
 {
     this->widget=widget;
@@ -93,7 +109,10 @@ SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
     QObject::connect(choosePicture, SIGNAL(clicked()), SLOT(choosePictureClicked()));
 }
 
-
+/**
+ * @brief SignUp::setVerticalLayout member function: set the vertical layout by adding items to it
+ *
+ */
 void SignUp::setVerticalLayout()
 {
     gridLayout1->addWidget(profilePictureL,0,0);
@@ -110,6 +129,10 @@ void SignUp::setVerticalLayout()
     verticalLayout->addWidget(back);
 }
 
+/**
+ * @brief SignUp::setVerticalLayout member function: set the gridlayout layout by adding items to it
+ *
+ */
 void SignUp::setGridLayout()
 {
     gridLayout->addWidget(firstNameL, 0, 0);
@@ -144,6 +167,13 @@ void SignUp::setGridLayout()
     gridLayout->addItem(new QSpacerItem(50, 8), 14, 0);
 }
 
+/**
+ * @brief SignIn::checkPassClicked member function: check if passord match requirements and matches the
+ * re-entered password by the user
+ *
+ * function that respond to clicking checkPassword button by cheking password requirements
+ * and matching and then display a label accoridingly
+ */
 void SignUp::checkPassClicked(){
     if(password->text() == NULL || password->text() == ""){
         emptyL->setText("Empty password");
@@ -177,7 +207,15 @@ void SignUp::checkPassClicked(){
 
 }
 
+/**
+ * @brief SignUp::containsANumber member function: check if the passowrd contains a number
+ *
+ * function that take a string checks if it has a number and then return a boolean
+ * @param QString text to be checked if it contains a number
+ * @return bool true if a number is found
+ */
 bool SignUp::containsANumber(QString text) {
+
     if (text.contains("0")
             || text.contains("1")
             || text.contains("2")
@@ -194,6 +232,12 @@ bool SignUp::containsANumber(QString text) {
     }
 }
 
+/**
+ * @brief SignUp::submitClicked member function: signup the user
+ *
+ * function that respond to clicking submit button by checking user's entered info
+ * sigining him up if everything is ok, or displaying message otherwise.
+ */
 void SignUp::submitClicked(){
     QButtonGroup group;
     QList<QRadioButton *> allButtons = genderGB->findChildren<QRadioButton *>();
@@ -248,12 +292,23 @@ void SignUp::submitClicked(){
     }
 }
 
+/**
+ * @brief SignUp::backClicked member function: takes user back
+ *
+ * function that respond to clicking back button by taking the user to the previous page
+ */
 void SignUp::backToHomeClicked(){
     qDeleteAll(widget->children());
     HomePage *homepage = new HomePage(widget);
 
 }
 
+/**
+ * @brief SignUp::choosePictureClicked member function: allow user to browse for a picture
+ *
+ * open the directory of the user allow him to choose a photo and take it to be set as his/her
+ * profile picture
+ */
 void SignUp::choosePictureClicked(){
     QString fileName = QFileDialog::getOpenFileName(widget,tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
 

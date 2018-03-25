@@ -1,7 +1,20 @@
 #include "HomePage.h"
 
 #include "Message.h"
+/**
+ *\file HomePage.cpp
+ *@brief contains HomePage class definition and functions implementation, which represents main home application's page
+ *
+ *
+ */
 
+/**
+ * @brief HomePage::HomePage constructor of HomePage class
+ *
+ * A constructor that set up the page with all labels and buttons
+ * In addition to creating the JSON file
+ * @param QWidget *widget represents the main widget holding all items
+ */
 HomePage::HomePage(QWidget *widget)
 {
     this->widget=widget;
@@ -51,7 +64,10 @@ HomePage::HomePage(QWidget *widget)
     usersFile = loadDoc.object();
 }
 
-
+/**
+ * @brief HistoryPage::setVerticalLayout member function: sets the vertical layout by adding items to it
+ *
+ */
 void HomePage::setVerticalLayout(){
     VerticalL->addWidget(imageLabel);
     VerticalL->addWidget(doneByL);
@@ -61,16 +77,31 @@ void HomePage::setVerticalLayout(){
     VerticalL->addItem(new QSpacerItem(500,200));
 }
 
+/**
+ * @brief HistoryPage::backClicked member function: take user to sigUp page
+ *
+ * function that respond to clicking signUp button by taking the user to the sigUp page
+ */
 void HomePage::signUpClicked(){
     qDeleteAll(widget->children());
     SignUp *signup = new SignUp(widget, user, usersFile);
 }
 
+/**
+ * @brief HistoryPage::backClicked member function: take user to signIn page
+ *
+ * function that respond to clicking signIn button by taking the user to the signIn page
+ */
 void HomePage::signInClicked(){
     qDeleteAll(widget->children());
     SignIn *signIn = new SignIn(widget, user, usersFile);
 }
 
+/**
+ * @brief HistoryPage::backClicked member function: take user to ChooseGamePage directly as a guest
+ *
+ * function that respond to clicking playAsGuest button by taking the user to ChooseGamePage directly as a guest
+ */
 void HomePage::playAsGuestClicked(){
     user->username = "Guest";
     user->firstName = "Guest";
