@@ -68,6 +68,7 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
 /**
  * @brief Bacteria::checkGameState triggered on checkGameStateTimer to check the game state and update
  * accordingly
+ *
  * A function that check if the game is paused to stop moving the bacteria and checks for collisions
  * and accordingly modify attributes (score,cleanliness) and mark the bacteria with toDelete as true
  *
