@@ -15,10 +15,10 @@
  * A constructor that set different parameters (level,cleanliness,time and score)
  * @param level argument integer indicating the level
  * @param currentCleanliness argument integer indicating the Cleanliness
- * @param currentCleanliness argument integer indicating the time of the game timer
+ * @param currentTime argument integer indicating the time of the game timer
  * @param score argument integer indicating the score
  */
-Aquarium::Aquarium(int level, int currentCleanliness, int currentCleanliness, int score, QObject *parent) : QObject(parent)
+Aquarium::Aquarium(int level, int currentCleanliness, int currentTime, int score, QObject *parent) : QObject(parent)
 {
     this->level = level;
 
