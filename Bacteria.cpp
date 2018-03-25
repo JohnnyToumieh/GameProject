@@ -1,5 +1,25 @@
 #include "Bacteria.h"
 
+/**
+ *\file Bacteria.cpp
+ *@brief contains Bacteria class definition which represents the bacteria floating in the aquarium
+ *
+ * Bacteria class represents the bacteria object with its different attributes
+ * such as type and position...
+ *
+ */
+
+/**
+ * @brief Bacteria::Bacteria constructor of Bacteria class
+ *
+ * A constructor that set the bacteria along with its attributes
+ * @param int type argument integer indicating the type of the bacteria
+ * @param SpongeBob* spongeBob is the spongebob object of the active game level
+ * @param Aquarium* aquarium
+ * @param QGraphicsPixmapItem* greenColorItem is the cleanliness green bar
+ * @param QGraphicsPixmapItem** pixmapLifeList the array of spongebob's lives
+ */
+
 Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPixmapItem* greenColorItem, QGraphicsPixmapItem** pixmapLifeList,QObject *parent)
 {
     srand(QTime::currentTime().msec());
@@ -45,6 +65,14 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
     checkGameStateTimer->start(100);
 }
 
+/**
+ * @brief Bacteria::checkGameState triggered on checkGameStateTimer to check the game state and update
+ * accordingly
+ *
+ * A function that check if the game is paused to stop moving the bacteria and checks for collisions
+ * and accordingly modify attributes (score,cleanliness) and mark the bacteria with toDelete as true
+ *
+ */
 void Bacteria::checkGameState() {
     // Check if game paused
     if (aquarium->gamePaused) {
@@ -97,6 +125,14 @@ void Bacteria::checkGameState() {
         }
     }
 }
+
+/**
+ * @brief Bacteria::checkGameState triggered on speedTimer to update the place and movement of the bacteria
+ *
+ * update() function move the bacteria in a sinusoidal movement and delete them on borders. When spongebob
+ * is vulnerable then bacteria chase him.
+ *
+ */
 
 void Bacteria::update(){
     if (x() + 30 >= 950) {

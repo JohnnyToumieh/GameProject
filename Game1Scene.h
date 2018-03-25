@@ -15,6 +15,13 @@
 #include "Item.h"
 #include "Virus.h"
 
+/**
+ *\file Game1Scene.h
+ *@brief The Game1Scene class, represents the game 1 shell.
+ * It handles saving of games, the creation and deletion of elements and tracking the game state.
+ *
+ */
+
 class Game1Scene : public QGraphicsScene
 {
     Q_OBJECT
@@ -28,20 +35,20 @@ public:
     void setUpNextLevel();
 
     QWidget* widget;
-    User* user;
-    QJsonObject usersFile;
+    User* user;//!<User member that represents the signed in user
+    QJsonObject usersFile;//!QJsonObject member usersFile that holds information of the user
 
-    Aquarium *aquarium;
-    SpongeBob *spongeBob;
+    Aquarium* aquarium;//!<Aquarium member that represents the aquarium
+    SpongeBob *spongeBob;//!<SpongeBob member that represents spongebob
 
-    Bacteria** bacterias;
-    int bacteriasIndex;
+    Bacteria** bacterias;//!<Bacteria array member that represents the list of currently visibile bacterias
+    int bacteriasIndex;//!<Int member that indexes the bacterias array
 
-    Item** items;
-    int itemsIndex;
+    Item** items;//!<Item array member that represents the list of currently visibile items
+    int itemsIndex;//!<Int member that indexes the items array
 
-    Virus** viruses;
-    int virusesIndex;
+    Virus** viruses;//!<Virus array member that represents the list of currently visibile viruses
+    int virusesIndex;//!<Int member that indexes the viruses array
 
     QLabel* timeLabel;
     QLabel* pestilenceTimeLabel;
@@ -50,22 +57,23 @@ public:
     QLabel* gameOverLabel;
     QLabel* unpauseLabel;
 
-    QTime* time;
-    int pausedTime;
+    QTime* time;//!<QTime member that counts the current time elapsed
+    int pausedTime;//!<int member that help save the time before the game was paused to use after the game unpauses
 
-    QTimer* timeUpdater;
-    int pausedTimeUpdater;
-    QTimer* updateItemsTimer;
-    int pausedUpdateItemsTimer;
-    QTimer* updateBacteriasTimer;
-    int pausedUpdateBacteriasTimer;
-    QTimer* checkGameStateTimer;
-    QTimer* virusTimer;
-    int pausedVirusTimer;
-    QTimer* pestilenceTimer;
-    int pausedPestilenceTimer;
+    QTimer* timeUpdater;//!<QTimer member that updates all QLabels that keeps track of time
+    int pausedTimeUpdater;//!<int member helper to save the QTimer's time left when the game pauses
+    QTimer* updateItemsTimer;//!<QTimer member that creates a new item
+    int pausedUpdateItemsTimer;//!<int member helper to save the QTimer's time left when the game pauses
+    QTimer* updateBacteriasTimer;//!<QTimer member that creates a new bacteria
+    int pausedUpdateBacteriasTimer;//!<int member helper to save the QTimer's time left when the game pauses
+    QTimer* virusTimer;//!<QTimer member that creates a new virus
+    int pausedVirusTimer;//!<int member helper to save the QTimer's time left when the game pauses
+    QTimer* pestilenceTimer;//!<QTimer member that counts down the time until the Pestilence shows up
+    int pausedPestilenceTimer;//!<int member helper to save the QTimer's time left when the game pauses
 
-    QTimer* unpauseTimer;
+    QTimer* unpauseTimer;//!<QTimer member that counts down the time until the game can be interactable again
+
+    QTimer* checkGameStateTimer;//!<QTimer member that updates the game state
 
     bool justPaused;
 
@@ -98,9 +106,9 @@ public slots:
     void updateBacterias();
     void updateTimer();
     void checkGameState();
-    void unpauseClicked();
-    void quitClicked();
-    void nextLevel();
+    void unpauseClicked();//!<Member function that triggers when the unpause button is clicked
+    void quitClicked();//!<Member function that triggers when the quit button is clicked
+    void nextLevel();//!<Member function that triggers when the next level button is clicked
     void virusUpdate();
     void summonPestilence();
     void unpauseGame();

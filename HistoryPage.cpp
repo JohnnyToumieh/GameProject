@@ -1,5 +1,24 @@
 #include "HistoryPage.h"
+/**
+ *\file HistoryPage.cpp
+ *@brief contains HistoryPage class definition which represents the page where user can check his/her
+ * history of records in a game.
+ *
+ * HistoryPage class is page that allow the user view his records
+ * and compare his prerformance globally.
+ *
+ */
 
+/**
+ * @brief HistoryPage::HistoryPage constructor of HistoryPage class
+ *
+ * A constructor that set up the page with all labels and buttons
+ * including reading and dsiplaying user info from the JSON file.
+ * @param QWidget *widget represents the main widget holding all items
+ * @param int gameNumber 1 or 2 depends on what user chose at ChooseGamePage
+ * @param User* user is the user signed in
+ * @param QJsonObject usersFile holds the info of the user
+ */
 HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile)
 {
     this->gameNumber = gameNumber;
@@ -37,12 +56,21 @@ HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObjec
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
 }
 
+/**
+ * @brief HistoryPage::backClicked member function: takes user back
+ *
+ * function that respond to clicking back button by taking the user to the previous page
+ */
 void HistoryPage::backClicked(){
     qDeleteAll(widget->children());
 
     GameOnePage *chooseGamePage = new GameOnePage(widget, gameNumber, user, usersFile);
 }
 
+/**
+ * @brief HistoryPage::setVerticalLayout member function: sets the vertical layout by adding items to it
+ *
+ */
 void HistoryPage::setVerticalLayout()
 {
     verticalLayout->addWidget(top10ScoresL);
@@ -53,6 +81,12 @@ void HistoryPage::setVerticalLayout()
     verticalLayout->addItem(new QSpacerItem(400,200));
 }
 
+/**
+ * @brief HistoryPage::read member function: reads user info from JSON file
+ *
+ * @return bool true if read is successful
+ * @param QJsonObject &json reference to the JSON file to read from
+ */
 bool HistoryPage::read(const QJsonObject &json)
 {
     if (json.contains("games") && json["games"].isArray()) {

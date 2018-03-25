@@ -8,6 +8,11 @@
 #include "ChooseGamePage.h"
 #include "HomePage.h"
 #include "User.h"
+/**
+ *\file SignIn.h
+ *@brief The SignIn class, represents the signIn page
+ *
+ */
 
 class SignIn : public QVBoxLayout
 {
@@ -27,16 +32,16 @@ public:
     QLabel* usernameL;
     QLabel* passwordL;
 
-    User* user;
-    QJsonObject usersFile;
+    User* user;//!<User member user represents the signed in user
+    QJsonObject usersFile;//!QJsonObject member usersFile that holds information of the user
 signals:
 
 private:
      void setVerticalLayout();
 
 public slots:
-    void submitClicked();
-    void backClicked();
+    void submitClicked();//!<Member function submit credentials to signin
+    void backClicked();//!<Member function takes user to previous page
 };
 
 #endif // SIGNIN_H

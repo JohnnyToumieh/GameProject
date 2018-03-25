@@ -2,6 +2,24 @@
 
 #include "Message.h"
 
+/**
+ *\file Game1Scene.cpp
+ *@brief contains Game1Scene class definition which represents the game 1 shell.
+ *
+ * It handles saving of games, the creation and deletion of elements and tracking the game state.
+ *
+ */
+
+/**
+ * @brief Game1Scene::Game1Scene constructor of Game1Scene class
+ *
+ * A constructor that sets up the game with all initial attributes.
+ * @param QWidget *widget represents the main widget holding all items
+ * @param User* user is the user signed in
+ * @param QJsonObject usersFile holds the info of the user
+ * @param bool resume determines is the game is being resumed
+ * @param int level determines if the game should start at a specific level
+ */
 Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool resume, int level, QGraphicsScene *parent) : QGraphicsScene(parent)
 {
     srand(QTime::currentTime().msec());
@@ -105,8 +123,8 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         spongeBob->immunityLevel = spongeBobSave["immunityLevel"].toInt();
         spongeBob->immunityLevelDegree = spongeBobSave["immunityLevelDegree"].toInt();
         spongeBob->lives = spongeBobSave["lives"].toInt();
-        spongeBob->setX(spongeBobSave["x"].toInt());
-        spongeBob->setY(spongeBobSave["y"].toInt());
+        spongeBob->setX(spongeBobSave["x"].toDouble());
+        spongeBob->setY(spongeBobSave["y"].toDouble());
         spongeBob->numCollisionsWithBacterias[0] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions1"].toInt();
         spongeBob->numCollisionsWithBacterias[1] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions2"].toInt();
         spongeBob->numCollisionsWithBacterias[2] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions3"].toInt();
@@ -141,8 +159,9 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
             QJsonObject currentBacteria = bacteriasSave[bacteriasIndex].toObject();
             bacterias[bacteriasIndex] = new Bacteria(currentBacteria["type"].toInt(),spongeBob,aquarium,greenColorItem,pixmapLifeList);
             bacterias[bacteriasIndex]->speed = currentBacteria["speed"].toInt();
-            bacterias[bacteriasIndex]->setX(currentBacteria["x"].toInt());
-            bacterias[bacteriasIndex]->setY(currentBacteria["y"].toInt());
+            bacterias[bacteriasIndex]->setX(currentBacteria["x"].toDouble());
+            bacterias[bacteriasIndex]->setY(currentBacteria["y"].toDouble());
+            bacterias[bacteriasIndex]->baseY = currentBacteria["y"].toDouble();
             addItem(bacterias[bacteriasIndex]);
         }
     } else {
@@ -164,8 +183,9 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
             QJsonObject currentVirus = virusesSave[virusesIndex].toObject();
             viruses[virusesIndex] = new Virus(currentVirus["type"].toInt(),spongeBob,aquarium);
             viruses[virusesIndex]->speed = currentVirus["speed"].toInt();
-            viruses[virusesIndex]->setX(currentVirus["x"].toInt());
-            viruses[virusesIndex]->setY(currentVirus["y"].toInt());
+            viruses[virusesIndex]->setX(currentVirus["x"].toDouble());
+            viruses[virusesIndex]->setY(currentVirus["y"].toDouble());
+            viruses[virusesIndex]->baseY = currentVirus["y"].toDouble();
             addItem(viruses[virusesIndex]);
         }
     }
@@ -181,8 +201,8 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         for (itemsIndex = 0; itemsIndex < itemsSave.size(); itemsIndex++) {
             QJsonObject currentItem = itemsSave[itemsIndex].toObject();
             items[itemsIndex] = new Item(aquarium, spongeBob, currentItem["isHealthy"].toBool(), currentItem["type"].toInt());
-            items[itemsIndex]->setX(currentItem["x"].toInt());
-            items[itemsIndex]->setY(currentItem["y"].toInt());
+            items[itemsIndex]->setX(currentItem["x"].toDouble());
+            items[itemsIndex]->setY(currentItem["y"].toDouble());
             addItem(items[itemsIndex]);
         }
     }
@@ -302,6 +322,11 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     updateTimer();
 }
 
+/**
+ * @brief Game1Scene::nextLevel
+ *
+ * A member function that loads the next level and mainly sets the timers.
+ */
 void Game1Scene::nextLevel() {
     scoreLabel2->hide();
     quit2->hide();
@@ -326,6 +351,11 @@ void Game1Scene::nextLevel() {
     updateTimer();
 }
 
+/**
+ * @brief Game1Scene::setUpNextLevel
+ *
+ * A member function that sets up the next level.
+ */
 void Game1Scene::setUpNextLevel() {
     aquarium->level++;
     aquarium->currentCleanliness = 0;
@@ -349,6 +379,11 @@ void Game1Scene::setUpNextLevel() {
     pixmapNeedle->setRotation(0);
 }
 
+/**
+ * @brief Game1Scene::virusUpdate
+ *
+ * A member function that generates a new virus.
+ */
 void Game1Scene::virusUpdate(){
     int time = (rand() % 2000) + aquarium->levels[aquarium->level]["virusGenerationRate"] - 1000;
     virusTimer->start(time);
@@ -385,6 +420,11 @@ void Game1Scene::virusUpdate(){
     }
 }
 
+/**
+ * @brief Game1Scene::summonPestilence
+ *
+ * A member function that summons Pestilence.
+ */
 void Game1Scene::summonPestilence() {
     pestilenceTimeLabel->hide();
     pestilenceTimeLabel2->hide();
@@ -397,6 +437,11 @@ void Game1Scene::summonPestilence() {
     addItem(viruses[virusesIndex++]);
 }
 
+/**
+ * @brief Game1Scene::updateTimer
+ *
+ * A member function that updates time based labels.
+ */
 void Game1Scene::updateTimer() {
     if (timeUpdater->isSingleShot()) {
         timeUpdater->setSingleShot(false);
@@ -424,6 +469,11 @@ void Game1Scene::updateTimer() {
     }
 }
 
+/**
+ * @brief Game1Scene::updateItems
+ *
+ * A member function that generates a new item.
+ */
 void Game1Scene::updateItems(){
     int time = (rand() % 500) + aquarium->levels[aquarium->level]["itemDropRate"] - 250;
     updateItemsTimer->start(time);
@@ -446,10 +496,20 @@ void Game1Scene::updateItems(){
     addItem(items[itemsIndex++]);
 }
 
+/**
+ * @brief Game1Scene::unpauseClicked
+ *
+ * A member function that unpauses the game (sending it into the 3..2..1 state).
+ */
 void Game1Scene::unpauseClicked() {
    aquarium->requestForUnpause = true;
 }
 
+/**
+ * @brief Game1Scene::quitClicked
+ *
+ * A member function that exists the game and goes back to the GameOnePage.
+ */
 void Game1Scene::quitClicked() {
     if (spongeBob->lives > 0) {
         saveProgress();
@@ -462,6 +522,11 @@ void Game1Scene::quitClicked() {
     widget->show();
 }
 
+/**
+ * @brief Game1Scene::saveFile
+ *
+ * A member function that saves the data of usersFile to disk.
+ */
 void Game1Scene::saveFile() {
     QFile saveFile(QStringLiteral("Data.json"));
 
@@ -474,12 +539,21 @@ void Game1Scene::saveFile() {
     saveFile.write(saveDoc.toJson());
 }
 
+/**
+ * @brief Game1Scene::read
+ *
+ * A member function that reads a specific part of the game saved.
+ *
+ * @param QString type that specifies the part of the saved progress to load.
+ *
+ * @return QJsonDocument the saved progress part needed.
+ */
 QJsonDocument Game1Scene::read(QString type) {
     QJsonObject save;
     if (usersFile.contains("games") && usersFile["games"].isArray()) {
         QJsonArray games = usersFile["games"].toArray();
-        if (games.size() > 0 && games[0].isObject()) {
-            QJsonObject gameData = games[0].toObject();
+        if (games.size() > 0 && games.at(0).isObject()) {
+            QJsonObject gameData = games.at(0).toObject();
             if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
                 QJsonArray userArray = gameData["users_save"].toArray();
 
@@ -501,59 +575,68 @@ QJsonDocument Game1Scene::read(QString type) {
     return (QJsonDocument) save;
 }
 
+/**
+ * @brief Game1Scene::saveProgress
+ *
+ * A member function that saves the current game progress.
+ *
+ * @return bool whether the saving of the game state was successful.
+ */
 bool Game1Scene::saveProgress() {
+    QJsonArray games;
     if (usersFile.contains("games") && usersFile["games"].isArray()) {
-        QJsonArray games = usersFile["games"].toArray();
-        if (games.size() > 0 && games[0].isObject()) {
-            QJsonObject gameData = games[0].toObject();
-            if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
-                QJsonArray userArray = gameData["users_save"].toArray();
+        games = usersFile["games"].toArray();
+    }
 
-                // If save for user already created, overwrite it
-                for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
-                    QJsonObject userObject = userArray[userIndex].toObject();
-                    if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
-                        QJsonObject saveObject;
-                        saveProgressHelper(saveObject);
-                        userObject["save"] = saveObject;
-                        userArray[userIndex] = userObject;
-                        gameData["users_save"] = userArray;
-                        games[0] = gameData;
-                        usersFile["games"] = games;
-                        return true;
-                    }
-                }
+    QJsonObject gameData;
+    if (games.size() > 0 && games.at(0).isObject()) {
+        gameData = games.at(0).toObject();
+    }
 
-                // If save for user never created before, create it
-                QJsonObject userObject;
-                QJsonObject saveObject;
-                saveProgressHelper(saveObject);
-                userObject["save"] = saveObject;
-                userObject["username"] = this->user->username;
-                userArray.append(userObject);
-                gameData["users_save"] = userArray;
-                games[0] = gameData;
-                usersFile["games"] = games;
-                return true;
-            } else {
-                // If no save of any users have ever been created before, create new list and create the save of the user
-                QJsonArray userArray;
-                QJsonObject userObject;
-                QJsonObject saveObject;
-                saveProgressHelper(saveObject);
-                userObject["save"] = saveObject;
-                userObject["username"] = this->user->username;
-                userArray.append(userObject);
-                gameData["users_save"] = userArray;
-                games[0] = gameData;
-                usersFile["games"] = games;
-                return true;
-            }
+    QJsonArray userArray;
+    if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
+        userArray = gameData["users_save"].toArray();
+    }
+
+    // If save for user already created, overwrite it
+    for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
+        QJsonObject userObject = userArray[userIndex].toObject();
+        if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
+            QJsonObject saveObject;
+            saveProgressHelper(saveObject);
+            userObject["save"] = saveObject;
+            userArray[userIndex] = userObject;
+            gameData["users_save"] = userArray;
+            games.replace(0, gameData);
+            usersFile["games"] = games;
+            return true;
         }
     }
-    return false;
+
+    // If save for user never created before, create it
+    QJsonObject userObject;
+    QJsonObject saveObject;
+    saveProgressHelper(saveObject);
+    userObject["save"] = saveObject;
+    userObject["username"] = this->user->username;
+    userArray.append(userObject);
+    gameData["users_save"] = userArray;
+    if (games.size() > 0) {
+        games.replace(0, gameData);
+    } else {
+        games.insert(0, gameData);
+    }
+    usersFile["games"] = games;
+    return true;
 }
 
+/**
+ * @brief Game1Scene::saveProgressHelper
+ *
+ * A member function that saves all game state parameters.
+ *
+ * @param QJsonObject &saveObject that helps save all the current game state parameters.
+ */
 void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
 {
     // Add aquarium fields
@@ -668,84 +751,100 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
     saveObject["needle"] = needle;
 }
 
+/**
+ * @brief Game1Scene::saveScore
+ *
+ * A member function that saves the current score of the user and updates the top score.
+ *
+ * @return bool whether the saving operation was successful.
+ */
 bool Game1Scene::saveScore() {
+    QJsonArray games;
     if (usersFile.contains("games") && usersFile["games"].isArray()) {
-        QJsonArray games = usersFile["games"].toArray();
-        if (games.size() > 0 && games[0].isObject()) {
-            QJsonObject gameData = games[0].toObject();
+        games = usersFile["games"].toArray();
+    }
 
-            if (gameData.contains("top_score") && gameData["top_score"].isObject()) {
-                QJsonObject userObject = gameData["top_score"].toObject();
-                if (userObject.contains("score") && userObject["score"].toInt() < aquarium->score) {
-                    userObject["score"] = aquarium->score;
-                    userObject["username"] = user->username;
-                    gameData["top_score"] = userObject;
-                    games[0] = gameData;
-                    usersFile["games"] = games;
-                }
-            } else {
-                QJsonObject userObject;
-                userObject["score"] = aquarium->score;
-                userObject["username"] = user->username;
-                gameData["top_score"] = userObject;
-                games[0] = gameData;
-                usersFile["games"] = games;
+    QJsonObject gameData;
+    if (games.size() > 0 && games.at(0).isObject()) {
+        gameData = games.at(0).toObject();
+    }
+
+    if (gameData.contains("top_score") && gameData["top_score"].isObject()) {
+        QJsonObject userObject = gameData["top_score"].toObject();
+        if (userObject.contains("score") && userObject["score"].toInt() < aquarium->score) {
+            userObject["score"] = aquarium->score;
+            userObject["username"] = user->username;
+            gameData["top_score"] = userObject;
+            games.replace(0, gameData);
+            usersFile["games"] = games;
+        }
+    } else {
+        QJsonObject userObject;
+        userObject["score"] = aquarium->score;
+        userObject["username"] = user->username;
+        gameData["top_score"] = userObject;
+        if (games.size() > 0) {
+            games.replace(0, gameData);
+        } else {
+            games.insert(0, gameData);
+        }
+        usersFile["games"] = games;
+    }
+
+    QJsonArray userArray;
+    if (gameData.contains("users_score") && gameData["users_score"].isArray()) {
+        userArray = gameData["users_score"].toArray();
+    }
+
+    // If score for user already created, add another
+    for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
+        QJsonObject userObject = userArray[userIndex].toObject();
+        if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
+            QJsonObject saveObject;
+            saveScoreHelper(saveObject);
+            QJsonArray scoresArray;
+            if (userObject.contains("scores") && userObject["scores"].isArray()) {
+                scoresArray = userObject["scores"].toArray();
             }
-
-            if (gameData.contains("users_score") && gameData["users_score"].isArray()) {
-                QJsonArray userArray = gameData["users_score"].toArray();
-
-                // If score for user already created, add another
-                for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
-                    QJsonObject userObject = userArray[userIndex].toObject();
-                    if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
-                        QJsonObject saveObject;
-                        saveScoreHelper(saveObject);
-                        QJsonArray scoresArray = userObject["scores"].toArray();
-                        scoresArray.append(saveObject);
-                        userObject["scores"] = scoresArray;
-                        userArray[userIndex] = userObject;
-                        gameData["users_score"] = userArray;
-                        games[0] = gameData;
-                        usersFile["games"] = games;
-                        return true;
-                    }
-                }
-
-                // If score for user never created before, create it
-                QJsonObject userObject;
-                QJsonObject saveObject;
-                saveScoreHelper(saveObject);
-                QJsonArray scoresArray = userObject["scores"].toArray();
-                scoresArray.append(saveObject);
-                userObject["scores"] = scoresArray;
-                userObject["username"] = this->user->username;
-                userArray.append(userObject);
-                gameData["users_score"] = userArray;
-                games[0] = gameData;
-                usersFile["games"] = games;
-                return true;
-            } else {
-                // If no score of any users have ever been created before, create new list and create the score of the user
-                QJsonArray userArray;
-                QJsonObject userObject;
-                QJsonObject saveObject;
-                saveScoreHelper(saveObject);
-                QJsonArray scoresArray;
-                scoresArray.append(saveObject);
-                userObject["scores"] = scoresArray;
-                userObject["username"] = this->user->username;
-                userArray.append(userObject);
-                gameData["users_score"] = userArray;
-                games[0] = gameData;
-                usersFile["games"] = games;
-                return true;
-            }
+            scoresArray.append(saveObject);
+            userObject["scores"] = scoresArray;
+            userArray[userIndex] = userObject;
+            gameData["users_score"] = userArray;
+            games.replace(0, gameData);
+            usersFile["games"] = games;
+            return true;
         }
     }
-    return false;
+
+    // If score for user never created before, create it
+    QJsonObject userObject;
+    QJsonObject saveObject;
+    saveScoreHelper(saveObject);
+    QJsonArray scoresArray;
+    if (userObject.contains("scores") && userObject["scores"].isArray()) {
+        scoresArray = userObject["scores"].toArray();
+    }
+    scoresArray.append(saveObject);
+    userObject["scores"] = scoresArray;
+    userObject["username"] = this->user->username;
+    userArray.append(userObject);
+    gameData["users_score"] = userArray;
+    if (games.size() > 0) {
+        games.replace(0, gameData);
+    } else {
+        games.insert(0, gameData);
+    }
+    usersFile["games"] = games;
+    return true;
 }
 
+/**
+ * @brief Game1Scene::saveScoreHelper
+ *
+ * A member function that saves the current score alongside the date.
+ *
+ * @param QJsonObject &saveObject that helps save data related to the score.
+ */
 void Game1Scene::saveScoreHelper(QJsonObject &saveObject) const
 {
     saveObject["score"] = aquarium->score;
@@ -754,6 +853,11 @@ void Game1Scene::saveScoreHelper(QJsonObject &saveObject) const
     saveObject["year"] = QDate::currentDate().year();
 }
 
+/**
+ * @brief Game1Scene::updateBacterias
+ *
+ * A member function that generates a new bacteria.
+ */
 void Game1Scene::updateBacterias() {
     int time = (rand() % 1000) + aquarium->levels[aquarium->level]["bacteriaGenerationRate"] - 500;
     updateBacteriasTimer->start(time);
@@ -779,6 +883,11 @@ void Game1Scene::updateBacterias() {
     addItem(bacterias[bacteriasIndex++]);
 }
 
+/**
+ * @brief Game1Scene::unpauseGame
+ *
+ * A member function that unpaused the game after the 3..2..1.. state.
+ */
 void Game1Scene::unpauseGame() {
     time->restart();
 
@@ -802,6 +911,11 @@ void Game1Scene::unpauseGame() {
     aquarium->requestForUnpause = false;
 }
 
+/**
+ * @brief Game1Scene::checkGameState
+ *
+ * A member function that checks and updates the game's state.
+ */
 void Game1Scene::checkGameState() {
     // Check if game paused
     if (aquarium->gamePaused) {
@@ -880,6 +994,7 @@ void Game1Scene::checkGameState() {
 
                 unpauseLabel->hide();
 
+                greyForeground->setStyleSheet("background-color: rgba(105, 105, 105, 100);");
                 greyForeground->show();
                 unpause->show();
                 quit->show();
@@ -948,6 +1063,13 @@ void Game1Scene::checkGameState() {
     }
 }
 
+/**
+ * @brief Game1Scene::gameOver
+ *
+ * A member function that shows the game over screen.
+ *
+ * @param bool result whether the level was won or lost.
+ */
 void Game1Scene::gameOver(bool result) {
     timeUpdater->stop();
     updateItemsTimer->stop();
@@ -1009,8 +1131,6 @@ void Game1Scene::gameOver(bool result) {
         quit2->move(this->width() / 2 - 110, this->height() / 2 + 150);
         nextLevelButton->move(this->width() / 2 + 10, this->height() / 2 + 150);
     } else {
-        // Should i also save when he overrides a resume game?
-
         quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
 
         saveScore();
