@@ -41,7 +41,7 @@ public:
     QLabel* profilePictureL;
     QLabel* nameL;
 
-    User* user;//!<User member user represents the signed in user
+    User* user;//!<User member that represents the signed in user
     QJsonObject usersFile;//!QJsonObject member usersFile that holds information of the user
 
 signals:

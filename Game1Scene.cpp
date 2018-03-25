@@ -2,6 +2,24 @@
 
 #include "Message.h"
 
+/**
+ *\file Game1Scene.cpp
+ *@brief contains Game1Scene class definition which represents the game 1 shell.
+ *
+ * It handles saving of games, the creation and deletion of elements and tracking the game state.
+ *
+ */
+
+/**
+ * @brief Game1Scene::Game1Scene constructor of Game1Scene class
+ *
+ * A constructor that sets up the game with all initial attributes.
+ * @param QWidget *widget represents the main widget holding all items
+ * @param User* user is the user signed in
+ * @param QJsonObject usersFile holds the info of the user
+ * @param bool resume determines is the game is being resumed
+ * @param int level determines if the game should start at a specific level
+ */
 Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool resume, int level, QGraphicsScene *parent) : QGraphicsScene(parent)
 {
     srand(QTime::currentTime().msec());
@@ -304,6 +322,11 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     updateTimer();
 }
 
+/**
+ * @brief Game1Scene::nextLevel
+ *
+ * A member function that loads the next level and mainly sets the timers.
+ */
 void Game1Scene::nextLevel() {
     scoreLabel2->hide();
     quit2->hide();
@@ -328,6 +351,11 @@ void Game1Scene::nextLevel() {
     updateTimer();
 }
 
+/**
+ * @brief Game1Scene::setUpNextLevel
+ *
+ * A member function that sets up the next level.
+ */
 void Game1Scene::setUpNextLevel() {
     aquarium->level++;
     aquarium->currentCleanliness = 0;
@@ -351,6 +379,11 @@ void Game1Scene::setUpNextLevel() {
     pixmapNeedle->setRotation(0);
 }
 
+/**
+ * @brief Game1Scene::virusUpdate
+ *
+ * A member function that generates a new virus.
+ */
 void Game1Scene::virusUpdate(){
     int time = (rand() % 2000) + aquarium->levels[aquarium->level]["virusGenerationRate"] - 1000;
     virusTimer->start(time);
@@ -387,6 +420,11 @@ void Game1Scene::virusUpdate(){
     }
 }
 
+/**
+ * @brief Game1Scene::summonPestilence
+ *
+ * A member function that summons Pestilence.
+ */
 void Game1Scene::summonPestilence() {
     pestilenceTimeLabel->hide();
     pestilenceTimeLabel2->hide();
@@ -399,6 +437,11 @@ void Game1Scene::summonPestilence() {
     addItem(viruses[virusesIndex++]);
 }
 
+/**
+ * @brief Game1Scene::updateTimer
+ *
+ * A member function that updates time based labels.
+ */
 void Game1Scene::updateTimer() {
     if (timeUpdater->isSingleShot()) {
         timeUpdater->setSingleShot(false);
@@ -426,6 +469,11 @@ void Game1Scene::updateTimer() {
     }
 }
 
+/**
+ * @brief Game1Scene::updateItems
+ *
+ * A member function that generates a new item.
+ */
 void Game1Scene::updateItems(){
     int time = (rand() % 500) + aquarium->levels[aquarium->level]["itemDropRate"] - 250;
     updateItemsTimer->start(time);
@@ -448,10 +496,20 @@ void Game1Scene::updateItems(){
     addItem(items[itemsIndex++]);
 }
 
+/**
+ * @brief Game1Scene::unpauseClicked
+ *
+ * A member function that unpauses the game (sending it into the 3..2..1 state).
+ */
 void Game1Scene::unpauseClicked() {
    aquarium->requestForUnpause = true;
 }
 
+/**
+ * @brief Game1Scene::quitClicked
+ *
+ * A member function that exists the game and goes back to the GameOnePage.
+ */
 void Game1Scene::quitClicked() {
     if (spongeBob->lives > 0) {
         saveProgress();
@@ -464,6 +522,11 @@ void Game1Scene::quitClicked() {
     widget->show();
 }
 
+/**
+ * @brief Game1Scene::saveFile
+ *
+ * A member function that saves the data of usersFile to disk.
+ */
 void Game1Scene::saveFile() {
     QFile saveFile(QStringLiteral("Data.json"));
 
@@ -476,6 +539,15 @@ void Game1Scene::saveFile() {
     saveFile.write(saveDoc.toJson());
 }
 
+/**
+ * @brief Game1Scene::read
+ *
+ * A member function that reads a specific part of the game saved.
+ *
+ * @param QString type that specifies the part of the saved progress to load.
+ *
+ * @return QJsonDocument the saved progress part needed.
+ */
 QJsonDocument Game1Scene::read(QString type) {
     QJsonObject save;
     if (usersFile.contains("games") && usersFile["games"].isArray()) {
@@ -503,6 +575,13 @@ QJsonDocument Game1Scene::read(QString type) {
     return (QJsonDocument) save;
 }
 
+/**
+ * @brief Game1Scene::saveProgress
+ *
+ * A member function that saves the current game progress.
+ *
+ * @return bool whether the saving of the game state was successful.
+ */
 bool Game1Scene::saveProgress() {
     QJsonArray games;
     if (usersFile.contains("games") && usersFile["games"].isArray()) {
@@ -551,6 +630,13 @@ bool Game1Scene::saveProgress() {
     return true;
 }
 
+/**
+ * @brief Game1Scene::saveProgressHelper
+ *
+ * A member function that saves all game state parameters.
+ *
+ * @param QJsonObject &saveObject that helps save all the current game state parameters.
+ */
 void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
 {
     // Add aquarium fields
@@ -665,6 +751,13 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
     saveObject["needle"] = needle;
 }
 
+/**
+ * @brief Game1Scene::saveScore
+ *
+ * A member function that saves the current score of the user and updates the top score.
+ *
+ * @return bool whether the saving operation was successful.
+ */
 bool Game1Scene::saveScore() {
     QJsonArray games;
     if (usersFile.contains("games") && usersFile["games"].isArray()) {
@@ -745,6 +838,13 @@ bool Game1Scene::saveScore() {
     return true;
 }
 
+/**
+ * @brief Game1Scene::saveScoreHelper
+ *
+ * A member function that saves the current score alongside the date.
+ *
+ * @param QJsonObject &saveObject that helps save data related to the score.
+ */
 void Game1Scene::saveScoreHelper(QJsonObject &saveObject) const
 {
     saveObject["score"] = aquarium->score;
@@ -753,6 +853,11 @@ void Game1Scene::saveScoreHelper(QJsonObject &saveObject) const
     saveObject["year"] = QDate::currentDate().year();
 }
 
+/**
+ * @brief Game1Scene::updateBacterias
+ *
+ * A member function that generates a new bacteria.
+ */
 void Game1Scene::updateBacterias() {
     int time = (rand() % 1000) + aquarium->levels[aquarium->level]["bacteriaGenerationRate"] - 500;
     updateBacteriasTimer->start(time);
@@ -778,6 +883,11 @@ void Game1Scene::updateBacterias() {
     addItem(bacterias[bacteriasIndex++]);
 }
 
+/**
+ * @brief Game1Scene::unpauseGame
+ *
+ * A member function that unpaused the game after the 3..2..1.. state.
+ */
 void Game1Scene::unpauseGame() {
     time->restart();
 
@@ -801,6 +911,11 @@ void Game1Scene::unpauseGame() {
     aquarium->requestForUnpause = false;
 }
 
+/**
+ * @brief Game1Scene::checkGameState
+ *
+ * A member function that checks and updates the game's state.
+ */
 void Game1Scene::checkGameState() {
     // Check if game paused
     if (aquarium->gamePaused) {
@@ -948,6 +1063,13 @@ void Game1Scene::checkGameState() {
     }
 }
 
+/**
+ * @brief Game1Scene::gameOver
+ *
+ * A member function that shows the game over screen.
+ *
+ * @param bool result whether the level was won or lost.
+ */
 void Game1Scene::gameOver(bool result) {
     timeUpdater->stop();
     updateItemsTimer->stop();
@@ -1009,8 +1131,6 @@ void Game1Scene::gameOver(bool result) {
         quit2->move(this->width() / 2 - 110, this->height() / 2 + 150);
         nextLevelButton->move(this->width() / 2 + 10, this->height() / 2 + 150);
     } else {
-        // Should i also save when he overrides a resume game?
-
         quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
 
         saveScore();

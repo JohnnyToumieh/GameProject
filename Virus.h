@@ -34,8 +34,8 @@ public:
 
     bool toDelete;//!<Boolean member that state if the virus is to be deleted from the saving list
 
-    SpongeBob *spongeBob;//!<SpongeBob member that represents spongebob
     Aquarium* aquarium;//!<Aquarium member that represents the aquarium
+    SpongeBob *spongeBob;//!<SpongeBob member that represents spongebob
 
     bool justPaused;//!<Boolean member that state if the game is just paused
 
