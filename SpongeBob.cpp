@@ -1,4 +1,21 @@
 #include "SpongeBob.h"
+/**
+ *\file SpongeBob.cpp
+ *@brief contains SpongeBob class definition which represents spongeBob moved by the user
+ *  in the aquarium
+ *
+ *
+ */
+
+/**
+ * @brief SpongeBob::SpongeBob constructor of SpongeBob class
+ *
+ * A constructor that ceates SpongeBob along with his attributes
+ * @param Aquarium* aquarium
+ * @param QGraphicsPixmapItem *needle is the needle shape on the immunity meter
+ * @param QGraphicsPixmapItem** pixmapLifeList list of heart shapes (lives) spongebob has
+ * @param QObject *parent
+ */
 
 SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsPixmapItem** pixmapLifeList, QObject *parent) : QObject(parent)
 {
@@ -41,6 +58,11 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
     connect(vulnerableTimer, SIGNAL(timeout()), this, SLOT(resetVulnerability()));
 }
 
+/**
+ * @brief SpongeBob::reset function that resets all attributes of spongebob back to defualt
+ *
+ *
+ */
 void SpongeBob::reset() {
     // Not resetting numCollisionsWithBacterias
 
@@ -58,6 +80,12 @@ void SpongeBob::reset() {
     setPos(500,100);
 }
 
+/**
+ * @brief SpongeBob::changeGlow function that checks for immunity level of spongebob
+ * and change his glow color accordingly
+ *
+ *
+ */
 void SpongeBob::changeGlow(){
     if(immunityLevel==0){
         setPixmap((QPixmap("bob.png")).scaled(80,80));
@@ -73,6 +101,12 @@ void SpongeBob::changeGlow(){
     }
 }
 
+/**
+ * @brief SpongeBob::changeGlow: changes spongebpb glow color
+ *
+ * function that checks for immunity level of spongebob
+ * and change his glow color accordingly (green for level 1, yellow 2, red 3(highest))
+ */
 void SpongeBob::keyPressEvent(QKeyEvent *event){
     if (event->key() == Qt::Key_Escape) {
         if (aquarium->gamePaused && !aquarium->requestForUnpause) {
@@ -95,6 +129,12 @@ void SpongeBob::keyPressEvent(QKeyEvent *event){
     }
 }
 
+/**
+ * @brief SpongeBob::toggleVisibility: make spongebob visible then unvisible
+ *
+ * function that used when spongebob hits a bacteria and loose a live
+ * then the shape blink using this function
+ */
 void SpongeBob::toggleVisibility() {
     if (!blinkerStatus) {
         setPixmap((QPixmap("bob1.png")).scaled(0,0));
@@ -104,6 +144,12 @@ void SpongeBob::toggleVisibility() {
     blinkerStatus = !blinkerStatus;
 }
 
+/**
+ * @brief SpongeBob::setCanCollide: make spongebob can collide
+ *
+ * function that reset spongebob to state where he can collide after being stopped
+ * when he lose a life
+ */
 void SpongeBob::setCanCollide() {
     canCollide = true;
     collisionBlinker->stop();
@@ -112,6 +158,14 @@ void SpongeBob::setCanCollide() {
     }
 }
 
+/**
+ * @brief SpongeBob::collisionWithBacteria: triggered when spongebob collide with bacteria
+ * stronger than him
+ *
+ * function that responds to spongebob collision with a bacteria stronger than him
+ * one live is removed and spongebob set to blink.
+ * @param int bacteriaType represents type of the bacteria collided with
+ */
 void SpongeBob::collisionWithBacteria(int bacteriaType){
     // Update lives
     if(lives > 0) {
@@ -136,6 +190,13 @@ void SpongeBob::collisionWithBacteria(int bacteriaType){
     }
 }
 
+/**
+ * @brief SpongeBob::setVulnerable: triggered when spongebob collide with a virus
+ *
+ * function that responds to spongebob collision with a virus
+ * he is then made vulnerable to all kinds of bacteria
+ * @param int type represents type of the virus collided with
+ */
 void SpongeBob::setVulnerable(int type) {
     if (type == 1) {
         vulnerable = true;
@@ -159,6 +220,12 @@ void SpongeBob::setVulnerable(int type) {
     }
 }
 
+/**
+ * @brief SpongeBob::resetVulnerability:
+ *
+ * function that is called to restore spongebob immunity (5 seconds after collision with virus)
+ * @param int type represents type of the virus collided with
+ */
 void SpongeBob::resetVulnerability() {
     vulnerable = false;
     immunityLevel = savedImmunityLevel;

@@ -84,6 +84,8 @@ void HistoryPage::setVerticalLayout()
 /**
  * @brief HistoryPage::read member function: reads user info from JSON file
  *
+ * @return bool true if read is successful
+ * @param QJsonObject &json reference to the JSON file to read from
  */
 bool HistoryPage::read(const QJsonObject &json)
 {
