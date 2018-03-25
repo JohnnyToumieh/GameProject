@@ -3,7 +3,11 @@
 
 #include <QWidget>
 #include <QtWidgets>
-
+/**
+ *\file Message.h
+ *@brief The Message class, represents object used to display different messages to the user
+ *
+ */
 class Message : public QWidget
 {
     Q_OBJECT
@@ -12,7 +16,7 @@ public:
 
     Message(QString m);
 
-    QLabel *msg;
+    QLabel *msg;//!<QLabel msg which is the message to be displayed
     QVBoxLayout *VerticalL;
 
 signals:

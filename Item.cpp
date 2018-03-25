@@ -1,5 +1,23 @@
 #include "Item.h"
+/**
+ *\file Item.cpp
+ *@brief contains Item class definition which represents the healthy/unhealthy items floating in the aquarium
+ *
+ * Item class represents the items (healthy/unhealthy) objects
+ *
+ */
 
+/**
+ * @brief Item::Item constructor of Item class
+ *
+ * A constructor that set the Item along with its attributes
+ * it select one of the three healthy/unhealthy items to create
+ * and randomly set the speed and position.
+ * @param SpongeBob* spongeBob is the spongebob object of the active game level
+ * @param Aquarium* aquarium
+ * @param int type argument integer indicating the type of the bacteria
+ * @param QObject *parent by default is null
+ */
 Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, QObject *parent)
 {
     srand(QTime::currentTime().msec());
@@ -55,6 +73,14 @@ Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, Q
     checkGameStateTimer->start(100);
 }
 
+/**
+ * @brief Item::checkGameState triggered on checkGameStateTimer to check the game state and update
+ * accordingly
+ * A function that check if the game is paused to stop moving the item and checks for collisions
+ * and accordingly modify attributes (immnuity level) and mark the item with toDelete as true
+ * it also modify the needle position of the immnunity meter.
+ *
+ */
 void Item::checkGameState() {
     // Check if game paused
     if (aquarium->gamePaused) {
@@ -120,6 +146,12 @@ void Item::checkGameState() {
     }
 }
 
+/**
+ * @brief Item::update triggered on speedTimer to update the place and movement of the items
+ *
+ * update() function move the item from top and going down and delete them on at the end of the screen.
+ *
+ */
 void Item::update(){
     if((y()+30) >= 500) {
         speedTimer->stop();

@@ -1,7 +1,23 @@
 #include "SignIn.h"
 
 #include "Message.h"
+/**
+ *\file SignIn.cpp
+ *@brief contains SignIn class definition which represents the page where user chooses game
+ *
+ * SignIn class allow the user to choose game 1 or game 2
+ * it takes him to the common page between the two games.
+ *
+ */
 
+/**
+ * @brief SignIn::SignIn constructor of SignIn class
+ *
+ * A constructor that set page buttons and labels
+ * @param QWidget *widget represents the main widget holding all items
+ * @param User* user is the user signed in
+ * @param QJsonObject usersFile holds the info of the user
+ */
 SignIn::SignIn(QWidget *widget, User* user, QJsonObject usersFile)
 {
     this->widget=widget;
@@ -28,6 +44,10 @@ SignIn::SignIn(QWidget *widget, User* user, QJsonObject usersFile)
     QObject::connect(back, SIGNAL(clicked()), SLOT(backClicked()));
 }
 
+/**
+ * @brief SignIn::setVerticalLayout member function: set the vertical layout by adding items to it
+ *
+ */
 void SignIn::setVerticalLayout()
 {
     verticalLayout->addItem(new QSpacerItem(500, 200));
@@ -41,6 +61,12 @@ void SignIn::setVerticalLayout()
     verticalLayout->addItem(new QSpacerItem(500, 200));
 }
 
+/**
+ * @brief SignIn::submitClicked member function: signin the user
+ *
+ * function that respond to clicking submit button by checking user's credentials
+ * sigining him in if they match, or displaying message otherwise.
+ */
 void SignIn::submitClicked(){
     if(username->text() == NULL ||  username->text() == ""
        || password->text() ==NULL || password->text()==""){
@@ -62,6 +88,11 @@ void SignIn::submitClicked(){
     }
 }
 
+/**
+ * @brief SignIn::backClicked member function: takes user back
+ *
+ * function that respond to clicking back button by taking the user to the previous page
+ */
 void SignIn::backClicked(){
     qDeleteAll(widget->children());
     HomePage *homePage = new HomePage(widget);
