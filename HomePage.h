@@ -41,6 +41,7 @@ signals:
 private:
     void setVerticalLayout();
     void RemoveLayout (QWidget* widget);
+    void setUpDataFile();
 public slots:
     void signUpClicked();//!<Member function takes user to sigin page
     void signInClicked();//!<Member function takes user to signup page
