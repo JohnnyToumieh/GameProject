@@ -87,17 +87,19 @@ void SpongeBob::reset() {
  *
  */
 void SpongeBob::changeGlow(){
-    if(immunityLevel==0){
-        setPixmap((QPixmap("bob.png")).scaled(80,80));
-    }
-    if(immunityLevel==1){
-        setPixmap((QPixmap("bob1.png")).scaled(80,80));
-    }
-    if(immunityLevel==2){
-        setPixmap((QPixmap("bob2.png")).scaled(80,80));
-    }
-    if(immunityLevel==3){
-        setPixmap((QPixmap("bob3.png")).scaled(80,80));
+    if (canCollide) {
+        if(immunityLevel==0){
+            setPixmap((QPixmap("bob.png")).scaled(80,80));
+        }
+        if(immunityLevel==1){
+            setPixmap((QPixmap("bob1.png")).scaled(80,80));
+        }
+        if(immunityLevel==2){
+            setPixmap((QPixmap("bob2.png")).scaled(80,80));
+        }
+        if(immunityLevel==3){
+            setPixmap((QPixmap("bob3.png")).scaled(80,80));
+        }
     }
 }
 
@@ -137,9 +139,31 @@ void SpongeBob::keyPressEvent(QKeyEvent *event){
  */
 void SpongeBob::toggleVisibility() {
     if (!blinkerStatus) {
-        setPixmap((QPixmap("bob1.png")).scaled(0,0));
+        if(immunityLevel==0){
+            setPixmap((QPixmap("bob.png")).scaled(0,0));
+        }
+        if(immunityLevel==1){
+            setPixmap((QPixmap("bob1.png")).scaled(0,0));
+        }
+        if(immunityLevel==2){
+            setPixmap((QPixmap("bob2.png")).scaled(0,0));
+        }
+        if(immunityLevel==3){
+            setPixmap((QPixmap("bob3.png")).scaled(0,0));
+        }
     } else {
-        setPixmap((QPixmap("bob1.png")).scaled(80,80));
+        if(immunityLevel==0){
+            setPixmap((QPixmap("bob.png")).scaled(80,80));
+        }
+        if(immunityLevel==1){
+            setPixmap((QPixmap("bob1.png")).scaled(80,80));
+        }
+        if(immunityLevel==2){
+            setPixmap((QPixmap("bob2.png")).scaled(80,80));
+        }
+        if(immunityLevel==3){
+            setPixmap((QPixmap("bob3.png")).scaled(80,80));
+        }
     }
     blinkerStatus = !blinkerStatus;
 }
