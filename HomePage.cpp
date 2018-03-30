@@ -61,7 +61,7 @@ HomePage::HomePage(QWidget *widget)
 
     QByteArray saveData = loadFile.readAll();
     QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-    usersFile = loadDoc.object();
+    dataFile = loadDoc.object();
 }
 
 /**
@@ -84,7 +84,7 @@ void HomePage::setVerticalLayout(){
  */
 void HomePage::signUpClicked(){
     qDeleteAll(widget->children());
-    SignUp *signup = new SignUp(widget, user, usersFile);
+    SignUp *signup = new SignUp(widget, user, dataFile);
 }
 
 /**
@@ -94,7 +94,7 @@ void HomePage::signUpClicked(){
  */
 void HomePage::signInClicked(){
     qDeleteAll(widget->children());
-    SignIn *signIn = new SignIn(widget, user, usersFile);
+    SignIn *signIn = new SignIn(widget, user, dataFile);
 }
 
 /**
@@ -108,5 +108,5 @@ void HomePage::playAsGuestClicked(){
     user->isGuest = true;
 
     qDeleteAll(widget->children());
-    ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, usersFile);
+    ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, dataFile);
 }

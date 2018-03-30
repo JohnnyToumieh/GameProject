@@ -18,7 +18,7 @@ class SignIn : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit SignIn(QWidget *widget, User* user, QJsonObject usersFile);
+    explicit SignIn(QWidget *widget, User* user, QJsonObject dataFile);
     QWidget *widget;
 
     QVBoxLayout *verticalLayout;
@@ -33,7 +33,7 @@ public:
     QLabel* passwordL;
 
     User* user;//!<User member user represents the signed in user
-    QJsonObject usersFile;//!QJsonObject member usersFile that holds information of the user
+    QJsonObject dataFile;//!QJsonObject member dataFile that holds information of the user
 signals:
 
 private:

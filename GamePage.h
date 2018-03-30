@@ -1,5 +1,5 @@
-#ifndef GAMEONEPAGE_H
-#define GAMEONEPAGE_H
+#ifndef GAMEPAGE_H
+#define GAMEPAGE_H
 
 #include <QWidget>
 #include <QtWidgets>
@@ -7,21 +7,22 @@
 
 #include "ChooseGamePage.h"
 #include "HistoryPage.h"
-#include "Game1Scene.h"
+#include "GameScene1.h"
+#include "GameScene2.h"
 #include "User.h"
 
 /**
- *\file GameOnePage.h
- *@brief The GameOnePage class, represents the page that let user start or resume a game (and check history...)
+ *\file GamePage.h
+ *@brief The GamePage class, represents the page that let user start or resume a game (and check history...)
  * it is a common page between game 1 and game 2
  *
  */
 
-class GameOnePage : public QVBoxLayout
+class GamePage : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile);
+    explicit GamePage(QWidget *widget, int gameNumber, User* user, QJsonObject dataFile);
 
     int gameNumber;//!<Integer member gameNumber (1,2) that represents number of the game chosen
     QVBoxLayout* verticalLayout;
@@ -42,7 +43,7 @@ public:
     QLabel* nameL;
 
     User* user;//!<User member that represents the signed in user
-    QJsonObject usersFile;//!QJsonObject member usersFile that holds information of the user
+    QJsonObject dataFile;//!QJsonObject member dataFile that holds information of the user
 
 signals:
 
@@ -58,4 +59,4 @@ public slots:
     void resumeGameClicked();//!<Member function allows user to resume and old game
 };
 
-#endif // GAMEONEPAGE_H
+#endif // GAMEPAGE_H

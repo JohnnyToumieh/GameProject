@@ -19,7 +19,7 @@ class SignUp : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit SignUp(QWidget *widget, User* user, QJsonObject usersFile);
+    explicit SignUp(QWidget *widget, User* user, QJsonObject dataFile);
 
     bool passChecked;
     QWidget *widget;
@@ -61,7 +61,7 @@ public:
     QPushButton* choosePicture;
 
     User* user;//!<User member user represents the signed in user
-    QJsonObject usersFile;//!QJsonObject member usersFile that holds information of the user
+    QJsonObject dataFile;//!QJsonObject member dataFile that holds information of the user
 
 private:
     void setVerticalLayout();

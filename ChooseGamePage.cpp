@@ -19,14 +19,14 @@
  * along with the user's name and picture.
  * @param QWidget *widget represents the main widget holding all items
  * @param User* user is the user signed in
- * @param QJsonObject usersFile holds the info of the user
+ * @param QJsonObject dataFile holds the info of the user
  */
 
-ChooseGamePage::ChooseGamePage(QWidget *widget, User* user, QJsonObject usersFile)
+ChooseGamePage::ChooseGamePage(QWidget *widget, User* user, QJsonObject dataFile)
 {
     this->widget=widget;
     this->user = user;
-    this->usersFile = usersFile;
+    this->dataFile = dataFile;
 
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
@@ -85,7 +85,7 @@ void ChooseGamePage::backToHomeClicked(){
  */
 void ChooseGamePage::game1Clicked(){
     qDeleteAll(widget->children());
-    GameOnePage *gameOnePage = new GameOnePage(widget, 1, user, usersFile);
+    GamePage *gamePage = new GamePage(widget, 1, user, dataFile);
 }
 
 /**
@@ -95,7 +95,7 @@ void ChooseGamePage::game1Clicked(){
  */
 void ChooseGamePage::game2Clicked(){
     qDeleteAll(widget->children());
-    GameOnePage *gameOnePage = new GameOnePage(widget, 2, user, usersFile);
+    GamePage *gamePage = new GamePage(widget, 2, user, dataFile);
 }
 
 /**

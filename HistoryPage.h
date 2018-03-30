@@ -5,7 +5,7 @@
 #include <QtWidgets>
 #include <QObject>
 
-#include "GameOnePage.h"
+#include "GamePage.h"
 #include "User.h"
 
 /**
@@ -18,7 +18,7 @@ class HistoryPage : public QVBoxLayout
 {
     Q_OBJECT
 public:
-    explicit HistoryPage(QWidget *widget,int gameNumber, User* user, QJsonObject usersFile);
+    explicit HistoryPage(QWidget *widget,int gameNumber, User* user, QJsonObject dataFile);
 
     bool read(const QJsonObject &json);//!<Member function takes reads userfile
 
@@ -41,7 +41,7 @@ public:
     QPushButton *back;
 
     User* user;//!<User member user represents the signed in user
-    QJsonObject usersFile;//!QJsonObject member usersFile that holds information of the user
+    QJsonObject dataFile;//!QJsonObject member dataFile that holds information of the user
 
 signals:
 

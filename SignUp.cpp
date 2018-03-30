@@ -16,13 +16,13 @@
  * A constructor that set page buttons and labels
  * @param QWidget *widget represents the main widget holding all items
  * @param User* user is the user signed in
- * @param QJsonObject usersFile holds the info of the user
+ * @param QJsonObject dataFile holds the info of the user
  */
-SignUp::SignUp(QWidget *widget, User* user, QJsonObject usersFile)
+SignUp::SignUp(QWidget *widget, User* user, QJsonObject dataFile)
 {
     this->widget=widget;
     this->user = user;
-    this->usersFile = usersFile;
+    this->dataFile = dataFile;
 
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
@@ -258,7 +258,7 @@ void SignUp::submitClicked(){
         user->username = username->text();
         user->password = password->text();
 
-        if (user->read(usersFile)) {
+        if (user->read(dataFile)) {
             Message *msg = new Message("Username already exist!");
             msg->show();
             return;
@@ -275,7 +275,7 @@ void SignUp::submitClicked(){
         QPixmap const* profilePicture = profilePictureL->pixmap();
         profilePicture->save(QDir::currentPath()+"/user_photos/" + user->username + ".png","png");
 
-        user->write(usersFile);
+        user->write(dataFile);
 
         QFile saveFile(QStringLiteral("Data.json"));
 
@@ -284,11 +284,11 @@ void SignUp::submitClicked(){
             msg->show();
         }
 
-        QJsonDocument saveDoc(usersFile);
+        QJsonDocument saveDoc(dataFile);
         saveFile.write(saveDoc.toJson());
 
         qDeleteAll(widget->children());
-        ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, usersFile);
+        ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, dataFile);
     }
 }
 
