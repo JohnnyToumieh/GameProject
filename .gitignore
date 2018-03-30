@@ -71,3 +71,7 @@ Thumbs.db
 *.dll
 *.exe
 
+# Doxy Files
+Doxyfile
+/latex
+/html
