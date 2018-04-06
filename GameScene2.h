@@ -56,6 +56,8 @@ public:
     QLabel* gameOverLabel;
     QLabel* unpauseLabel;
 
+    QMovie* movie;
+
     QTime* time;//!<QTime member that counts the current time elapsed
     int pausedTime;//!<int member that help save the time before the game was paused to use after the game unpauses
 

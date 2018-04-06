@@ -34,12 +34,14 @@ GameScene2::GameScene2(QWidget *widget, User* user, QJsonObject dataFile, bool r
         aquarium = new Aquarium(level, 0, 0, 0);
     }
 
-    setBackgroundBrush(QBrush(QImage(":game1Background").scaledToHeight(600).scaledToWidth(1000)));
+    setBackgroundBrush(QBrush(QImage(":game2Background").scaledToHeight(600).scaledToWidth(1000)));
     setSceneRect(0,0,1000,600);
 
     timeLabel = new QLabel();
-    timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
-    timeLabel->move(this->width() / 2 - 30, 25);
+    movie = new QMovie(":movingEyes");
+    movie->setScaledSize(QSize(200, 200));
+    timeLabel->setMovie(movie);
+    timeLabel->move(this->width() / 2 - 100, this->height() / 2 - 200);
     addWidget(timeLabel);
 
     pestilenceTimeLabel = new QLabel();
@@ -107,7 +109,7 @@ GameScene2::GameScene2(QWidget *widget, User* user, QJsonObject dataFile, bool r
 
     greenColorItem= new QGraphicsPixmapItem();
     greenColorItem->setPos(15,51);
-    QPixmap *greenColor = new QPixmap("needle.png");
+    QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
     addItem(greenColorItem);
@@ -370,7 +372,7 @@ void GameScene2::setUpNextLevel() {
 
     spongeBob->reset();
 
-    QPixmap *greenColor = new QPixmap("needle.png");
+    QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
 
@@ -385,39 +387,6 @@ void GameScene2::setUpNextLevel() {
  * A member function that generates a new virus.
  */
 void GameScene2::virusUpdate(){
-    int time = (rand() % 2000) + aquarium->levels[aquarium->level]["virusGenerationRate"] - 1000;
-    virusTimer->start(time);
-
-    if (virusesIndex >= 9) {
-        virusesIndex = 0;
-    }
-
-    int weight = (rand() % (aquarium->levels[aquarium->level]["virusWeight1"]
-                        + aquarium->levels[aquarium->level]["virusWeight2"]
-                        + aquarium->levels[aquarium->level]["virusWeight3"]));
-
-    int type = 1;
-    if (weight < aquarium->levels[aquarium->level]["virusWeight1"]) {
-        type = 1;
-    } else if (weight < aquarium->levels[aquarium->level]["virusWeight1"] + aquarium->levels[aquarium->level]["virusWeight2"]) {
-        type = 2;
-    } else {
-        if (!pestilenceTimer->isActive()) {
-            type = 3;
-        } else {
-            type = 1;
-        }
-    }
-
-    if (type == 3){
-        pestilenceTimer->start(10000);
-        updateTimer();
-        pestilenceTimeLabel->show();
-        pestilenceTimeLabel2->show();
-    } else {
-        viruses[virusesIndex] = new Virus(type, spongeBob, aquarium);
-        addItem(viruses[virusesIndex++]);
-    }
 }
 
 /**
@@ -448,13 +417,24 @@ void GameScene2::updateTimer() {
         timeUpdater->start(500);
     }
 
+    if (movie->state() == QMovie::Running && movie->currentFrameNumber() == 10) {
+        movie->setPaused(true);
+    } else if (movie->state() == QMovie::Paused){
+        int ran = (rand() % 10);
+        if (ran == 0) {
+            movie->setPaused(false);
+        }
+    } else if (movie->state() == QMovie::NotRunning) {
+        movie->start();
+    }
+
     int secs = (time->elapsed() + pausedTime) / 1000;
     int mins = (secs / 60) % 60;
     secs = secs % 60;
 
-    timeLabel->setText(QString("%1:%2")
-    .arg(mins, 2, 10, QLatin1Char('0'))
-    .arg(secs, 2, 10, QLatin1Char('0')) );
+    //timeLabel->setText(QString("%1:%2")
+    //.arg(mins, 2, 10, QLatin1Char('0'))
+    //.arg(secs, 2, 10, QLatin1Char('0')) );
 
     aquarium->currentTime = time->elapsed() + pausedTime;
 
@@ -475,25 +455,6 @@ void GameScene2::updateTimer() {
  * A member function that generates a new item.
  */
 void GameScene2::updateItems(){
-    int time = (rand() % 500) + aquarium->levels[aquarium->level]["itemDropRate"] - 250;
-    updateItemsTimer->start(time);
-
-    int weight = (rand() % (aquarium->levels[aquarium->level]["healthyItemWeight"]
-                        + aquarium->levels[aquarium->level]["unhealthyItemWeight"]));
-
-    bool isHealthy = true;
-    if (weight < aquarium->levels[aquarium->level]["healthyItemWeight"]) {
-        isHealthy = true;
-    } else {
-        isHealthy = false;
-    }
-
-    if (itemsIndex >= 20) {
-        itemsIndex = 0;
-    }
-
-    items[itemsIndex] = new Item(aquarium, spongeBob, isHealthy);
-    addItem(items[itemsIndex++]);
 }
 
 /**
@@ -662,28 +623,6 @@ void GameScene2::saveScoreHelper(QJsonObject &saveObject) const
  * A member function that generates a new bacteria.
  */
 void GameScene2::updateBacterias() {
-    int time = (rand() % 1000) + aquarium->levels[aquarium->level]["bacteriaGenerationRate"] - 500;
-    updateBacteriasTimer->start(time);
-
-    if (bacteriasIndex >= 19) {
-        bacteriasIndex = 0;
-    }
-
-    int weight = (rand() % (aquarium->levels[aquarium->level]["bacteriaWeight1"]
-                        + aquarium->levels[aquarium->level]["bacteriaWeight2"]
-                        + aquarium->levels[aquarium->level]["bacteriaWeight3"]));
-
-    int type = 1;
-    if (weight < aquarium->levels[aquarium->level]["bacteriaWeight1"]) {
-        type = 1;
-    } else if (weight < aquarium->levels[aquarium->level]["bacteriaWeight1"] + aquarium->levels[aquarium->level]["bacteriaWeight2"]) {
-        type = 2;
-    } else {
-        type = 3;
-    }
-
-    bacterias[bacteriasIndex] = new Bacteria(type,spongeBob,aquarium,greenColorItem,pixmapLifeList);
-    addItem(bacterias[bacteriasIndex++]);
 }
 
 /**
@@ -851,9 +790,9 @@ void GameScene2::checkGameState() {
         int secs = aquarium->levels[aquarium->level]["maxTime"] / 1000;
         int mins = (secs / 60) % 60;
         secs = secs % 60;
-        timeLabel->setText(QString("%1:%2")
-        .arg(mins, 2, 10, QLatin1Char('0'))
-        .arg(secs, 2, 10, QLatin1Char('0')) );
+        //timeLabel->setText(QString("%1:%2")
+        //.arg(mins, 2, 10, QLatin1Char('0'))
+        //.arg(secs, 2, 10, QLatin1Char('0')) );
 
         aquarium->currentTime = aquarium->levels[aquarium->level]["maxTime"];
 

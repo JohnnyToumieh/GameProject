@@ -107,7 +107,7 @@ GameScene1::GameScene1(QWidget *widget, User* user, QJsonObject dataFile, bool r
 
     greenColorItem= new QGraphicsPixmapItem();
     greenColorItem->setPos(15,51);
-    QPixmap *greenColor = new QPixmap("needle.png");
+    QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
     addItem(greenColorItem);
@@ -370,7 +370,7 @@ void GameScene1::setUpNextLevel() {
 
     spongeBob->reset();
 
-    QPixmap *greenColor = new QPixmap("needle.png");
+    QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
 

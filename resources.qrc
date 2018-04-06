@@ -20,5 +20,7 @@
         <file alias="bacteria2">Images/bacteria2.png</file>
         <file alias="bacteria1">Images/bacteria1.png</file>
         <file alias="game1Background">Images/background2.JPG</file>
+        <file alias="movingEyes">Images/movingEyes.gif</file>
+        <file alias="game2Background">Images/game2Background.png</file>
     </qresource>
 </RCC>

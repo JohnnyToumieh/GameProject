@@ -113,7 +113,7 @@ void Bacteria::checkGameState() {
 
                     //increase cleanliness
                     aquarium->currentCleanliness += aquarium->levels[aquarium->level]["incrementCleanliness"];
-                    QPixmap *greenColor = new QPixmap("needle.png");
+                    QPixmap *greenColor = new QPixmap(":needle");
                     greenColor->fill(Qt::green);
                     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
 
