@@ -1,1 +1,24 @@
-<RCC/>
+<RCC>
+    <qresource prefix="/">
+        <file alias="virus1">Images/virus.png</file>
+        <file alias="unhealthyItem3">Images/unhealthy3.png</file>
+        <file alias="unhealthyItem2">Images/unhealthy2.png</file>
+        <file alias="unhealthyItem1">Images/unhealthy1.png</file>
+        <file alias="pestilence">Images/pestilence.png</file>
+        <file alias="needle">Images/needle.png</file>
+        <file alias="gameTitle">Images/logo2.JPG</file>
+        <file alias="life">Images/life.png</file>
+        <file alias="healthyItem3">Images/healthy3.png</file>
+        <file alias="healthyItem2">Images/healthy2.png</file>
+        <file alias="healthyItem1">Images/healthy1.png</file>
+        <file alias="virus2">Images/evil-virus.png</file>
+        <file alias="spongeBob3">Images/bob3.png</file>
+        <file alias="spongeBob2">Images/bob2.png</file>
+        <file alias="spongeBob1">Images/bob1.png</file>
+        <file alias="spongeBob0">Images/bob.png</file>
+        <file alias="bacteria3">Images/bacteria3.png</file>
+        <file alias="bacteria2">Images/bacteria2.png</file>
+        <file alias="bacteria1">Images/bacteria1.png</file>
+        <file alias="game1Background">Images/background2.JPG</file>
+    </qresource>
+</RCC>
