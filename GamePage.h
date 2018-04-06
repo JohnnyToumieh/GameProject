@@ -8,7 +8,7 @@
 #include "ChooseGamePage.h"
 #include "HistoryPage.h"
 #include "GameScene1.h"
-#include "GameScene2.h"
+#include "GameScene3.h"
 #include "User.h"
 
 /**

@@ -113,13 +113,13 @@ void GamePage::startNewGameClicked(){
 
     QGraphicsView *view;
     if (gameNumber == 1) {
-        GameScene1 *gamescene1 = new GameScene1(widget, user, dataFile, false, level);
+        GameScene1 *game1 = new GameScene1(widget, user, dataFile, false, level);
 
-        view = new QGraphicsView(gamescene1);
+        view = new QGraphicsView(game1);
     } else {
-        GameScene2 *gamescene2 = new GameScene2(widget, user, dataFile, false, level);
+        GameScene3 *game2 = new GameScene3(widget, user, dataFile, false, level);
 
-        view = new QGraphicsView(gamescene2);
+        view = new QGraphicsView(game2);
     }
     view->setFixedSize(1000,600);
     view->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
@@ -182,13 +182,13 @@ void GamePage::resumeGameClicked(){
 
     QGraphicsView *view;
     if (gameNumber == 1) {
-        GameScene1 *gamescene1 = new GameScene1(widget, user, dataFile, true);
+        GameScene1 *game1 = new GameScene1(widget, user, dataFile, true);
 
-        view = new QGraphicsView(gamescene1);
+        view = new QGraphicsView(game1);
     } else {
-        GameScene2 *gamescene2 = new GameScene2(widget, user, dataFile, true);
+        GameScene3 *game2 = new GameScene3(widget, user, dataFile, true);
 
-        view = new QGraphicsView(gamescene2);
+        view = new QGraphicsView(game2);
     }
 
     view->setFixedSize(1000,600);
