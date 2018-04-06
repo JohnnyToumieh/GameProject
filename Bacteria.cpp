@@ -34,14 +34,17 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
     this->toDelete = false;
 
     if(type==1){
-        QPixmap *pic  = new QPixmap("bacteria1.png");
+        imageName = ":bacteria1";
+        QPixmap *pic  = new QPixmap(imageName);
         setPixmap(pic->scaled(80,80));
     }
     else if(type==2){
-        QPixmap *pic  = new QPixmap("bacteria2.png");
+        imageName = ":bacteria2";
+        QPixmap *pic  = new QPixmap(imageName);
         setPixmap(pic->scaled(80,80));
     }else{
-        QPixmap *pic  = new QPixmap("bacteria3.png");
+        imageName = ":bacteria3";
+        QPixmap *pic  = new QPixmap(imageName);
         setPixmap(pic->scaled(80,80));
     }
 

@@ -26,7 +26,7 @@ HomePage::HomePage(QWidget *widget)
     doneByL = new QLabel("\t\t\tGaming Platform\n\t\t\t       Done by \n\t\t\tHassan & Johnny");
 
     QPixmap logo;
-    logo.load("logo2.JPG");
+    logo.load(":gameTitle");
     imageLabel = new QLabel();
     imageLabel->setPixmap(logo);
 

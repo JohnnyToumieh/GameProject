@@ -37,23 +37,29 @@ Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, Q
 
     if(this->type==1){
         if (this->isHealthy) {
-            setPixmap((QPixmap("healthy1.png")).scaled(60,30));
+            imageName = ":healthyItem1";
+            setPixmap((QPixmap(imageName)).scaled(60,30));
         } else {
-            setPixmap((QPixmap("unhealthy1.png")).scaled(40,40));
+            imageName = ":unhealthyItem1";
+            setPixmap((QPixmap(imageName)).scaled(40,40));
         }
     }
     else if(this->type==2){
         if (this->isHealthy) {
-            setPixmap((QPixmap("healthy2.png")).scaled(40,40));
+            imageName = ":healthyItem2";
+            setPixmap((QPixmap(imageName)).scaled(40,40));
         } else {
-            setPixmap((QPixmap("unhealthy2.png")).scaled(40,40));
+            imageName = ":unhealthyItem2";
+            setPixmap((QPixmap(imageName)).scaled(40,40));
         }
     }
     else{
         if (this->isHealthy) {
-            setPixmap((QPixmap("healthy3.png")).scaled(30,60));
+            imageName = ":healthyItem3";
+            setPixmap((QPixmap(imageName)).scaled(30,60));
         } else {
-            setPixmap((QPixmap("unhealthy3.png")).scaled(40,40));
+            imageName = ":unhealthyItem3";
+            setPixmap((QPixmap(imageName)).scaled(40,40));
         }
     }
     setPos((rand() % 800) + 100, 100);

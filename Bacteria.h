@@ -35,6 +35,8 @@ public:
 
     int baseY;//!<Integer member that represents the base Y position of the bacteria
 
+    QString imageName;
+
     bool toDelete;//!<Boolean member that state if the bacteria is to be deleted from the saving list
 
     Aquarium* aquarium;//!<Aquarium member that represents the aquarium

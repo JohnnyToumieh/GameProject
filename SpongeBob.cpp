@@ -25,9 +25,6 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
 
     vulnerable=false;
 
-    setPixmap((QPixmap("bob1.png")).scaled(80,80));
-    setPos(500,100);
-
     this->immunityLevel=1;
     this->savedImmunityLevel=-1;
     this->savedImmunityLevelDegree=-1;
@@ -36,6 +33,9 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
     this->lives=3;
     this->canCollide = true;
     this->blinkerStatus = false;
+
+    changeGlow();
+    setPos(500,100);
 
     this->numCollisionsWithBacterias=new int[3];
     this->numCollisionsWithBacterias[0] = 0;
@@ -89,17 +89,18 @@ void SpongeBob::reset() {
 void SpongeBob::changeGlow(){
     if (canCollide) {
         if(immunityLevel==0){
-            setPixmap((QPixmap("bob.png")).scaled(80,80));
+            imageName = ":spongeBob0";
         }
         if(immunityLevel==1){
-            setPixmap((QPixmap("bob1.png")).scaled(80,80));
+            imageName = ":spongeBob1";
         }
         if(immunityLevel==2){
-            setPixmap((QPixmap("bob2.png")).scaled(80,80));
+            imageName = ":spongeBob2";
         }
         if(immunityLevel==3){
-            setPixmap((QPixmap("bob3.png")).scaled(80,80));
+            imageName = ":spongeBob3";
         }
+        setPixmap((QPixmap(imageName)).scaled(80,80));
     }
 }
 
@@ -139,31 +140,9 @@ void SpongeBob::keyPressEvent(QKeyEvent *event){
  */
 void SpongeBob::toggleVisibility() {
     if (!blinkerStatus) {
-        if(immunityLevel==0){
-            setPixmap((QPixmap("bob.png")).scaled(0,0));
-        }
-        if(immunityLevel==1){
-            setPixmap((QPixmap("bob1.png")).scaled(0,0));
-        }
-        if(immunityLevel==2){
-            setPixmap((QPixmap("bob2.png")).scaled(0,0));
-        }
-        if(immunityLevel==3){
-            setPixmap((QPixmap("bob3.png")).scaled(0,0));
-        }
+        setPixmap((QPixmap(imageName)).scaled(0,0));
     } else {
-        if(immunityLevel==0){
-            setPixmap((QPixmap("bob.png")).scaled(80,80));
-        }
-        if(immunityLevel==1){
-            setPixmap((QPixmap("bob1.png")).scaled(80,80));
-        }
-        if(immunityLevel==2){
-            setPixmap((QPixmap("bob2.png")).scaled(80,80));
-        }
-        if(immunityLevel==3){
-            setPixmap((QPixmap("bob3.png")).scaled(80,80));
-        }
+        setPixmap((QPixmap(imageName)).scaled(80,80));
     }
     blinkerStatus = !blinkerStatus;
 }

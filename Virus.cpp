@@ -34,13 +34,16 @@ Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
     }
 
     if(type==1){
-        QPixmap *pic  = new QPixmap("virus.png");
+        imageName = ":virus1";
+        QPixmap *pic  = new QPixmap(imageName);
         setPixmap(pic->scaled(60,60));
     }else if (type==2){
-        QPixmap *pic  = new QPixmap("evil-virus.png");
+        imageName = ":virus2";
+        QPixmap *pic  = new QPixmap(imageName);
         setPixmap(pic->scaled(60,60));
     }else if (type==3){
-        QPixmap *pic  = new QPixmap("pestilence.png");
+        imageName = ":pestilence";
+        QPixmap *pic  = new QPixmap(imageName);
         setPixmap(pic->scaled(120,120));
     }
     baseY = (rand() % 300) + 250;

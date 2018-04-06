@@ -51,6 +51,8 @@ public:
 
     int* numCollisionsWithBacterias;//!<Integer array hold spongebob collisions
 
+    QString imageName;
+
 signals:
 
 public slots:

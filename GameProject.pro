@@ -36,3 +36,6 @@ HEADERS += \
     GameScene1.h \
     GameScene2.h \
     GameScene.h
+
+RESOURCES += \
+    resources.qrc

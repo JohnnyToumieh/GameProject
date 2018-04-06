@@ -34,7 +34,7 @@ GameScene2::GameScene2(QWidget *widget, User* user, QJsonObject dataFile, bool r
         aquarium = new Aquarium(level, 0, 0, 0);
     }
 
-    setBackgroundBrush(QBrush(QImage("background2.JPG").scaledToHeight(600).scaledToWidth(1000)));
+    setBackgroundBrush(QBrush(QImage(":game1Background").scaledToHeight(600).scaledToWidth(1000)));
     setSceneRect(0,0,1000,600);
 
     timeLabel = new QLabel();
@@ -77,7 +77,7 @@ GameScene2::GameScene2(QWidget *widget, User* user, QJsonObject dataFile, bool r
     addWidget(scoreLabel);
 
     pixmapNeedle = new QGraphicsPixmapItem();
-    QPixmap *picNeedle  = new QPixmap("needle.png");
+    QPixmap *picNeedle  = new QPixmap(":needle");
     pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
     pixmapNeedle->setPos(850, 80);
     pixmapNeedle->setTransformOriginPoint(pixmapNeedle->boundingRect().center().x() + 20,
@@ -87,7 +87,7 @@ GameScene2::GameScene2(QWidget *widget, User* user, QJsonObject dataFile, bool r
     pixmapLife1 = new QGraphicsPixmapItem();
     pixmapLife2 = new QGraphicsPixmapItem();
     pixmapLife3 = new QGraphicsPixmapItem();
-    QPixmap *picLife  = new QPixmap("life.png");
+    QPixmap *picLife  = new QPixmap(":life");
 
     pixmapLife1->setPixmap(picLife->scaled(50,50));
     pixmapLife1->setPos(600,30);
