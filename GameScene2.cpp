@@ -34,7 +34,7 @@ GameScene2::GameScene2(QWidget *widget, User* user, QJsonObject dataFile, bool r
         aquarium = new Aquarium(level, 0, 0, 0);
     }
 
-    setBackgroundBrush(QBrush(QImage(":game2Background").scaledToHeight(600).scaledToWidth(1000)));
+    setBackgroundBrush(QBrush(QImage(":miniGame2Background").scaledToHeight(600).scaledToWidth(1000)));
     setSceneRect(0,0,1000,600);
 
     timeLabel = new QLabel();

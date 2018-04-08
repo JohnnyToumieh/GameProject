@@ -18,7 +18,8 @@ SOURCES += \
     GameScene1.cpp \
     GameScene2.cpp \
     GameScene.cpp \
-    GameScene3.cpp
+    GameScene3.cpp \
+    Office.cpp
 
 HEADERS += \
     HomePage.h \
@@ -37,7 +38,8 @@ HEADERS += \
     GameScene1.h \
     GameScene2.h \
     GameScene.h \
-    GameScene3.h
+    GameScene3.h \
+    Office.h
 
 RESOURCES += \
     resources.qrc

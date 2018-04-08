@@ -10,7 +10,7 @@
 
 #include "SpongeBob.h"
 #include "Bacteria.h"
-#include "Aquarium.h"
+#include "Office.h"
 #include "Item.h"
 #include "Virus.h"
 #include "GameScene.h"
@@ -33,7 +33,7 @@ public:
     void gameOver(bool result);
     int getCurrentScore();
 
-    Aquarium* aquarium;//!<Aquarium member that represents the aquarium
+    Office* office;//!<Office member that represents the office
     SpongeBob *spongeBob;//!<SpongeBob member that represents spongebob
 
     Bacteria** bacterias;//!<Bacteria array member that represents the list of currently visibile bacterias
@@ -87,6 +87,7 @@ public:
     QGraphicsPixmapItem *pixmapLife1;
     QGraphicsPixmapItem *pixmapLife2;
     QGraphicsPixmapItem *pixmapLife3;
+    QGraphicsPixmapItem *aquarium;
 
     QGraphicsPixmapItem** pixmapLifeList;
 

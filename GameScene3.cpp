@@ -25,17 +25,23 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
     srand(QTime::currentTime().msec());
 
     if (resume) {
-        QJsonObject aquariumSave = read("aquarium").object();
-        aquarium = new Aquarium(aquariumSave["level"].toInt(),
-                aquariumSave["currentCleanliness"].toInt(),
-                aquariumSave["currentTime"].toInt(),
-                aquariumSave["score"].toInt());
+        QJsonObject officeSave = read("office").object();
+        office = new Office(officeSave["level"].toInt(),
+                officeSave["currentReputation"].toInt(),
+                officeSave["currentTime"].toInt(),
+                officeSave["score"].toInt());
     } else {
-        aquarium = new Aquarium(level, 0, 0, 0);
+        office = new Office(level, 0, 0, 0);
     }
 
-    setBackgroundBrush(QBrush(QImage(":game1Background").scaledToHeight(600).scaledToWidth(1000)));
+    setBackgroundBrush(QBrush(QImage(":game2Background").scaledToHeight(600).scaledToWidth(1000)));
     setSceneRect(0,0,1000,600);
+
+    aquarium = new QGraphicsPixmapItem();
+    QPixmap *picAquarium  = new QPixmap(":aquarium0");
+    aquarium->setPixmap(picAquarium->scaled(153,87));
+    aquarium->setPos(52, 313);
+    addItem(aquarium);
 
     timeLabel = new QLabel();
     timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
@@ -66,13 +72,13 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
     levelLabel = new QLabel();
     levelLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
     levelLabel->move(300, 20);
-    levelLabel->setText(QStringLiteral("Level: %1").arg(aquarium->level));
+    levelLabel->setText(QStringLiteral("Level: %1").arg(office->level));
     addWidget(levelLabel);
 
     scoreLabel = new QLabel();
     scoreLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
     scoreLabel->move(300, 50);
-    scoreLabel->setText(QStringLiteral("Score: %1").arg(aquarium->score));
+    scoreLabel->setText(QStringLiteral("Score: %1").arg(office->score));
     scoreLabel->adjustSize();
     addWidget(scoreLabel);
 
@@ -109,10 +115,10 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
     greenColorItem->setPos(15,51);
     QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
-    greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
+    greenColorItem->setPixmap(greenColor->scaled((230 / office->levels[office->level]["maxReputation"]) * office->currentReputation, 20));
     addItem(greenColorItem);
 
-    spongeBob = new SpongeBob(aquarium, pixmapNeedle, pixmapLifeList);
+    spongeBob = new SpongeBob(office, pixmapNeedle, pixmapLifeList);
 
     if (resume) {
         QJsonObject spongeBobSave = read("spongeBob").object();
@@ -153,7 +159,7 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
         QJsonArray bacteriasSave = read("bacterias").array();
         for (bacteriasIndex = 0; bacteriasIndex < bacteriasSave.size(); bacteriasIndex++) {
             QJsonObject currentBacteria = bacteriasSave[bacteriasIndex].toObject();
-            bacterias[bacteriasIndex] = new Bacteria(currentBacteria["type"].toInt(),spongeBob,aquarium,greenColorItem,pixmapLifeList);
+            bacterias[bacteriasIndex] = new Bacteria(currentBacteria["type"].toInt(),spongeBob,office,greenColorItem,pixmapLifeList);
             bacterias[bacteriasIndex]->speed = currentBacteria["speed"].toInt();
             bacterias[bacteriasIndex]->setX(currentBacteria["x"].toDouble());
             bacterias[bacteriasIndex]->setY(currentBacteria["y"].toDouble());
@@ -161,7 +167,7 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
             addItem(bacterias[bacteriasIndex]);
         }
     } else {
-        updateBacterias();
+        //updateBacterias();
     }
 
     viruses = new Virus*[10];
@@ -177,7 +183,7 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
         QJsonArray virusesSave = read("viruses").array();
         for (virusesIndex = 0; virusesIndex < virusesSave.size(); virusesIndex++) {
             QJsonObject currentVirus = virusesSave[virusesIndex].toObject();
-            viruses[virusesIndex] = new Virus(currentVirus["type"].toInt(),spongeBob,aquarium);
+            viruses[virusesIndex] = new Virus(currentVirus["type"].toInt(),spongeBob,office);
             viruses[virusesIndex]->speed = currentVirus["speed"].toInt();
             viruses[virusesIndex]->setX(currentVirus["x"].toDouble());
             viruses[virusesIndex]->setY(currentVirus["y"].toDouble());
@@ -196,7 +202,7 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
         QJsonArray itemsSave = read("items").array();
         for (itemsIndex = 0; itemsIndex < itemsSave.size(); itemsIndex++) {
             QJsonObject currentItem = itemsSave[itemsIndex].toObject();
-            items[itemsIndex] = new Item(aquarium, spongeBob, currentItem["isHealthy"].toBool(), currentItem["type"].toInt());
+            items[itemsIndex] = new Item(office, spongeBob, currentItem["isHealthy"].toBool(), currentItem["type"].toInt());
             items[itemsIndex]->setX(currentItem["x"].toDouble());
             items[itemsIndex]->setY(currentItem["y"].toDouble());
             addItem(items[itemsIndex]);
@@ -204,7 +210,7 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
     }
 
    if (resume) {
-        pausedTime = aquarium->currentTime;
+        pausedTime = office->currentTime;
     } else {
         pausedTime = 0;
     }
@@ -301,10 +307,10 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
            pestilenceTimeLabel2->show();
         }
     } else {
-        updateBacteriasTimer->start(aquarium->levels[aquarium->level]["bacteriaGenerationRate"]);
-        updateItemsTimer->start(aquarium->levels[aquarium->level]["itemDropRate"]);
-        if (aquarium->level != 1) {
-            virusTimer->start(aquarium->levels[aquarium->level]["virusGenerationRate"]);
+        //updateBacteriasTimer->start(office->levels[office->level]["bacteriaGenerationRate"]);
+        //updateItemsTimer->start(office->levels[office->level]["itemDropRate"]);
+        if (office->level != 1) {
+            virusTimer->start(office->levels[office->level]["virusGenerationRate"]);
         }
         timeUpdater->start(500);
     }
@@ -319,7 +325,7 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
 }
 
 int GameScene3::getCurrentScore() {
-    return aquarium->score;
+    return office->score;
 }
 
 /**
@@ -339,10 +345,10 @@ void GameScene3::nextLevel() {
     updateBacterias();
 
     checkGameStateTimer->start(100);
-    updateBacteriasTimer->start(aquarium->levels[aquarium->level]["bacteriaGenerationRate"]);
-    updateItemsTimer->start(aquarium->levels[aquarium->level]["itemDropRate"]);
-    if (aquarium->level != 1) {
-        virusTimer->start(aquarium->levels[aquarium->level]["virusGenerationRate"]);
+    updateBacteriasTimer->start(office->levels[office->level]["bacteriaGenerationRate"]);
+    updateItemsTimer->start(office->levels[office->level]["itemDropRate"]);
+    if (office->level != 1) {
+        virusTimer->start(office->levels[office->level]["virusGenerationRate"]);
     }
     timeUpdater->start(500);
 
@@ -357,9 +363,9 @@ void GameScene3::nextLevel() {
  * A member function that sets up the next level.
  */
 void GameScene3::setUpNextLevel() {
-    aquarium->level++;
-    aquarium->currentCleanliness = 0;
-    aquarium->currentTime = 0;
+    office->level++;
+    office->currentReputation = 0;
+    office->currentTime = 0;
 
     if (spongeBob->lives < 3) {
         addItem(pixmapLife1);
@@ -372,7 +378,7 @@ void GameScene3::setUpNextLevel() {
 
     QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
-    greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
+    greenColorItem->setPixmap(greenColor->scaled((230 / office->levels[office->level]["maxReputation"]) * office->currentReputation, 20));
 
     pixmapNeedle->setTransformOriginPoint(pixmapNeedle->boundingRect().center().x() + 20,
                                                pixmapNeedle->boundingRect().center().y());
@@ -385,21 +391,21 @@ void GameScene3::setUpNextLevel() {
  * A member function that generates a new virus.
  */
 void GameScene3::virusUpdate(){
-    int time = (rand() % 2000) + aquarium->levels[aquarium->level]["virusGenerationRate"] - 1000;
+    int time = (rand() % 2000) + office->levels[office->level]["virusGenerationRate"] - 1000;
     virusTimer->start(time);
 
     if (virusesIndex >= 9) {
         virusesIndex = 0;
     }
 
-    int weight = (rand() % (aquarium->levels[aquarium->level]["virusWeight1"]
-                        + aquarium->levels[aquarium->level]["virusWeight2"]
-                        + aquarium->levels[aquarium->level]["virusWeight3"]));
+    int weight = (rand() % (office->levels[office->level]["virusWeight1"]
+                        + office->levels[office->level]["virusWeight2"]
+                        + office->levels[office->level]["virusWeight3"]));
 
     int type = 1;
-    if (weight < aquarium->levels[aquarium->level]["virusWeight1"]) {
+    if (weight < office->levels[office->level]["virusWeight1"]) {
         type = 1;
-    } else if (weight < aquarium->levels[aquarium->level]["virusWeight1"] + aquarium->levels[aquarium->level]["virusWeight2"]) {
+    } else if (weight < office->levels[office->level]["virusWeight1"] + office->levels[office->level]["virusWeight2"]) {
         type = 2;
     } else {
         if (!pestilenceTimer->isActive()) {
@@ -415,7 +421,7 @@ void GameScene3::virusUpdate(){
         pestilenceTimeLabel->show();
         pestilenceTimeLabel2->show();
     } else {
-        viruses[virusesIndex] = new Virus(type, spongeBob, aquarium);
+        viruses[virusesIndex] = new Virus(type, spongeBob, office);
         addItem(viruses[virusesIndex++]);
     }
 }
@@ -433,7 +439,7 @@ void GameScene3::summonPestilence() {
         virusesIndex = 0;
     }
 
-    viruses[virusesIndex] = new Virus(3,spongeBob,aquarium);
+    viruses[virusesIndex] = new Virus(3,spongeBob,office);
     addItem(viruses[virusesIndex++]);
 }
 
@@ -456,7 +462,7 @@ void GameScene3::updateTimer() {
     .arg(mins, 2, 10, QLatin1Char('0'))
     .arg(secs, 2, 10, QLatin1Char('0')) );
 
-    aquarium->currentTime = time->elapsed() + pausedTime;
+    office->currentTime = time->elapsed() + pausedTime;
 
     if (pestilenceTimer->isActive()) {
         secs = (pestilenceTimer->remainingTime()) / 1000;
@@ -475,14 +481,14 @@ void GameScene3::updateTimer() {
  * A member function that generates a new item.
  */
 void GameScene3::updateItems(){
-    int time = (rand() % 500) + aquarium->levels[aquarium->level]["itemDropRate"] - 250;
+    int time = (rand() % 500) + office->levels[office->level]["itemDropRate"] - 250;
     updateItemsTimer->start(time);
 
-    int weight = (rand() % (aquarium->levels[aquarium->level]["healthyItemWeight"]
-                        + aquarium->levels[aquarium->level]["unhealthyItemWeight"]));
+    int weight = (rand() % (office->levels[office->level]["healthyItemWeight"]
+                        + office->levels[office->level]["unhealthyItemWeight"]));
 
     bool isHealthy = true;
-    if (weight < aquarium->levels[aquarium->level]["healthyItemWeight"]) {
+    if (weight < office->levels[office->level]["healthyItemWeight"]) {
         isHealthy = true;
     } else {
         isHealthy = false;
@@ -492,7 +498,7 @@ void GameScene3::updateItems(){
         itemsIndex = 0;
     }
 
-    items[itemsIndex] = new Item(aquarium, spongeBob, isHealthy);
+    items[itemsIndex] = new Item(office, spongeBob, isHealthy);
     addItem(items[itemsIndex++]);
 }
 
@@ -502,7 +508,7 @@ void GameScene3::updateItems(){
  * A member function that unpauses the game (sending it into the 3..2..1 state).
  */
 void GameScene3::unpauseClicked() {
-   aquarium->requestForUnpause = true;
+   office->requestForUnpause = true;
 }
 
 /**
@@ -529,17 +535,17 @@ void GameScene3::quitClicked() {
  */
 void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
 {
-    // Add aquarium fields
-    QJsonObject aquarium;
+    // Add office fields
+    QJsonObject office;
 
-    aquarium["level"] = this->aquarium->level;
+    office["level"] = this->office->level;
 
-    aquarium["currentCleanliness"] = this->aquarium->currentCleanliness;
-    aquarium["currentTime"] = this->aquarium->currentTime;
+    office["currentReputation"] = this->office->currentReputation;
+    office["currentTime"] = this->office->currentTime;
 
-    aquarium["score"] = this->aquarium->score;
+    office["score"] = this->office->score;
 
-    saveObject["aquarium"] = aquarium;
+    saveObject["office"] = office;
 
     // Add spongeBob fields
     QJsonObject spongeBob;
@@ -650,7 +656,7 @@ void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
  */
 void GameScene3::saveScoreHelper(QJsonObject &saveObject) const
 {
-    saveObject["score"] = aquarium->score;
+    saveObject["score"] = office->score;
     saveObject["day"] = QDate::currentDate().day();
     saveObject["month"] = QDate::currentDate().month();
     saveObject["year"] = QDate::currentDate().year();
@@ -662,27 +668,27 @@ void GameScene3::saveScoreHelper(QJsonObject &saveObject) const
  * A member function that generates a new bacteria.
  */
 void GameScene3::updateBacterias() {
-    int time = (rand() % 1000) + aquarium->levels[aquarium->level]["bacteriaGenerationRate"] - 500;
+    int time = (rand() % 1000) + office->levels[office->level]["bacteriaGenerationRate"] - 500;
     updateBacteriasTimer->start(time);
 
     if (bacteriasIndex >= 19) {
         bacteriasIndex = 0;
     }
 
-    int weight = (rand() % (aquarium->levels[aquarium->level]["bacteriaWeight1"]
-                        + aquarium->levels[aquarium->level]["bacteriaWeight2"]
-                        + aquarium->levels[aquarium->level]["bacteriaWeight3"]));
+    int weight = (rand() % (office->levels[office->level]["bacteriaWeight1"]
+                        + office->levels[office->level]["bacteriaWeight2"]
+                        + office->levels[office->level]["bacteriaWeight3"]));
 
     int type = 1;
-    if (weight < aquarium->levels[aquarium->level]["bacteriaWeight1"]) {
+    if (weight < office->levels[office->level]["bacteriaWeight1"]) {
         type = 1;
-    } else if (weight < aquarium->levels[aquarium->level]["bacteriaWeight1"] + aquarium->levels[aquarium->level]["bacteriaWeight2"]) {
+    } else if (weight < office->levels[office->level]["bacteriaWeight1"] + office->levels[office->level]["bacteriaWeight2"]) {
         type = 2;
     } else {
         type = 3;
     }
 
-    bacterias[bacteriasIndex] = new Bacteria(type,spongeBob,aquarium,greenColorItem,pixmapLifeList);
+    bacterias[bacteriasIndex] = new Bacteria(type,spongeBob,office,greenColorItem,pixmapLifeList);
     addItem(bacterias[bacteriasIndex++]);
 }
 
@@ -710,8 +716,8 @@ void GameScene3::unpauseGame() {
     greyForeground->hide();
     unpauseLabel->hide();
 
-    aquarium->gamePaused = false;
-    aquarium->requestForUnpause = false;
+    office->gamePaused = false;
+    office->requestForUnpause = false;
 }
 
 /**
@@ -721,10 +727,10 @@ void GameScene3::unpauseGame() {
  */
 void GameScene3::checkGameState() {
     // Check if game paused
-    if (aquarium->gamePaused) {
+    if (office->gamePaused) {
        // Pause everything. We need those stats anw for the save functionality
 
-        if (aquarium->requestForUnpause) {
+        if (office->requestForUnpause) {
             if (!justPaused) {
                 unpauseTimer->start(3000);
 
@@ -834,11 +840,11 @@ void GameScene3::checkGameState() {
     }
 
     // Update score
-    scoreLabel->setText(QStringLiteral("Score: %1").arg(aquarium->score));
+    scoreLabel->setText(QStringLiteral("Score: %1").arg(office->score));
     scoreLabel->adjustSize();
 
     // Update level
-    levelLabel->setText(QStringLiteral("Level: %1").arg(aquarium->level));
+    levelLabel->setText(QStringLiteral("Level: %1").arg(office->level));
     levelLabel->adjustSize();
 
     // Check if spongebob is dead
@@ -847,21 +853,21 @@ void GameScene3::checkGameState() {
     }
 
     // Check if time is up
-    if (time->elapsed() >= aquarium->levels[aquarium->level]["maxTime"]) {
-        int secs = aquarium->levels[aquarium->level]["maxTime"] / 1000;
+    if (time->elapsed() >= office->levels[office->level]["maxTime"]) {
+        int secs = office->levels[office->level]["maxTime"] / 1000;
         int mins = (secs / 60) % 60;
         secs = secs % 60;
         timeLabel->setText(QString("%1:%2")
         .arg(mins, 2, 10, QLatin1Char('0'))
         .arg(secs, 2, 10, QLatin1Char('0')) );
 
-        aquarium->currentTime = aquarium->levels[aquarium->level]["maxTime"];
+        office->currentTime = office->levels[office->level]["maxTime"];
 
         gameOver(false);
     }
 
-    // Check if the aquarium is cleaned
-    if (aquarium->currentCleanliness == aquarium->levels[aquarium->level]["maxCleanliness"]) {
+    // Check if the office is cleaned
+    if (office->currentReputation == office->levels[office->level]["maxReputation"]) {
         gameOver(true);
     }
 }
@@ -910,8 +916,8 @@ void GameScene3::gameOver(bool result) {
     itemsIndex = 0;
 
     if (result) {
-        aquarium->score += aquarium->levels[aquarium->level]["maxTime"] / aquarium->currentTime - 1;
-        aquarium->score += spongeBob->lives * 100;
+        office->score += office->levels[office->level]["maxTime"] / office->currentTime - 1;
+        office->score += spongeBob->lives * 100;
     }
 
     greyForeground->setStyleSheet("background-color: rgba(0, 0, 0, 255);");
@@ -919,14 +925,14 @@ void GameScene3::gameOver(bool result) {
 
     gameOverLabel->show();
 
-    scoreLabel2->setText(QStringLiteral("Score: %1").arg(aquarium->score));
+    scoreLabel2->setText(QStringLiteral("Score: %1").arg(office->score));
     scoreLabel2->adjustSize();
     scoreLabel2->move((this->width() - scoreLabel2->width()) / 2, 330);
     scoreLabel2->show();
 
     quit2->show();
 
-    if (result && aquarium->level < 3) {
+    if (result && office->level < 3) {
         setUpNextLevel();
 
         nextLevelButton->show();
