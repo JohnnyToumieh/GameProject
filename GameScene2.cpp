@@ -786,7 +786,7 @@ void GameScene2::checkGameState() {
     }
 
     // Check if time is up
-    if (time->elapsed() >= aquarium->levels[aquarium->level]["maxTime"]) {
+    if (time->elapsed() + pausedTime >= aquarium->levels[aquarium->level]["maxTime"]) {
         int secs = aquarium->levels[aquarium->level]["maxTime"] / 1000;
         int mins = (secs / 60) % 60;
         secs = secs % 60;
