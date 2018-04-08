@@ -118,6 +118,23 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
     greenColorItem->setPixmap(greenColor->scaled((230 / office->levels[office->level]["maxReputation"]) * office->currentReputation, 20));
     addItem(greenColorItem);
 
+    patients = new Patient*[20];
+    for (int i = 0; i < 20; i++) {
+        patients[i] = NULL;
+    }
+    patientsIndex = 0;
+
+    if (resume) {
+        QJsonArray patientsSave = read("patients").array();
+        for (patientsIndex = 0; patientsIndex < patientsSave.size(); patientsIndex++) {
+            QJsonObject currentPatient = patientsSave[patientsIndex].toObject();
+            patients[patientsIndex] = new Patient(currentPatient["type"].toInt(), office);
+            patients[patientsIndex]->setX(currentPatient["x"].toDouble());
+            patients[patientsIndex]->setY(currentPatient["y"].toDouble());
+            addItem(patients[patientsIndex]);
+        }
+    }
+
    if (resume) {
         pausedTime = office->currentTime;
     } else {
@@ -186,8 +203,11 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
     unpauseTimer = new QTimer(this);
     connect(unpauseTimer, SIGNAL(timeout()), this, SLOT(unpauseGame()));
+    updatePatientsTimer = new QTimer(this);
+    connect(updatePatientsTimer, SIGNAL(timeout()), this, SLOT(updatePatients()));
 
     unpauseTimer->setSingleShot(true);
+    updatePatientsTimer->setSingleShot(true);
 
     if (resume) {
         QJsonObject pausedTimesSave = read("pausedTimes").object();
@@ -195,11 +215,14 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
         timeUpdater->setSingleShot(true);
 
         timeUpdater->start(pausedTimesSave["pausedTimeUpdater"].toInt());
+        updatePatientsTimer->start(pausedTimesSave["pausedUpdatePatientsTimer"].toInt());
     } else {
         timeUpdater->start(500);
+        updatePatientsTimer->start(office->levels[office->level]["patientGenerationRate"]);
     }
 
     this->pausedTimeUpdater = 0;
+    this->pausedUpdatePatientsTimer = 0;
 
     updateTimer();
 }
@@ -220,16 +243,8 @@ void GameScene3::nextLevel() {
     gameOverLabel->hide();
     nextLevelButton->hide();
 
-    spongeBob->setFocus();
-
-    updateBacterias();
-
     checkGameStateTimer->start(100);
-    updateBacteriasTimer->start(office->levels[office->level]["bacteriaGenerationRate"]);
-    updateItemsTimer->start(office->levels[office->level]["itemDropRate"]);
-    if (office->level != 1) {
-        virusTimer->start(office->levels[office->level]["virusGenerationRate"]);
-    }
+    updatePatientsTimer->start(office->levels[office->level]["patientGenerationRate"]);
     timeUpdater->start(500);
 
     pausedTime = 0;
@@ -257,24 +272,6 @@ void GameScene3::setUpNextLevel() {
 }
 
 /**
- * @brief GameScene3::virusUpdate
- *
- * A member function that generates a new virus.
- */
-void GameScene3::virusUpdate(){
-
-}
-
-/**
- * @brief GameScene3::summonPestilence
- *
- * A member function that summons Pestilence.
- */
-void GameScene3::summonPestilence() {
-
-}
-
-/**
  * @brief GameScene3::updateTimer
  *
  * A member function that updates time based labels.
@@ -297,11 +294,33 @@ void GameScene3::updateTimer() {
 }
 
 /**
- * @brief GameScene3::updateItems
+ * @brief GameScene3::updatePatients
  *
- * A member function that generates a new item.
+ * A member function that generates a new patients.
  */
-void GameScene3::updateItems(){
+void GameScene3::updatePatients(){
+    int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+    updatePatientsTimer->start(time);
+
+    if (patientsIndex >= 19) {
+        patientsIndex = 0;
+    }
+
+    int weight = (rand() % (office->levels[office->level]["patientWeight1"]
+                        + office->levels[office->level]["patientWeight2"]
+                        + office->levels[office->level]["patientWeight3"]));
+
+    int type = 1;
+    if (weight < office->levels[office->level]["patientWeight1"]) {
+        type = 1;
+    } else if (weight < office->levels[office->level]["patientWeight1"] + office->levels[office->level]["patientWeight2"]) {
+        type = 2;
+    } else {
+        type = 3;
+    }
+
+    patients[patientsIndex] = new Patient(type, office);
+    addItem(patients[patientsIndex++]);
 }
 
 /**
@@ -319,11 +338,8 @@ void GameScene3::unpauseClicked() {
  * A member function that exists the game and goes back to the GamePage.
  */
 void GameScene3::quitClicked() {
-    if (spongeBob->lives > 0) {
-        saveProgress();
-
-        saveFile();
-    }
+    saveProgress();
+    saveFile();
 
     backToGamePage();
 }
@@ -349,95 +365,30 @@ void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
 
     saveObject["office"] = office;
 
-    // Add spongeBob fields
-    QJsonObject spongeBob;
-
-    spongeBob["immunityLevel"] = this->spongeBob->immunityLevel;
-    spongeBob["immunityLevelDegree"] = this->spongeBob->immunityLevelDegree;
-    spongeBob["lives"] = this->spongeBob->lives;
-    spongeBob["x"] = this->spongeBob->x();
-    spongeBob["y"] = this->spongeBob->y();
-
-    QJsonObject bacteriaCollisions;
-    for (int i = 0; i < 3; i++) {
-        bacteriaCollisions[QStringLiteral("numbBacteriaCollisions%1").arg(i + 1)] = this->spongeBob->numCollisionsWithBacterias[i];
-    }
-    spongeBob["numbBacteriaCollisions"] = bacteriaCollisions;
-
-    saveObject["spongeBob"] = spongeBob;
-
-    // Add bacterias fields
-    QJsonArray bacterias;
+    // Add patients fields
+    QJsonArray patients;
 
     for (int i = 0; i < 20; i++) {
-        if (this->bacterias[i] != NULL) {
-            QJsonObject currentBacteria;
+        if (this->patients[i] != NULL) {
+            QJsonObject currentPatient;
 
-            currentBacteria["x"] = this->bacterias[i]->x();
-            currentBacteria["y"] = this->bacterias[i]->y();
-            currentBacteria["type"] = this->bacterias[i]->type;
-            currentBacteria["speed"] = this->bacterias[i]->speed;
+            currentPatient["x"] = this->patients[i]->x();
+            currentPatient["y"] = this->patients[i]->y();
+            currentPatient["type"] = this->patients[i]->type;
 
-            bacterias.append(currentBacteria);
+            patients.append(currentPatient);
         }
     }
 
-    if (!bacterias.empty()) {
-        saveObject["bacterias"] = bacterias;
-    }
-
-    // Add viruses fields
-    QJsonArray viruses;
-
-    for (int i = 0; i < 10; i++) {
-        if (this->viruses[i] != NULL) {
-            QJsonObject currentVirus;
-
-            currentVirus["x"] = this->viruses[i]->x();
-            currentVirus["y"] = this->viruses[i]->y();
-            currentVirus["speed"] = this->viruses[i]->speed;
-            currentVirus["type"]= this->viruses[i]->type;
-
-            viruses.append(currentVirus);
-        }
-    }
-
-    if (!viruses.empty()) {
-        saveObject["viruses"] = viruses;
-    }
-
-    // Add items fields
-    QJsonArray items;
-
-    for (int i = 0; i < 20; i++) {
-        if (this->items[i] != NULL) {
-            QJsonObject currentItem;
-
-            currentItem["x"] = this->items[i]->x();
-            currentItem["y"] = this->items[i]->y();
-            currentItem["type"] = this->items[i]->type;
-            currentItem["isHealthy"] = this->items[i]->isHealthy;
-
-            items.append(currentItem);
-        }
-    }
-
-    if (!items.empty()) {
-        saveObject["items"] = items;
+    if (!patients.empty()) {
+        saveObject["patients"] = patients;
     }
 
     // Add paused times
     QJsonObject pausedTimes;
 
     pausedTimes["pausedTimeUpdater"] = this->pausedTimeUpdater;
-    pausedTimes["pausedUpdateItemsTimer"] = this->pausedUpdateItemsTimer;
-    pausedTimes["pausedUpdateBacteriasTimer"] = this->pausedUpdateBacteriasTimer;
-    if (this->pausedVirusTimer != 0) {
-        pausedTimes["pausedVirusTimer"] = this->pausedVirusTimer;
-    }
-    if (this->pausedPestilenceTimer != 0) {
-        pausedTimes["pausedPestilenceTimer"] = this->pausedPestilenceTimer;
-    }
+    pausedTimes["pausedUpdatePatientsTimer"] = this->pausedUpdatePatientsTimer;
 
     saveObject["pausedTimes"] = pausedTimes;
 
@@ -465,15 +416,6 @@ void GameScene3::saveScoreHelper(QJsonObject &saveObject) const
 }
 
 /**
- * @brief GameScene3::updateBacterias
- *
- * A member function that generates a new bacteria.
- */
-void GameScene3::updateBacterias() {
-
-}
-
-/**
  * @brief GameScene3::unpauseGame
  *
  * A member function that unpaused the game after the 3..2..1.. state.
@@ -484,15 +426,7 @@ void GameScene3::unpauseGame() {
     timeUpdater->setSingleShot(true);
 
     timeUpdater->start(pausedTimeUpdater);
-    updateItemsTimer->start(pausedUpdateItemsTimer);
-    updateBacteriasTimer->start(pausedUpdateBacteriasTimer);
-    if (pausedVirusTimer > 0) {
-        virusTimer->start(pausedVirusTimer);
-    }
-    if (pausedPestilenceTimer > 0) {
-        pestilenceTimer->start(pausedPestilenceTimer);
-        pausedPestilenceTimer = 0;
-    }
+    updatePatientsTimer->start(pausedUpdatePatientsTimer);
 
     greyForeground->hide();
     unpauseLabel->hide();
@@ -543,42 +477,17 @@ void GameScene3::checkGameState() {
                 }
 
                 pausedTimeUpdater = timeUpdater->remainingTime();
-                pausedUpdateItemsTimer = updateItemsTimer->remainingTime();
-                pausedUpdateBacteriasTimer = updateBacteriasTimer->remainingTime();
+                pausedUpdatePatientsTimer = updatePatientsTimer->remainingTime();
 
                 if (pausedTimeUpdater < 0) {
                     pausedTimeUpdater = 0;
                 }
-                if (pausedUpdateItemsTimer < 0) {
-                    pausedUpdateItemsTimer = 0;
-                }
-                if (pausedUpdateBacteriasTimer < 0) {
-                    pausedUpdateBacteriasTimer = 0;
-                }
-
-                if (virusTimer->isActive()) {
-                    pausedVirusTimer = virusTimer->remainingTime();
-
-                    if (pausedVirusTimer < 0) {
-                        pausedVirusTimer = 0;
-                    }
-
-                    virusTimer->stop();
-                }
-
-                if (pestilenceTimer->isActive()) {
-                    pausedPestilenceTimer = pestilenceTimer->remainingTime();
-
-                    if (pausedPestilenceTimer < 0) {
-                        pausedPestilenceTimer = 0;
-                    }
-
-                    pestilenceTimer->stop();
+                if (pausedUpdatePatientsTimer < 0) {
+                    pausedUpdatePatientsTimer = 0;
                 }
 
                 timeUpdater->stop();
-                updateItemsTimer->stop();
-                updateBacteriasTimer->stop();
+                updatePatientsTimer->stop();
 
                 justPaused = false;
 
@@ -592,6 +501,14 @@ void GameScene3::checkGameState() {
         }
 
         return;
+    }
+
+    // Remove patients
+    for (int i = 0; i < 20; i++) {
+        if (patients[i] != NULL && patients[i]->toDelete) {
+            delete patients[i];
+            patients[i] = NULL;
+        }
     }
 
     // Update score
@@ -634,9 +551,16 @@ void GameScene3::gameOver(bool result) {
     timeUpdater->stop();
     checkGameStateTimer->stop();
 
+    for (int i = 0; i < 20; i++) {
+        if (patients[i] != NULL) {
+            delete patients[i];
+            patients[i] = NULL;
+        }
+    }
+    patientsIndex = 0;
+
     if (result) {
         office->score += office->levels[office->level]["endTime"] / office->currentTime - 1;
-        office->score += spongeBob->lives * 100;
     }
 
     greyForeground->setStyleSheet("background-color: rgba(0, 0, 0, 255);");

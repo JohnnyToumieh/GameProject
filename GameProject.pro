@@ -19,7 +19,8 @@ SOURCES += \
     GameScene2.cpp \
     GameScene.cpp \
     GameScene3.cpp \
-    Office.cpp
+    Office.cpp \
+    Patient.cpp
 
 HEADERS += \
     HomePage.h \
@@ -39,7 +40,8 @@ HEADERS += \
     GameScene2.h \
     GameScene.h \
     GameScene3.h \
-    Office.h
+    Office.h \
+    Patient.h
 
 RESOURCES += \
     resources.qrc
