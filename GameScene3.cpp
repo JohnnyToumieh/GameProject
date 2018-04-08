@@ -300,7 +300,7 @@ void GameScene3::updateTimer() {
  */
 void GameScene3::updatePatients(){
     int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
-    updatePatientsTimer->start(time);
+    //updatePatientsTimer->start(time);
 
     if (patientsIndex >= 19) {
         patientsIndex = 0;

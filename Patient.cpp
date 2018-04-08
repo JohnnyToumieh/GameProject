@@ -31,24 +31,24 @@ Patient::Patient(int type, Office* office, QObject *parent)
     this->toDelete = false;
 
     if(type==1){
-        imageName = ":bacteria1";
+        imageName = ":patient1";
         QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(80,80));
+        setPixmap(pic->scaled(100,230));
     }
     else if(type==2){
-        imageName = ":bacteria2";
+        imageName = ":patient1";
         QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(80,80));
+        setPixmap(pic->scaled(100,230));
     }else{
-        imageName = ":bacteria3";
+        imageName = ":patient1";
         QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(80,80));
+        setPixmap(pic->scaled(100,230));
     }
 
     baseY = (rand() % 400) + 100;
-    setPos(949, baseY);
+    setPos(900, 350);
 
-    this->speed = (rand() % 100) + 100;
+    this->speed = 400;
 
     speedTimer = new QTimer(this);
     connect(speedTimer, SIGNAL(timeout()), this, SLOT(update()));
@@ -101,6 +101,8 @@ void Patient::update(){
         checkGameStateTimer->stop();
         return;
     } else {
-        setPos(x() - 30, baseY + 20*qSin(x()+30));
+        if (x() > 700) {
+            setX(x() - 30);
+        }
     }
 }
