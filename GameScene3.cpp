@@ -118,97 +118,6 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
     greenColorItem->setPixmap(greenColor->scaled((230 / office->levels[office->level]["maxReputation"]) * office->currentReputation, 20));
     addItem(greenColorItem);
 
-    spongeBob = new SpongeBob(office, pixmapNeedle, pixmapLifeList);
-
-    if (resume) {
-        QJsonObject spongeBobSave = read("spongeBob").object();
-        spongeBob->immunityLevel = spongeBobSave["immunityLevel"].toInt();
-        spongeBob->immunityLevelDegree = spongeBobSave["immunityLevelDegree"].toInt();
-        spongeBob->lives = spongeBobSave["lives"].toInt();
-        spongeBob->setX(spongeBobSave["x"].toDouble());
-        spongeBob->setY(spongeBobSave["y"].toDouble());
-        spongeBob->numCollisionsWithBacterias[0] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions1"].toInt();
-        spongeBob->numCollisionsWithBacterias[1] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions2"].toInt();
-        spongeBob->numCollisionsWithBacterias[2] = (spongeBobSave["numCollisionsWithBacterias"].toObject())["numbBacteriaCollisions3"].toInt();
-
-        if (spongeBob->lives < 3) {
-            removeItem(pixmapLifeList[0]);
-        }
-        if (spongeBob->lives < 2) {
-            removeItem(pixmapLifeList[1]);
-        }
-
-        QJsonObject needleSave = read("needle").object();
-        pixmapNeedle->setRotation(needleSave["rotation"].toInt());
-    }
-
-    addItem(spongeBob);
-
-    spongeBob->setFlag(QGraphicsItem::ItemIsFocusable);
-    spongeBob->setFocus();
-
-    bacterias = new Bacteria*[20];
-    for (int i = 0; i < 20; i++) {
-        bacterias[i] = NULL;
-    }
-    bacteriasIndex = 0;
-
-    updateBacteriasTimer = new QTimer(this);
-
-    if (resume) {
-        QJsonArray bacteriasSave = read("bacterias").array();
-        for (bacteriasIndex = 0; bacteriasIndex < bacteriasSave.size(); bacteriasIndex++) {
-            QJsonObject currentBacteria = bacteriasSave[bacteriasIndex].toObject();
-            bacterias[bacteriasIndex] = new Bacteria(currentBacteria["type"].toInt(),spongeBob,office,greenColorItem,pixmapLifeList);
-            bacterias[bacteriasIndex]->speed = currentBacteria["speed"].toInt();
-            bacterias[bacteriasIndex]->setX(currentBacteria["x"].toDouble());
-            bacterias[bacteriasIndex]->setY(currentBacteria["y"].toDouble());
-            bacterias[bacteriasIndex]->baseY = currentBacteria["y"].toDouble();
-            addItem(bacterias[bacteriasIndex]);
-        }
-    } else {
-        //updateBacterias();
-    }
-
-    viruses = new Virus*[10];
-    for (int i = 0; i < 10; i++) {
-        viruses[i] = NULL;
-    }
-    virusesIndex = 0;
-
-    virusTimer = new QTimer(this);
-    pestilenceTimer = new QTimer(this);
-
-    if (resume) {
-        QJsonArray virusesSave = read("viruses").array();
-        for (virusesIndex = 0; virusesIndex < virusesSave.size(); virusesIndex++) {
-            QJsonObject currentVirus = virusesSave[virusesIndex].toObject();
-            viruses[virusesIndex] = new Virus(currentVirus["type"].toInt(),spongeBob,office);
-            viruses[virusesIndex]->speed = currentVirus["speed"].toInt();
-            viruses[virusesIndex]->setX(currentVirus["x"].toDouble());
-            viruses[virusesIndex]->setY(currentVirus["y"].toDouble());
-            viruses[virusesIndex]->baseY = currentVirus["y"].toDouble();
-            addItem(viruses[virusesIndex]);
-        }
-    }
-
-    items = new Item*[20];
-    for (int i = 0; i < 20; i++) {
-        items[i] = NULL;
-    }
-    itemsIndex = 0;
-
-    if (resume) {
-        QJsonArray itemsSave = read("items").array();
-        for (itemsIndex = 0; itemsIndex < itemsSave.size(); itemsIndex++) {
-            QJsonObject currentItem = itemsSave[itemsIndex].toObject();
-            items[itemsIndex] = new Item(office, spongeBob, currentItem["isHealthy"].toBool(), currentItem["type"].toInt());
-            items[itemsIndex]->setX(currentItem["x"].toDouble());
-            items[itemsIndex]->setY(currentItem["y"].toDouble());
-            addItem(items[itemsIndex]);
-        }
-    }
-
    if (resume) {
         pausedTime = office->currentTime;
     } else {
@@ -273,20 +182,11 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
     time = new QTime();
     time->start();
 
-    connect(virusTimer, SIGNAL(timeout()), this, SLOT(virusUpdate()));
-    connect(updateBacteriasTimer, SIGNAL(timeout()), this, SLOT(updateBacterias()));
-    updateItemsTimer = new QTimer(this);
-    connect(updateItemsTimer, SIGNAL(timeout()), this, SLOT(updateItems()));
     timeUpdater = new QTimer(this);
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
-    connect(pestilenceTimer, SIGNAL(timeout()), this, SLOT(summonPestilence()));
     unpauseTimer = new QTimer(this);
     connect(unpauseTimer, SIGNAL(timeout()), this, SLOT(unpauseGame()));
 
-    updateItemsTimer->setSingleShot(true);
-    updateBacteriasTimer->setSingleShot(true);
-    virusTimer->setSingleShot(true);
-    pestilenceTimer->setSingleShot(true);
     unpauseTimer->setSingleShot(true);
 
     if (resume) {
@@ -295,31 +195,11 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
         timeUpdater->setSingleShot(true);
 
         timeUpdater->start(pausedTimesSave["pausedTimeUpdater"].toInt());
-        updateItemsTimer->start(pausedTimesSave["pausedUpdateItemsTimer"].toInt());
-        updateBacteriasTimer->start(pausedTimesSave["pausedUpdateBacteriasTimer"].toInt());
-        if (pausedTimesSave.contains("virusTimer")) {
-            virusTimer->start(pausedTimesSave["virusTimer"].toInt());
-        }
-        if (pausedTimesSave.contains("pestilenceTimer")) {
-           pestilenceTimer->start(pausedTimesSave["pestilenceTimer"].toInt());
-           updateTimer();
-           pestilenceTimeLabel->show();
-           pestilenceTimeLabel2->show();
-        }
     } else {
-        //updateBacteriasTimer->start(office->levels[office->level]["bacteriaGenerationRate"]);
-        //updateItemsTimer->start(office->levels[office->level]["itemDropRate"]);
-        if (office->level != 1) {
-            virusTimer->start(office->levels[office->level]["virusGenerationRate"]);
-        }
         timeUpdater->start(500);
     }
 
     this->pausedTimeUpdater = 0;
-    this->pausedUpdateItemsTimer = 0;
-    this->pausedUpdateBacteriasTimer = 0;
-    this->pausedVirusTimer = 0;
-    this->pausedPestilenceTimer = 0;
 
     updateTimer();
 }
@@ -367,15 +247,6 @@ void GameScene3::setUpNextLevel() {
     office->currentReputation = 0;
     office->currentTime = 0;
 
-    if (spongeBob->lives < 3) {
-        addItem(pixmapLife1);
-    }
-    if (spongeBob->lives < 2) {
-        addItem(pixmapLife2);
-    }
-
-    spongeBob->reset();
-
     QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
     greenColorItem->setPixmap(greenColor->scaled((230 / office->levels[office->level]["maxReputation"]) * office->currentReputation, 20));
@@ -391,39 +262,7 @@ void GameScene3::setUpNextLevel() {
  * A member function that generates a new virus.
  */
 void GameScene3::virusUpdate(){
-    int time = (rand() % 2000) + office->levels[office->level]["virusGenerationRate"] - 1000;
-    virusTimer->start(time);
 
-    if (virusesIndex >= 9) {
-        virusesIndex = 0;
-    }
-
-    int weight = (rand() % (office->levels[office->level]["virusWeight1"]
-                        + office->levels[office->level]["virusWeight2"]
-                        + office->levels[office->level]["virusWeight3"]));
-
-    int type = 1;
-    if (weight < office->levels[office->level]["virusWeight1"]) {
-        type = 1;
-    } else if (weight < office->levels[office->level]["virusWeight1"] + office->levels[office->level]["virusWeight2"]) {
-        type = 2;
-    } else {
-        if (!pestilenceTimer->isActive()) {
-            type = 3;
-        } else {
-            type = 1;
-        }
-    }
-
-    if (type == 3){
-        pestilenceTimer->start(10000);
-        updateTimer();
-        pestilenceTimeLabel->show();
-        pestilenceTimeLabel2->show();
-    } else {
-        viruses[virusesIndex] = new Virus(type, spongeBob, office);
-        addItem(viruses[virusesIndex++]);
-    }
 }
 
 /**
@@ -432,15 +271,7 @@ void GameScene3::virusUpdate(){
  * A member function that summons Pestilence.
  */
 void GameScene3::summonPestilence() {
-    pestilenceTimeLabel->hide();
-    pestilenceTimeLabel2->hide();
 
-    if (virusesIndex >= 9) {
-        virusesIndex = 0;
-    }
-
-    viruses[virusesIndex] = new Virus(3,spongeBob,office);
-    addItem(viruses[virusesIndex++]);
 }
 
 /**
@@ -454,25 +285,15 @@ void GameScene3::updateTimer() {
         timeUpdater->start(500);
     }
 
-    int secs = (time->elapsed() + pausedTime) / 1000;
-    int mins = (secs / 60) % 60;
-    secs = secs % 60;
+    int timeConversion = (time->elapsed() + pausedTime) / office->levels[office->level]["minuteInMilliSeconds"] + office->levels[office->level]["startTime"];
+    int hours = (timeConversion / 60) % 60;
+    int mins = timeConversion % 60;
 
     timeLabel->setText(QString("%1:%2")
-    .arg(mins, 2, 10, QLatin1Char('0'))
-    .arg(secs, 2, 10, QLatin1Char('0')) );
+    .arg(hours, 2, 10, QLatin1Char('0'))
+    .arg(mins, 2, 10, QLatin1Char('0')) );
 
     office->currentTime = time->elapsed() + pausedTime;
-
-    if (pestilenceTimer->isActive()) {
-        secs = (pestilenceTimer->remainingTime()) / 1000;
-        mins = (secs / 60) % 60;
-        secs = secs % 60;
-
-        pestilenceTimeLabel->setText(QString("%1:%2")
-        .arg(mins, 2, 10, QLatin1Char('0'))
-        .arg(secs, 2, 10, QLatin1Char('0')) );
-    }
 }
 
 /**
@@ -481,25 +302,6 @@ void GameScene3::updateTimer() {
  * A member function that generates a new item.
  */
 void GameScene3::updateItems(){
-    int time = (rand() % 500) + office->levels[office->level]["itemDropRate"] - 250;
-    updateItemsTimer->start(time);
-
-    int weight = (rand() % (office->levels[office->level]["healthyItemWeight"]
-                        + office->levels[office->level]["unhealthyItemWeight"]));
-
-    bool isHealthy = true;
-    if (weight < office->levels[office->level]["healthyItemWeight"]) {
-        isHealthy = true;
-    } else {
-        isHealthy = false;
-    }
-
-    if (itemsIndex >= 20) {
-        itemsIndex = 0;
-    }
-
-    items[itemsIndex] = new Item(office, spongeBob, isHealthy);
-    addItem(items[itemsIndex++]);
 }
 
 /**
@@ -668,28 +470,7 @@ void GameScene3::saveScoreHelper(QJsonObject &saveObject) const
  * A member function that generates a new bacteria.
  */
 void GameScene3::updateBacterias() {
-    int time = (rand() % 1000) + office->levels[office->level]["bacteriaGenerationRate"] - 500;
-    updateBacteriasTimer->start(time);
 
-    if (bacteriasIndex >= 19) {
-        bacteriasIndex = 0;
-    }
-
-    int weight = (rand() % (office->levels[office->level]["bacteriaWeight1"]
-                        + office->levels[office->level]["bacteriaWeight2"]
-                        + office->levels[office->level]["bacteriaWeight3"]));
-
-    int type = 1;
-    if (weight < office->levels[office->level]["bacteriaWeight1"]) {
-        type = 1;
-    } else if (weight < office->levels[office->level]["bacteriaWeight1"] + office->levels[office->level]["bacteriaWeight2"]) {
-        type = 2;
-    } else {
-        type = 3;
-    }
-
-    bacterias[bacteriasIndex] = new Bacteria(type,spongeBob,office,greenColorItem,pixmapLifeList);
-    addItem(bacterias[bacteriasIndex++]);
 }
 
 /**
@@ -813,32 +594,6 @@ void GameScene3::checkGameState() {
         return;
     }
 
-    spongeBob->setFocus();
-
-    // Remove bacterias
-    for (int i = 0; i < 20; i++) {
-        if (bacterias[i] != NULL && bacterias[i]->toDelete) {
-            delete bacterias[i];
-            bacterias[i] = NULL;
-        }
-    }
-
-    // Remove items
-    for (int i = 0; i < 20; i++) {
-        if (items[i] != NULL && items[i]->toDelete) {
-            delete items[i];
-            items[i] = NULL;
-        }
-    }
-
-    // Remove viruses
-    for (int i = 0; i < 10; i++) {
-        if (viruses[i] != NULL && viruses[i]->toDelete) {
-            delete viruses[i];
-            viruses[i] = NULL;
-        }
-    }
-
     // Update score
     scoreLabel->setText(QStringLiteral("Score: %1").arg(office->score));
     scoreLabel->adjustSize();
@@ -847,21 +602,17 @@ void GameScene3::checkGameState() {
     levelLabel->setText(QStringLiteral("Level: %1").arg(office->level));
     levelLabel->adjustSize();
 
-    // Check if spongebob is dead
-    if (spongeBob->lives == 0) {
-        gameOver(false);
-    }
-
     // Check if time is up
-    if (time->elapsed() >= office->levels[office->level]["maxTime"]) {
-        int secs = office->levels[office->level]["maxTime"] / 1000;
-        int mins = (secs / 60) % 60;
-        secs = secs % 60;
+    if ((time->elapsed() + pausedTime) / office->levels[office->level]["minuteInMilliSeconds"] + office->levels[office->level]["startTime"]
+            >= office->levels[office->level]["endTime"]) {
+        int timeConverted = office->levels[office->level]["endTime"];
+        int hours = (timeConverted / 60) % 60;
+        int mins = timeConverted % 60;
         timeLabel->setText(QString("%1:%2")
-        .arg(mins, 2, 10, QLatin1Char('0'))
-        .arg(secs, 2, 10, QLatin1Char('0')) );
+        .arg(hours, 2, 10, QLatin1Char('0'))
+        .arg(mins, 2, 10, QLatin1Char('0')) );
 
-        office->currentTime = office->levels[office->level]["maxTime"];
+        office->currentTime = office->levels[office->level]["endTime"];
 
         gameOver(false);
     }
@@ -881,42 +632,10 @@ void GameScene3::checkGameState() {
  */
 void GameScene3::gameOver(bool result) {
     timeUpdater->stop();
-    updateItemsTimer->stop();
-    updateBacteriasTimer->stop();
     checkGameStateTimer->stop();
-    if (virusTimer->isActive()) {
-        virusTimer->stop();
-    }
-    if (pestilenceTimer->isActive()) {
-        pestilenceTimer->stop();
-    }
-
-    for (int i = 0; i < 20; i++) {
-        if (bacterias[i] != NULL) {
-            delete bacterias[i];
-            bacterias[i] = NULL;
-        }
-    }
-    bacteriasIndex = 0;
-
-    for (int i = 0; i < 10; i++) {
-        if (viruses[i] != NULL) {
-            delete viruses[i];
-            viruses[i] = NULL;
-        }
-    }
-    virusesIndex = 0;
-
-    for (int i = 0; i < 20; i++) {
-        if (items[i] != NULL) {
-            delete items[i];
-            items[i] = NULL;
-        }
-    }
-    itemsIndex = 0;
 
     if (result) {
-        office->score += office->levels[office->level]["maxTime"] / office->currentTime - 1;
+        office->score += office->levels[office->level]["endTime"] / office->currentTime - 1;
         office->score += spongeBob->lives * 100;
     }
 

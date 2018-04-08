@@ -29,15 +29,9 @@ public:
     bool requestForUnpause;//!<Boolean member that state wether there is a request to unpause or not
 
 private:
-    std::map<std::string, int> setUpLevelsHelper(int maxTime,
+    std::map<std::string, int> setUpLevelsHelper(int startTime, int endTime, int minuteInMilliSeconds,
                                                  int maxReputation, int incrementReputation,
-                                                 int stepsPerImmunity,
-                                                 int bacteriaGenerationRate, int bacteriaWeight1, int bacteriaWeight2, int bacteriaWeight3,
-                                                 int bacteriaSpeed1, int bacteriaSpeed2, int bacteriaSpeed3,
-                                                 int itemDropRate, int healthyItemWeight, int unhealthyItemWeight,
-                                                 int healthyItemSpeed, int unhealthyItemSpeed,
-                                                 int virusGenerationRate, int virusWeight1, int virusWeight2, int virusWeight3,
-                                                 int virusSpeed1, int virusSpeed2, int virusSpeed3);//!<Member function sets up different levels according to passed parameters
+                                                 int patientGenerationRate);//!<Member function sets up different levels according to passed parameters
 
 signals:
 

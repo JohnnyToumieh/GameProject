@@ -39,26 +39,9 @@ Office::Office(int level, int currentReputation, int currentTime, int score, QOb
  * function that fill the array of the levels with 3 levels each with specified attributes.
  */
 void Office::setUpLevels() {
-    this->levels[1] = setUpLevelsHelper(300000,
+    this->levels[1] = setUpLevelsHelper(480, 840, 1000,
                                           10, 1,
-                                          4,
-                                          3000, 33, 33, 33, 200, 200, 200,
-                                          3000, 50, 50, 400, 400,
-                                          0, 0, 0, 0, 0, 0, 0);
-
-    this->levels[2] = setUpLevelsHelper(300000,
-                                          20, 1,
-                                          8,
-                                          2500, 33, 33, 33, 200, 200, 200,
-                                          2000, 50, 50, 300, 400,
-                                          15000, 100, 0, 0, 200, 0, 0);
-
-    this->levels[3] = setUpLevelsHelper(300000,
-                                          30, 1,
-                                          8,
-                                          2000, 33, 33, 33, 150, 150, 150,
-                                          2000, 50, 50, 300, 300,
-                                          10000, 50, 30, 5, 200, 200, 50);
+                                          3000);
 }
 
 /**
@@ -91,45 +74,19 @@ void Office::setUpLevels() {
  * @param virusSpeed3  integer indicates the speed of virus 3
  * @return std::map<std::string, int> a map between attributes discriptions and values
  */
-std::map<std::string, int> Office::setUpLevelsHelper(int maxTime,
+std::map<std::string, int> Office::setUpLevelsHelper(int startTime, int endTime, int minuteInMilliSeconds,
                                      int maxReputation, int incrementReputation,
-                                     int stepsPerImmunity,
-                                     int bacteriaGenerationRate, int bacteriaWeight1, int bacteriaWeight2, int bacteriaWeight3,
-                                     int bacteriaSpeed1, int bacteriaSpeed2, int bacteriaSpeed3,
-                                     int itemDropRate, int healthyItemWeight, int unhealthyItemWeight,
-                                     int healthyItemSpeed, int unhealthyItemSpeed,
-                                     int virusGenerationRate, int virusWeight1, int virusWeight2, int virusWeight3,
-                                     int virusSpeed1, int virusSpeed2, int virusSpeed3) {
+                                     int patientGenerationRate) {
     std::map<std::string, int> level;
 
-    level["maxTime"] = maxTime;
+    level["startTime"] = startTime;
+    level["endTime"] = endTime;
+    level["minuteInMilliSeconds"] = minuteInMilliSeconds;
 
-    level["maxCleanliness"] = maxReputation;
-    level["incrementCleanliness"] = incrementReputation;
+    level["maxReputation"] = maxReputation;
+    level["incrementReputation"] = incrementReputation;
 
-    level["stepsPerImmunity"] = stepsPerImmunity;
-
-    level["bacteriaGenerationRate"] = bacteriaGenerationRate;
-    level["bacteriaWeight1"] = bacteriaWeight1;
-    level["bacteriaWeight2"] = bacteriaWeight2;
-    level["bacteriaWeight3"] = bacteriaWeight3;
-    level["bacteriaSpeed1"] = bacteriaSpeed1;
-    level["bacteriaSpeed2"] = bacteriaSpeed2;
-    level["bacteriaSpeed3"] = bacteriaSpeed3;
-
-    level["itemDropRate"] = itemDropRate;
-    level["healthyItemWeight"] = healthyItemWeight;
-    level["unhealthyItemWeight"] = unhealthyItemWeight;
-    level["healthyItemSpeed"] = healthyItemSpeed;
-    level["unhealthyItemSpeed"] = unhealthyItemSpeed;
-
-    level["virusGenerationRate"] = virusGenerationRate;
-    level["virusWeight1"] = virusWeight1;
-    level["virusWeight2"] = virusWeight2;
-    level["virusWeight3"] = virusWeight3;
-    level["virusSpeed1"] = virusSpeed1;
-    level["virusSpeed2"] = virusSpeed2;
-    level["virusSpeed3"] = virusSpeed3;
+    level["patientGenerationRate"] = patientGenerationRate;
 
     return level;
 }
