@@ -46,7 +46,7 @@ Patient::Patient(int type, Office* office, QObject *parent)
     }
 
     baseY = (rand() % 400) + 100;
-    setPos(0, baseY);
+    setPos(949, baseY);
 
     this->speed = (rand() % 100) + 100;
 
@@ -95,12 +95,12 @@ void Patient::checkGameState() {
  */
 
 void Patient::update(){
-    if (x() + 30 >= 950) {
+    if (x() - 30 <= 0) {
         toDelete = true;
         speedTimer->stop();
         checkGameStateTimer->stop();
         return;
     } else {
-        setPos(x()+30, baseY +20*qSin(x()+30));
+        setPos(x() - 30, baseY + 20*qSin(x()+30));
     }
 }
