@@ -41,7 +41,8 @@ Office::Office(int level, int currentReputation, int currentTime, int score, QOb
 void Office::setUpLevels() {
     this->levels[1] = setUpLevelsHelper(480, 840, 1000,
                                           10, 1,
-                                          3000);
+                                          3000, 50, 30, 20,
+                                          20000);
 }
 
 /**
@@ -76,7 +77,8 @@ void Office::setUpLevels() {
  */
 std::map<std::string, int> Office::setUpLevelsHelper(int startTime, int endTime, int minuteInMilliSeconds,
                                      int maxReputation, int incrementReputation,
-                                     int patientGenerationRate) {
+                                     int patientGenerationRate, int patientWeight1, int patientWeight2, int patientWeight3,
+                                     int dirtinessRate) {
     std::map<std::string, int> level;
 
     level["startTime"] = startTime;
@@ -87,6 +89,11 @@ std::map<std::string, int> Office::setUpLevelsHelper(int startTime, int endTime,
     level["incrementReputation"] = incrementReputation;
 
     level["patientGenerationRate"] = patientGenerationRate;
+    level["patientWeight1"] = patientWeight1;
+    level["patientWeight2"] = patientWeight2;
+    level["patientWeight3"] = patientWeight3;
+
+    level["dirtinessRate"] = dirtinessRate;
 
     return level;
 }
