@@ -445,6 +445,8 @@ void GameScene3::handleAquariumRequest() {
     miniGameView->setFocus();
     miniGameView->move(100, 50);
 
+    updateAquariumTimer->stop();
+
     office->inAMiniGame = true;
 
     aquariumBox->hide();
@@ -659,10 +661,11 @@ void GameScene3::checkGameState() {
 
             if (game1->aquarium->levels[game1->aquarium->level]["levelWon"] == 1) {
                 office->score += office->currentMiniGameScore;
-                office->currentMiniGameScore = 0;
+                office->currentAquariumState = 0;
             }
 
-            office->currentAquariumState = 0;
+            office->currentMiniGameScore = 0;
+
             int time = (rand() % 1000) + office->levels[office->level]["dirtinessRate"] - 500;
             updateAquariumTimer->start(time);
         }
