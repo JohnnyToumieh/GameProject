@@ -37,18 +37,18 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     setBackgroundBrush(QBrush(QImage(":miniGame2Background").scaledToHeight(height).scaledToWidth(width)));
     setSceneRect(0,0,width,height);
 
-    timeLabel = new QLabel();
-    movie = new QMovie(":movingEyes");
-    movie->setScaledSize(QSize(200, 200));
-    timeLabel->setMovie(movie);
-    addWidget(timeLabel);
-    timeLabel->move(this->width() / 2 - 100, this->height() / 2 - 200);
+    eyes = new QLabel();
+    eyesAnimation = new QMovie(":movingEyes");
+    eyesAnimation->setScaledSize(QSize(200, 200));
+    eyes->setMovie(eyesAnimation);
+    addWidget(eyes);
+    eyes->move(this->width() / 2 - 100, this->height() / 2 - 200);
 
-    QGraphicsPixmapItem* temp = new QGraphicsPixmapItem();
-    QPixmap *temp2  = new QPixmap(":mouth");
-    temp->setPixmap(temp2->scaled(400, 300));
-    addItem(temp);
-    temp->setPos(this->width() / 2 - 200, this->height() / 2 - 50);
+    mouth = new QGraphicsPixmapItem();
+    QPixmap* picMouth  = new QPixmap(":mouth");
+    mouth->setPixmap(picMouth->scaled(400, 300));
+    addItem(mouth);
+    mouth->setPos(this->width() / 2 - 200, this->height() / 2 - 50);
 
     upperTeeth = new QLabel*[6];
     for (int i = 0; i < 6; i++) {
@@ -463,15 +463,15 @@ void GameScene2::updateTimer() {
         timeUpdater->start(500);
     }
 
-    if (movie->state() == QMovie::Running && movie->currentFrameNumber() == 10) {
-        movie->setPaused(true);
-    } else if (movie->state() == QMovie::Paused){
+    if (eyesAnimation->state() == QMovie::Running && eyesAnimation->currentFrameNumber() == 10) {
+        eyesAnimation->setPaused(true);
+    } else if (eyesAnimation->state() == QMovie::Paused){
         int ran = (rand() % 10);
         if (ran == 0) {
-            movie->setPaused(false);
+            eyesAnimation->setPaused(false);
         }
-    } else if (movie->state() == QMovie::NotRunning) {
-        movie->start();
+    } else if (eyesAnimation->state() == QMovie::NotRunning) {
+        eyesAnimation->start();
     }
 
     int secs = (time->elapsed() + pausedTime) / 1000;

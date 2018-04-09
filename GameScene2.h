@@ -44,6 +44,10 @@ public:
     QLabel** lowerTeeth;
     int lowerTeethIndex;
 
+    QGraphicsPixmapItem* mouth;
+    QLabel* eyes;
+    QMovie* eyesAnimation;
+
     Aquarium* aquarium;//!<Aquarium member that represents the aquarium
     SpongeBob *spongeBob;//!<SpongeBob member that represents spongebob
 
@@ -62,8 +66,6 @@ public:
     QLabel* scoreLabel2;
     QLabel* gameOverLabel;
     QLabel* unpauseLabel;
-
-    QMovie* movie;
 
     QTime* time;//!<QTime member that counts the current time elapsed
     int pausedTime;//!<int member that help save the time before the game was paused to use after the game unpauses
