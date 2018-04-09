@@ -37,6 +37,8 @@ public:
     Patient** patients;//!<Patient array member that represents the list of currently visibile patients
     int patientsIndex;//!<Int member that indexes the patients array
 
+    QGraphicsView* miniGameView;
+
     QLabel* timeLabel;
     QLabel* pestilenceTimeLabel;
     QLabel* pestilenceTimeLabel2;

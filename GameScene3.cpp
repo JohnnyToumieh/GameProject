@@ -577,14 +577,16 @@ void GameScene3::checkGameState() {
 
             //Enter game2
             //Games shouldn't be able to be paused. It should show only the exit button that makes it like rejecting the patient (not losing the game).
-            QGraphicsView *view;
             GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, 1);
-            view = new QGraphicsView(game1);
-            view->setFixedSize(800,500);
-            view->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
-            view->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
-            addWidget(view);
-            view->move(100, 50);
+            miniGameView = new QGraphicsView(game1);
+            miniGameView->setFixedSize(800,500);
+            miniGameView->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+            miniGameView->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+            addWidget(miniGameView);
+            miniGameView->setFocus();
+            miniGameView->move(100, 50);
+        } else if (patients[index]->state == Patient::InProgress) {
+            miniGameView->setFocus();
         }
     }
 
