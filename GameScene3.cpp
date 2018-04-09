@@ -662,7 +662,7 @@ void GameScene3::checkGameState() {
         }
     } else if (office->inAMiniGame) {
         GameScene1* game1 = (GameScene1*) miniGameView->scene();
-        office->currentMiniGameScore = game1->aquarium->score;
+        office->currentMiniGameScore = game1->getCurrentScore();
 
         if (!game1->hasFocus()) {
             office->inAMiniGame = false;
@@ -725,7 +725,7 @@ void GameScene3::checkGameState() {
             miniGameView->move(100, 50);
         } else if (patients[index]->motionState == Patient::InProgress) {         
             GameScene2* game1 = (GameScene2*) miniGameView->scene();
-            office->currentMiniGameScore = game1->aquarium->score;
+            office->currentMiniGameScore = game1->getCurrentScore();
 
             if (!game1->hasFocus()) {
                 patients[index]->motionState = Patient::Done;

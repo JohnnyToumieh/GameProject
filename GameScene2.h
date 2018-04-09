@@ -26,6 +26,8 @@ class GameScene2 : public GameScene
 {
     Q_OBJECT
 public:
+    enum State {NotStarted, DisplayingTeeth, GuessingTeeth, GameWon, GameLost};
+
     explicit GameScene2(QWidget* widget, int width, int height, User* user, QJsonObject dataFile,
                         bool resume = false, int level = 1, bool isMiniGame = false);
 
@@ -33,6 +35,8 @@ public:
 
     void gameOver(bool result);
     int getCurrentScore();
+
+    State gameState;
 
     QWidget* widget;
     User* user;//!<User member that represents the signed in user
@@ -47,6 +51,14 @@ public:
     QGraphicsPixmapItem* mouth;
     QLabel* eyes;
     QMovie* eyesAnimation;
+
+    QPushButton* start;
+    QLabel* goLabel;
+
+    int order[3];
+    int orderIndex;
+
+    QTimer* toothUpdater;
 
     Aquarium* aquarium;//!<Aquarium member that represents the aquarium
     SpongeBob *spongeBob;//!<SpongeBob member that represents spongebob
@@ -112,6 +124,9 @@ private:
 signals:
 
 public slots:
+    void startClicked();
+    void highlightTooth();
+
     void updateItems();
     void updateBacterias();
     void updateTimer();

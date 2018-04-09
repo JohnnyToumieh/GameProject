@@ -24,6 +24,8 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
 {
     srand(QTime::currentTime().msec());
 
+    gameState = NotStarted;
+
     if (resume) {
         QJsonObject aquariumSave = read("aquarium").object();
         aquarium = new Aquarium(aquariumSave["level"].toInt(),
@@ -42,30 +44,32 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     eyesAnimation->setScaledSize(QSize(200, 200));
     eyes->setMovie(eyesAnimation);
     addWidget(eyes);
-    eyes->move(this->width() / 2 - 100, this->height() / 2 - 200);
+    eyes->move(this->width() / 2 - 100 - 150, this->height() / 2 - 200);
 
     mouth = new QGraphicsPixmapItem();
     QPixmap* picMouth  = new QPixmap(":mouth");
     mouth->setPixmap(picMouth->scaled(400, 300));
     addItem(mouth);
-    mouth->setPos(this->width() / 2 - 200, this->height() / 2 - 50);
+    mouth->setPos(this->width() / 2 - 200 - 150, this->height() / 2 - 50);
+    mouth->setFlag(QGraphicsItem::ItemIsFocusable);
 
     upperTeeth = new QLabel*[6];
     for (int i = 0; i < 6; i++) {
         upperTeeth[i] = new QLabel();
         upperTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
         addWidget(upperTeeth[i]);
+        upperTeeth[i]->setFocusPolicy(Qt::ClickFocus);
         if (i == 0 || i == 5) {
             upperTeeth[i]->setFixedSize(30, 51);
-            upperTeeth[i]->move(this->width() / 2 - 157 + 56 * i, this->height() / 2 + 26);
+            upperTeeth[i]->move(this->width() / 2 - 157 - 150 + 56 * i, this->height() / 2 + 26);
         }
         if (i == 1 || i == 4) {
             upperTeeth[i]->setFixedSize(50, 50);
-            upperTeeth[i]->move(this->width() / 2 - 125 + 65.5 * (i - 1), this->height() / 2 + 20);
+            upperTeeth[i]->move(this->width() / 2 - 125 - 150 + 65.5 * (i - 1), this->height() / 2 + 20);
         }
         if (i == 2 || i == 3) {
             upperTeeth[i]->setFixedSize(65, 50);
-            upperTeeth[i]->move(this->width() / 2 - 70 + 71 * (i - 2), this->height() / 2 + 18);
+            upperTeeth[i]->move(this->width() / 2 - 70 - 150 + 71 * (i - 2), this->height() / 2 + 18);
         }
     }
     upperTeethIndex = 0;
@@ -75,20 +79,40 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
         lowerTeeth[i] = new QLabel();
         lowerTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
         addWidget(lowerTeeth[i]);
+        lowerTeeth[i]->setFocusPolicy(Qt::ClickFocus);
         if (i == 0 || i == 5) {
             lowerTeeth[i]->setFixedSize(30, 51);
-            lowerTeeth[i]->move(this->width() / 2 - 157 + 56 * i, this->height() / 2 + 124);
+            lowerTeeth[i]->move(this->width() / 2 - 157 - 150 + 56 * i, this->height() / 2 + 124);
         }
         if (i == 1 || i == 4) {
             lowerTeeth[i]->setFixedSize(50, 50);
-            lowerTeeth[i]->move(this->width() / 2 - 125 + 65.5 * (i - 1), this->height() / 2 + 128);
+            lowerTeeth[i]->move(this->width() / 2 - 125 - 150 + 65.5 * (i - 1), this->height() / 2 + 128);
         }
         if (i == 2 || i == 3) {
             lowerTeeth[i]->setFixedSize(65, 50);
-            lowerTeeth[i]->move(this->width() / 2 - 70 + 71 * (i - 2), this->height() / 2 + 132);
+            lowerTeeth[i]->move(this->width() / 2 - 70 - 150 + 71 * (i - 2), this->height() / 2 + 132);
         }
     }
     lowerTeethIndex = 0;
+
+    start = new QPushButton("Start");
+    addWidget(start);
+    start->resize(150, 70);
+    start->move(this->width() / 2 + 150, this->height() / 2 - 35);
+    start->setFocusPolicy(Qt::NoFocus);
+
+    connect(start, SIGNAL(clicked()), SLOT(startClicked()));
+
+    toothUpdater = new QTimer();
+    toothUpdater->setSingleShot(true);
+
+    connect(toothUpdater, SIGNAL(timeout()), this, SLOT(highlightTooth()));
+
+    goLabel = new QLabel("GO!");
+    goLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : black; font: 80px; }");
+    goLabel->move(this->width() / 2 + 150, this->height() / 2 - 35);
+    addWidget(goLabel);
+    goLabel->hide();
 
     pestilenceTimeLabel = new QLabel();
     pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");
@@ -364,6 +388,49 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     this->pausedPestilenceTimer = 0;
 
     updateTimer();
+}
+
+void GameScene2::startClicked() {
+    start->hide();
+
+    order[0] = 1;
+    order[1] = 3;
+    order[2] = 8;
+
+    orderIndex = 0;
+
+    highlightTooth();
+    toothUpdater->start(3000);
+
+    gameState = DisplayingTeeth;
+}
+
+void GameScene2::highlightTooth() {
+    if (orderIndex > 0) {
+        if (order[orderIndex - 1] < 6) {
+            upperTeeth[order[orderIndex - 1]]->setStyleSheet("QLabel { background-color : white; }");
+        } else {
+            lowerTeeth[order[orderIndex - 1] - 6]->setStyleSheet("QLabel { background-color : white; }");
+        }
+    }
+
+    if (orderIndex < 3) {
+        if (order[orderIndex] < 6) {
+            upperTeeth[order[orderIndex]]->setStyleSheet("QLabel { background-color : black; }");
+        } else {
+            lowerTeeth[order[orderIndex] - 6]->setStyleSheet("QLabel { background-color : black; }");
+        }
+
+        orderIndex++;
+
+        toothUpdater->start(3000);
+    } else {
+        orderIndex = 0;
+
+        goLabel->show();
+
+        gameState = GuessingTeeth;
+    }
 }
 
 int GameScene2::getCurrentScore() {
@@ -792,7 +859,37 @@ void GameScene2::checkGameState() {
         return;
     }
 
-    spongeBob->setFocus();
+    if (gameState == GuessingTeeth) {
+        for (int i = 0; i < 12; i++) {
+            if ((i < 6 && upperTeeth[i]->hasFocus())
+                    || (i >= 6 && lowerTeeth[i - 6]->hasFocus())) {
+                if (order[orderIndex] == i) {
+                    if (i < 6) {
+                        upperTeeth[i]->setStyleSheet("QLabel { background-color : green; }");
+                    } else {
+                        lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : green; }");
+                    }
+                    orderIndex++;
+                } else {
+                    if (i < 6) {
+                        upperTeeth[i]->setStyleSheet("QLabel { background-color : red; }");
+                    } else {
+                        lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : red; }");
+                    }
+
+                    gameState = GameLost;
+                }
+                break;
+            }
+        }
+
+        if (orderIndex == 3) {
+            orderIndex = 0;
+            gameState = GameWon;
+        }
+     }
+
+    mouth->setFocus();
 
     // Remove bacterias
     for (int i = 0; i < 20; i++) {
