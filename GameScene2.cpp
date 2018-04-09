@@ -50,6 +50,46 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     addItem(temp);
     temp->setPos(this->width() / 2 - 200, this->height() / 2 - 50);
 
+    QLabel** upperTeeth = new QLabel*[6];
+    for (int i = 0; i < 6; i++) {
+        upperTeeth[i] = new QLabel();
+        upperTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
+        addWidget(upperTeeth[i]);
+        if (i == 0 || i == 5) {
+            upperTeeth[i]->setFixedSize(30, 51);
+            upperTeeth[i]->move(this->width() / 2 - 157 + 56 * i, this->height() / 2 + 26);
+        }
+        if (i == 1 || i == 4) {
+            upperTeeth[i]->setFixedSize(50, 50);
+            upperTeeth[i]->move(this->width() / 2 - 125 + 65.5 * (i - 1), this->height() / 2 + 20);
+        }
+        if (i == 2 || i == 3) {
+            upperTeeth[i]->setFixedSize(65, 50);
+            upperTeeth[i]->move(this->width() / 2 - 70 + 71 * (i - 2), this->height() / 2 + 18);
+        }
+    }
+    int upperTeethIndex = 0;
+
+    QLabel** lowerTeeth = new QLabel*[6];
+    for (int i = 0; i < 6; i++) {
+        lowerTeeth[i] = new QLabel();
+        lowerTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
+        addWidget(lowerTeeth[i]);
+        if (i == 0 || i == 5) {
+            lowerTeeth[i]->setFixedSize(30, 51);
+            lowerTeeth[i]->move(this->width() / 2 - 157 + 56 * i, this->height() / 2 + 124);
+        }
+        if (i == 1 || i == 4) {
+            lowerTeeth[i]->setFixedSize(50, 50);
+            lowerTeeth[i]->move(this->width() / 2 - 125 + 65.5 * (i - 1), this->height() / 2 + 128);
+        }
+        if (i == 2 || i == 3) {
+            lowerTeeth[i]->setFixedSize(65, 50);
+            lowerTeeth[i]->move(this->width() / 2 - 70 + 71 * (i - 2), this->height() / 2 + 132);
+        }
+    }
+    int lowerTeethIndex = 0;
+
     pestilenceTimeLabel = new QLabel();
     pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");
     pestilenceTimeLabel->move(this->width() / 2 + 320, 160);
