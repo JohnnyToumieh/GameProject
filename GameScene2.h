@@ -38,6 +38,12 @@ public:
     User* user;//!<User member that represents the signed in user
     QJsonObject dataFile;//!QJsonObject member dataFile that holds information of the user
 
+    QLabel** upperTeeth;
+    int upperTeethIndex;
+
+    QLabel** lowerTeeth;
+    int lowerTeethIndex;
+
     Aquarium* aquarium;//!<Aquarium member that represents the aquarium
     SpongeBob *spongeBob;//!<SpongeBob member that represents spongebob
 

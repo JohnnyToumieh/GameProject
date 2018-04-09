@@ -50,7 +50,7 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     addItem(temp);
     temp->setPos(this->width() / 2 - 200, this->height() / 2 - 50);
 
-    QLabel** upperTeeth = new QLabel*[6];
+    upperTeeth = new QLabel*[6];
     for (int i = 0; i < 6; i++) {
         upperTeeth[i] = new QLabel();
         upperTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
@@ -68,9 +68,9 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
             upperTeeth[i]->move(this->width() / 2 - 70 + 71 * (i - 2), this->height() / 2 + 18);
         }
     }
-    int upperTeethIndex = 0;
+    upperTeethIndex = 0;
 
-    QLabel** lowerTeeth = new QLabel*[6];
+    lowerTeeth = new QLabel*[6];
     for (int i = 0; i < 6; i++) {
         lowerTeeth[i] = new QLabel();
         lowerTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
@@ -88,7 +88,7 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
             lowerTeeth[i]->move(this->width() / 2 - 70 + 71 * (i - 2), this->height() / 2 + 132);
         }
     }
-    int lowerTeethIndex = 0;
+    lowerTeethIndex = 0;
 
     pestilenceTimeLabel = new QLabel();
     pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");
