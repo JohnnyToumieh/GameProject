@@ -41,8 +41,14 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     movie = new QMovie(":movingEyes");
     movie->setScaledSize(QSize(200, 200));
     timeLabel->setMovie(movie);
-    timeLabel->move(this->width() / 2 - 100, this->height() / 2 - 200);
     addWidget(timeLabel);
+    timeLabel->move(this->width() / 2 - 100, this->height() / 2 - 200);
+
+    QGraphicsPixmapItem* temp = new QGraphicsPixmapItem();
+    QPixmap *temp2  = new QPixmap(":mouth");
+    temp->setPixmap(temp2->scaled(400, 300));
+    addItem(temp);
+    temp->setPos(this->width() / 2 - 200, this->height() / 2 - 50);
 
     pestilenceTimeLabel = new QLabel();
     pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");

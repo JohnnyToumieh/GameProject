@@ -28,5 +28,6 @@
         <file alias="aquarium1">Images/aquarium1.jpg</file>
         <file alias="aquarium0">Images/aquarium0.JPG</file>
         <file alias="patient1">Images/patient1.png</file>
+        <file alias="mouth">Images/mouth.png</file>
     </qresource>
 </RCC>
