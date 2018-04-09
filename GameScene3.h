@@ -11,6 +11,8 @@
 #include "Office.h"
 #include "Patient.h"
 #include "GameScene.h"
+#include "GameScene1.h"
+#include "GameScene2.h"
 
 /**
  *\file GameScene3.h

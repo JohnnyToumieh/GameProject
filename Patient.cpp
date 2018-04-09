@@ -120,7 +120,7 @@ void Patient::update(){
             } else {
                 setPos(300, 350);
                 setRotation(-60);
-                state == Ready;
+                state = Ready;
             }
         }
     }

@@ -366,6 +366,13 @@ void GameScene3::handlePatient(int status) {
         patients[index]->state = Patient::Accepted;
     } else if (status == 0) {
         patients[index]->state = Patient::Rejected;
+
+        //Reduce reputation
+        if (office->currentReputation >= office->levels[office->level]["incrementReputation"]) {
+            office->currentReputation -= office->levels[office->level]["incrementReputation"];
+        } else {
+            office->currentReputation = 0;
+        }
     }
 }
 
@@ -567,6 +574,22 @@ void GameScene3::checkGameState() {
             reject->show();
         } else if (patients[index]->state == Patient::Ready) {
             //Enter game2
+            //Games shouldn't be able to be paused. It should show only the exit button that makes it like rejecting the patient (not losing the game).
+            patients[index]->state = Patient::InProgress;
+            QGraphicsView *view;
+            GameScene1 *game1 = new GameScene1(widget, user, dataFile, false, 1);
+            view = new QGraphicsView(game1);
+            view->setFixedSize(1000,600);
+            view->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+            view->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+            view->setGeometry(
+                        QStyle::alignedRect(
+                                   Qt::LeftToRight,
+                                   Qt::AlignCenter,
+                                   view->size(),
+                                   qApp->desktop()->availableGeometry()
+                            ));
+            view->show();
         }
     }
 
