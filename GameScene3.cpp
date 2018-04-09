@@ -212,10 +212,36 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     description->move(patientBox->x() + 15, patientBox->y() + 15);
     description->hide();
 
+    aquariumBox = new QWidget();
+    aquariumBox->setStyleSheet("background-color: rgba(105, 105, 105, 100);");
+    addWidget(aquariumBox);
+    aquariumBox->setFixedSize(250, 250);
+    aquariumBox->move(this->width() / 2 - aquariumBox->width() / 2, this->height() / 2 - aquariumBox->height() / 2 + 50);
+    aquariumBox->hide();
+
+    cleanAquarium = new QPushButton("Clean");
+    addWidget(cleanAquarium);
+    cleanAquarium->move(aquariumBox->x() + 30, aquariumBox->y() + aquariumBox->height() - 20 - cleanAquarium->height());
+    cleanAquarium->hide();
+
+    cancelAquarium = new QPushButton("Cancel");
+    addWidget(cancelAquarium);
+    cancelAquarium->move(aquariumBox->x() + aquariumBox->width() - 30 - cancelAquarium->width(), aquariumBox->y() + aquariumBox->height() - 20 - cancelAquarium->height());
+    cancelAquarium->hide();
+
+    aquariumDescription = new QLabel("long long");
+    aquariumDescription->setWordWrap(true);
+    addWidget(aquariumDescription);
+    aquariumDescription->setFixedSize(aquariumBox->width() - 2 * 15, aquariumBox->height() - 2 * 15 - aquariumDescription->height() - 2 * 15);
+    aquariumDescription->move(aquariumBox->x() + 15, aquariumBox->y() + 15);
+    aquariumDescription->hide();
+
     connect(unpause, SIGNAL(clicked()), SLOT(unpauseClicked()));
     connect(quit, SIGNAL(clicked()), SLOT(quitClicked()));
     connect(quit2, SIGNAL(clicked()), SLOT(quitClicked()));
     connect(nextLevelButton, SIGNAL(clicked()), SLOT(nextLevel()));
+    connect(cleanAquarium, SIGNAL(clicked()), SLOT(handleAquariumRequest()));
+    connect(cancelAquarium, SIGNAL(clicked()), SLOT(cancelAquariumRequest()));
 
     QSignalMapper* signalMapper = new QSignalMapper(this);
     connect(accept, SIGNAL(clicked()), signalMapper, SLOT(map()));
@@ -325,13 +351,12 @@ void GameScene3::updateAquariumImage() {
 }
 
 void GameScene3::updateAquarium() {
-    int time = (rand() % 1000) + office->levels[office->level]["dirtinessRate"] - 500;
-    updateAquariumTimer->start(time);
-
-    if (office->currentAquariumState < 3) {
-        office->currentAquariumState++;
+    if (office->currentAquariumState < 2) {
+        int time = (rand() % 1000) + office->levels[office->level]["dirtinessRate"] - 500;
+        updateAquariumTimer->start(time);
     }
-    updateAquariumImage();
+
+    office->currentAquariumState++;
 }
 
 /**
@@ -408,6 +433,31 @@ void GameScene3::handlePatient(int status) {
             office->currentReputation = 0;
         }
     }
+}
+
+void GameScene3::handleAquariumRequest() {
+    office->inAMiniGame = true;
+
+    aquariumBox->hide();
+    aquariumDescription->hide();
+    cleanAquarium->hide();
+    cancelAquarium->hide();
+
+    GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, office->currentAquariumState, true);
+    miniGameView = new QGraphicsView(game1);
+    miniGameView->setFixedSize(800, 500);
+    miniGameView->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    miniGameView->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+    addWidget(miniGameView);
+    miniGameView->setFocus();
+    miniGameView->move(100, 50);
+}
+
+void GameScene3::cancelAquariumRequest() {
+    aquariumBox->hide();
+    aquariumDescription->hide();
+    cleanAquarium->hide();
+    cancelAquarium->hide();
 }
 
 /**
@@ -595,24 +645,21 @@ void GameScene3::checkGameState() {
     // Check if Aquarium clicked
     if (aquarium->hasFocus() && !office->inAMiniGame) {
         if (office->currentAquariumState > 0) {
-            office->inAMiniGame = true;
-
-            GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, office->currentAquariumState, true);
-            miniGameView = new QGraphicsView(game1);
-            miniGameView->setFixedSize(800, 500);
-            miniGameView->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
-            miniGameView->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
-            addWidget(miniGameView);
-            miniGameView->setFocus();
-            miniGameView->move(100, 50);
+            aquariumBox->show();
+            aquariumDescription->show();
+            cleanAquarium->show();
+            cancelAquarium->show();
         }
     } else if (office->inAMiniGame) {
         if (!miniGameView->scene()->isActive()) {
             office->inAMiniGame = false;
+            office->currentAquariumState = 0;
+            int time = (rand() % 1000) + office->levels[office->level]["dirtinessRate"] - 500;
+            updateAquariumTimer->start(time);
         }
-    } else {
-        //timeLabel->setFocus();
     }
+
+    updateAquariumImage();
 
     // Remove patients
     for (int i = 0; i < 20; i++) {

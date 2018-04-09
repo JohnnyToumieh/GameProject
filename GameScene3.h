@@ -66,6 +66,7 @@ public:
 
     QWidget* greyForeground;
     QWidget* patientBox;
+    QWidget* aquariumBox;
 
     QPushButton* unpause;
     QPushButton* quit;
@@ -73,10 +74,13 @@ public:
     QPushButton* quit2;
     QPushButton* accept;
     QPushButton* reject;
+    QPushButton* cleanAquarium;
+    QPushButton* cancelAquarium;
 
     QLabel* levelLabel;
     QLabel* scoreLabel;
     QLabel* description;
+    QLabel* aquariumDescription;
 
     QGraphicsPixmapItem *greenColorItem;
     QGraphicsPixmapItem *pixmapNeedle;
@@ -103,6 +107,8 @@ public slots:
     void unpauseGame();
     void checkGameState();
     void handlePatient(int status);
+    void handleAquariumRequest();
+    void cancelAquariumRequest();
 };
 
 #endif // GAMESCENE3_H
