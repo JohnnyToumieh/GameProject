@@ -681,6 +681,13 @@ void GameScene3::checkGameState() {
         }
     }
 
+    // Hide patients
+    for (int i = 0; i < 20; i++) {
+        if (patients[i] != NULL && patients[i]->motionState == Patient::Left) {
+            patients[i]->hide();
+        }
+    }
+
     // Check patient's status
     int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
     if (patients[index] != NULL) {
