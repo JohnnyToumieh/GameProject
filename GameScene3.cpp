@@ -42,6 +42,7 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     updateAquariumImage();
     aquarium->setPos(52, 313);
     addItem(aquarium);
+    aquarium->setFlag(QGraphicsItem::ItemIsFocusable);
 
     timeLabel = new QLabel();
     timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
@@ -589,6 +590,22 @@ void GameScene3::checkGameState() {
         }
 
         return;
+    }
+
+    // Check if Aquarium clicked
+    if (aquarium->hasFocus()) {
+        if (office->currentAquariumState > 0) {
+            GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, office->currentAquariumState, true);
+            miniGameView = new QGraphicsView(game1);
+            miniGameView->setFixedSize(800, 500);
+            miniGameView->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+            miniGameView->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
+            addWidget(miniGameView);
+            miniGameView->setFocus();
+            miniGameView->move(100, 50);
+        } else {
+            //timeLabel->setFocus();
+        }
     }
 
     // Remove patients
