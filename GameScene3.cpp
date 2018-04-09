@@ -429,6 +429,9 @@ void GameScene3::handlePatient(int status) {
         } else {
             office->currentReputation = 0;
         }
+
+        int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+        updatePatientsTimer->start(time);
     }
 }
 
