@@ -30,6 +30,8 @@ Patient::Patient(int type, Office* office, QObject *parent)
     this->justPaused = true;
     this->toDelete = false;
 
+    this->state = Patient::Arriving;
+
     if(type==1){
         imageName = ":patient1";
         QPixmap *pic  = new QPixmap(imageName);
@@ -45,10 +47,9 @@ Patient::Patient(int type, Office* office, QObject *parent)
         setPixmap(pic->scaled(100,230));
     }
 
-    baseY = (rand() % 400) + 100;
     setPos(900, 350);
 
-    this->speed = 400;
+    this->speed = 300;
 
     speedTimer = new QTimer(this);
     connect(speedTimer, SIGNAL(timeout()), this, SLOT(update()));
@@ -95,14 +96,22 @@ void Patient::checkGameState() {
  */
 
 void Patient::update(){
-    if (x() - 30 <= 0) {
+    if (x() + 30 > 1000) {
         toDelete = true;
         speedTimer->stop();
         checkGameStateTimer->stop();
         return;
     } else {
-        if (x() > 700) {
+        if (state == Arriving && x() <= 700) {
+            state = Waiting;
+        }
+
+        if (state == Arriving) {
             setX(x() - 30);
+        }
+
+        if (state == Rejected) {
+            setX(x() + 30);
         }
     }
 }

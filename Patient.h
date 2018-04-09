@@ -27,12 +27,14 @@ class Patient : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
+    enum State {Arriving, Waiting, Rejected, Accepted, Satisfied, Unsatisfied};
+
     explicit Patient(int type, Office* office, QObject *parent = nullptr);
 
     int type;//!<Integer member type (1,2 or 3) that represents type of the patient
     int speed;//!<Integer member speed that represents the speed of the patient
 
-    int baseY;//!<Integer member that represents the base Y position of the patient
+    State state;
 
     QString imageName;
 

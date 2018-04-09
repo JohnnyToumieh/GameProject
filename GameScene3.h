@@ -57,14 +57,18 @@ public:
     bool justPaused;
 
     QWidget* greyForeground;
+    QWidget* patientBox;
 
     QPushButton* unpause;
     QPushButton* quit;
     QPushButton* nextLevelButton;
     QPushButton* quit2;
+    QPushButton* accept;
+    QPushButton* reject;
 
     QLabel* levelLabel;
     QLabel* scoreLabel;
+    QLabel* description;
 
     QGraphicsPixmapItem *greenColorItem;
     QGraphicsPixmapItem *pixmapNeedle;
@@ -89,6 +93,7 @@ public slots:
     void nextLevel();//!<Member function that triggers when the next level button is clicked
     void unpauseGame();
     void checkGameState();
+    void handlePatient(int status);
 };
 
 #endif // GAMESCENE3_H

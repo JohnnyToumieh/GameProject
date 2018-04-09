@@ -187,10 +187,41 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
     proxyWidget->setZValue(10000);
     nextLevelButton->hide();
 
-    QObject::connect(unpause, SIGNAL(clicked()), SLOT(unpauseClicked()));
-    QObject::connect(quit, SIGNAL(clicked()), SLOT(quitClicked()));
-    QObject::connect(quit2, SIGNAL(clicked()), SLOT(quitClicked()));
-    QObject::connect(nextLevelButton, SIGNAL(clicked()), SLOT(nextLevel()));
+    patientBox = new QWidget();
+    patientBox->setStyleSheet("background-color: rgba(105, 105, 105, 100);");
+    addWidget(patientBox);
+    patientBox->setFixedSize(250, 250);
+    patientBox->move(this->width() / 2 - patientBox->width() / 2, this->height() / 2 - patientBox->height() / 2 + 50);
+    patientBox->hide();
+
+    accept = new QPushButton("Accept");
+    addWidget(accept);
+    accept->move(patientBox->x() + 30, patientBox->y() + patientBox->height() - 20 - accept->height());
+    accept->hide();
+
+    reject = new QPushButton("Reject");
+    addWidget(reject);
+    reject->move(patientBox->x() + patientBox->width() - 30 - reject->width(), patientBox->y() + patientBox->height() - 20 - reject->height());
+    reject->hide();
+
+    description = new QLabel("long long string");
+    description->setWordWrap(true);
+    addWidget(description);
+    description->setFixedSize(patientBox->width() - 2 * 15, patientBox->height() - 2 * 15 - accept->height() - 2 * 15);
+    description->move(patientBox->x() + 15, patientBox->y() + 15);
+    description->hide();
+
+    connect(unpause, SIGNAL(clicked()), SLOT(unpauseClicked()));
+    connect(quit, SIGNAL(clicked()), SLOT(quitClicked()));
+    connect(quit2, SIGNAL(clicked()), SLOT(quitClicked()));
+    connect(nextLevelButton, SIGNAL(clicked()), SLOT(nextLevel()));
+
+    QSignalMapper* signalMapper = new QSignalMapper(this);
+    connect(accept, SIGNAL(clicked()), signalMapper, SLOT(map()));
+    connect(reject, SIGNAL(clicked()), signalMapper, SLOT(map()));
+    signalMapper->setMapping(accept, 1);
+    signalMapper->setMapping(reject, 0);
+    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(handlePatient(int))) ;
 
     checkGameStateTimer = new QTimer(this);
     connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
@@ -302,7 +333,7 @@ void GameScene3::updatePatients(){
     int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
     //updatePatientsTimer->start(time);
 
-    if (patientsIndex >= 19) {
+    if (patientsIndex > 19) {
         patientsIndex = 0;
     }
 
@@ -321,6 +352,21 @@ void GameScene3::updatePatients(){
 
     patients[patientsIndex] = new Patient(type, office);
     addItem(patients[patientsIndex++]);
+}
+
+void GameScene3::handlePatient(int status) {
+    reject->hide();
+    accept->hide();
+    description->hide();
+    patientBox->hide();
+
+    int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
+
+    if (status == 1) {
+        patients[index]->state = Patient::Accepted;
+    } else if (status == 0) {
+        patients[index]->state = Patient::Rejected;
+    }
 }
 
 /**
@@ -509,6 +555,15 @@ void GameScene3::checkGameState() {
             delete patients[i];
             patients[i] = NULL;
         }
+    }
+
+    // Display patient's box
+    int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
+    if (patients[index] != NULL && patients[index]->state == Patient::Waiting) {
+        patientBox->show();
+        description->show();
+        accept->show();
+        reject->show();
     }
 
     // Update score
