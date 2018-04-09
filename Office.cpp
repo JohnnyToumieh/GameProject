@@ -30,6 +30,8 @@ Office::Office(int level, int currentReputation, int currentTime, int currentAqu
 
     this->score = score;
 
+    this->currentMiniGameScore = 0;
+
     this->gamePaused = false;
     this->requestForUnpause = false;
     this->inAMiniGame = false;
@@ -44,7 +46,7 @@ void Office::setUpLevels() {
     this->levels[1] = setUpLevelsHelper(480, 840, 1000,
                                           10, 1,
                                           3000, 50, 30, 20,
-                                          20000);
+                                          5000);
 }
 
 /**

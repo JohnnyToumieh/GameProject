@@ -436,13 +436,6 @@ void GameScene3::handlePatient(int status) {
 }
 
 void GameScene3::handleAquariumRequest() {
-    office->inAMiniGame = true;
-
-    aquariumBox->hide();
-    aquariumDescription->hide();
-    cleanAquarium->hide();
-    cancelAquarium->hide();
-
     GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, office->currentAquariumState, true);
     miniGameView = new QGraphicsView(game1);
     miniGameView->setFixedSize(800, 500);
@@ -451,6 +444,13 @@ void GameScene3::handleAquariumRequest() {
     addWidget(miniGameView);
     miniGameView->setFocus();
     miniGameView->move(100, 50);
+
+    office->inAMiniGame = true;
+
+    aquariumBox->hide();
+    aquariumDescription->hide();
+    cleanAquarium->hide();
+    cancelAquarium->hide();
 }
 
 void GameScene3::cancelAquariumRequest() {
@@ -651,8 +651,17 @@ void GameScene3::checkGameState() {
             cancelAquarium->show();
         }
     } else if (office->inAMiniGame) {
-        if (!miniGameView->scene()->isActive()) {
+        GameScene1* game1 = (GameScene1*) miniGameView->scene();
+        office->currentMiniGameScore = game1->aquarium->score;
+
+        if (!game1->hasFocus()) {
             office->inAMiniGame = false;
+
+            if (game1->aquarium->levels[game1->aquarium->level]["levelWon"] == 1) {
+                office->score += office->currentMiniGameScore;
+                office->currentMiniGameScore = 0;
+            }
+
             office->currentAquariumState = 0;
             int time = (rand() % 1000) + office->levels[office->level]["dirtinessRate"] - 500;
             updateAquariumTimer->start(time);

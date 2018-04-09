@@ -877,6 +877,10 @@ void GameScene1::checkGameState() {
  * @param bool result whether the level was won or lost.
  */
 void GameScene1::gameOver(bool result) {
+    if (result) {
+        aquarium->levels[aquarium->level]["levelWon"] = 1;
+    }
+
     timeUpdater->stop();
     updateItemsTimer->stop();
     updateBacteriasTimer->stop();
