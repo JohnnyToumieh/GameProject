@@ -557,13 +557,17 @@ void GameScene3::checkGameState() {
         }
     }
 
-    // Display patient's box
+    // Check patient's status
     int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
-    if (patients[index] != NULL && patients[index]->state == Patient::Waiting) {
-        patientBox->show();
-        description->show();
-        accept->show();
-        reject->show();
+    if (patients[index] != NULL) {
+        if (patients[index]->state == Patient::Waiting) {
+            patientBox->show();
+            description->show();
+            accept->show();
+            reject->show();
+        } else if (patients[index]->state == Patient::Ready) {
+            //Enter game2
+        }
     }
 
     // Update score
