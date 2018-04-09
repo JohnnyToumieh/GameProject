@@ -34,6 +34,8 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     } else {
         office = new Office(level, 0, 0, 0, 0);
     }
+    office->setFlag(QGraphicsItem::ItemIsFocusable);
+    addItem(office);
 
     setBackgroundBrush(QBrush(QImage(":game2Background").scaledToHeight(height).scaledToWidth(width)));
     setSceneRect(0,0,width,height);
@@ -135,12 +137,14 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     proxyWidget = addWidget(unpause);
     proxyWidget->setZValue(10000);
     unpause->hide();
+    unpause->setFocusPolicy(Qt::NoFocus);
 
     quit = new QPushButton("Quit");
     quit->move(this->width() / 2 - 30, this->height() / 2 + 10);
     proxyWidget = addWidget(quit);
     proxyWidget->setZValue(10000);
     quit->hide();
+    quit->setFocusPolicy(Qt::NoFocus);
 
     gameOverLabel = new QLabel("GAME OVER");
     gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
@@ -160,12 +164,14 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     proxyWidget = addWidget(quit2);
     proxyWidget->setZValue(10000);
     quit2->hide();
+    quit2->setFocusPolicy(Qt::NoFocus);
 
     nextLevelButton = new QPushButton("Next Level");
     nextLevelButton->move(this->width() / 2 - 50, this->height() / 2 + 150);
     proxyWidget = addWidget(nextLevelButton);
     proxyWidget->setZValue(10000);
     nextLevelButton->hide();
+    nextLevelButton->setFocusPolicy(Qt::NoFocus);
 
     patientBox = new QWidget();
     patientBox->setStyleSheet("background-color: rgba(105, 105, 105, 100);");
@@ -178,11 +184,13 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     addWidget(reject);
     reject->move(patientBox->x() + 30, patientBox->y() + patientBox->height() - 20 - reject->height());
     reject->hide();
+    reject->setFocusPolicy(Qt::NoFocus);
 
     accept = new QPushButton("Accept");
     addWidget(accept);
     accept->move(patientBox->x() + patientBox->width() - 30 - accept->width(), patientBox->y() + patientBox->height() - 20 - accept->height());
     accept->hide();
+    accept->setFocusPolicy(Qt::NoFocus);
 
     description = new QLabel("long long string");
     description->setWordWrap(true);
@@ -202,11 +210,13 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     addWidget(cancelAquarium);
     cancelAquarium->move(aquariumBox->x() + 30, aquariumBox->y() + aquariumBox->height() - 20 - cancelAquarium->height());
     cancelAquarium->hide();
+    cancelAquarium->setFocusPolicy(Qt::NoFocus);
 
     cleanAquarium = new QPushButton("Clean");
     addWidget(cleanAquarium);
     cleanAquarium->move(aquariumBox->x() + aquariumBox->width() - 30 - cleanAquarium->width(), aquariumBox->y() + aquariumBox->height() - 20 - cleanAquarium->height());
     cleanAquarium->hide();
+    cleanAquarium->setFocusPolicy(Qt::NoFocus);
 
     aquariumDescription = new QLabel("long long");
     aquariumDescription->setWordWrap(true);
@@ -546,7 +556,12 @@ void GameScene3::unpauseGame() {
     timeUpdater->setSingleShot(true);
 
     timeUpdater->start(pausedTimeUpdater);
-    updatePatientsTimer->start(pausedUpdatePatientsTimer);
+    if (pausedUpdatePatientsTimer > 0) {
+        updatePatientsTimer->start(pausedUpdatePatientsTimer);
+    }
+    if (pausedUpdateAquariumTimer > 0) {
+        updateAquariumTimer->start(pausedUpdateAquariumTimer);
+    }
 
     greyForeground->hide();
     unpauseLabel->hide();
@@ -597,17 +612,31 @@ void GameScene3::checkGameState() {
                 }
 
                 pausedTimeUpdater = timeUpdater->remainingTime();
-                pausedUpdatePatientsTimer = updatePatientsTimer->remainingTime();
+
+                if (updatePatientsTimer->isActive()) {
+                    pausedUpdatePatientsTimer = updatePatientsTimer->remainingTime();
+
+                    if (pausedUpdatePatientsTimer < 0) {
+                        pausedUpdatePatientsTimer = 0;
+                    }
+
+                    updatePatientsTimer->stop();
+                }
+                if (updateAquariumTimer->isActive()) {
+                    pausedUpdateAquariumTimer = updateAquariumTimer->remainingTime();
+
+                    if (pausedUpdateAquariumTimer < 0) {
+                        pausedUpdateAquariumTimer = 0;
+                    }
+
+                    updateAquariumTimer->stop();
+                }
 
                 if (pausedTimeUpdater < 0) {
                     pausedTimeUpdater = 0;
                 }
-                if (pausedUpdatePatientsTimer < 0) {
-                    pausedUpdatePatientsTimer = 0;
-                }
 
                 timeUpdater->stop();
-                updatePatientsTimer->stop();
 
                 justPaused = false;
 
@@ -648,6 +677,10 @@ void GameScene3::checkGameState() {
             int time = (rand() % 1000) + office->levels[office->level]["dirtinessRate"] - 500;
             updateAquariumTimer->start(time);
         }
+    }
+
+    if (!office->inAMiniGame && !office->hasFocus()) {
+        office->setFocus();
     }
 
     updateAquariumImage();

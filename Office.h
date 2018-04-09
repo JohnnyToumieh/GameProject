@@ -2,6 +2,8 @@
 #define OFFICE_H
 
 #include <QObject>
+#include <QGraphicsPixmapItem>
+#include <QKeyEvent>
 
 /**
  *\file Office.h
@@ -10,12 +12,14 @@
  *
  */
 
-class Office : public QObject
+class Office : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
     explicit Office(int level, int currentReputation, int currentTime, int currentAquariumState, int score, QObject *parent = nullptr);
     void setUpLevels();
+
+    void keyPressEvent(QKeyEvent *event);
 
     int level;//!<Integer member (1,2 or 3) that represents level of the game
     std::map<int, std::map<std::string, int>> levels;//!<<Map member that holds a string key and Integer value represnting defferent attributes of the level

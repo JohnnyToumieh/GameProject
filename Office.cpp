@@ -37,6 +37,18 @@ Office::Office(int level, int currentReputation, int currentTime, int currentAqu
     this->inAMiniGame = false;
 }
 
+void Office::keyPressEvent(QKeyEvent *event){
+    if (event->key() == Qt::Key_Escape) {
+        if (gamePaused && !requestForUnpause) {
+            requestForUnpause = true;
+        } else if (gamePaused && requestForUnpause) {
+            requestForUnpause = false;
+        } else {
+            gamePaused = !gamePaused;
+        }
+    }
+}
+
 /**
  * @brief Office::setUpLevels member function: sets up the levels
  *
