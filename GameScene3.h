@@ -25,7 +25,8 @@ class GameScene3 : public GameScene
 {
     Q_OBJECT
 public:
-    explicit GameScene3(QWidget* widget, int width, int height, User* user, QJsonObject dataFile, bool resume = false, int level = 1);
+    explicit GameScene3(QWidget* widget, int width, int height, User* user, QJsonObject dataFile,
+                        bool resume = false, int level = 1, bool isMiniGame = false);
 
     void setUpNextLevel();
 

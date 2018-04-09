@@ -20,7 +20,7 @@
  * @param bool resume determines is the game is being resumed
  * @param int level determines if the game should start at a specific level
  */
-GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level) : GameScene(widget, user, dataFile, 2)
+GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level, bool isMiniGame) : GameScene(widget, user, dataFile, 2, isMiniGame)
 {
     srand(QTime::currentTime().msec());
 

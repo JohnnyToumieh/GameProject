@@ -19,7 +19,7 @@ class GameScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit GameScene(QWidget* widget, User* user, QJsonObject dataFile, int gameNumber, QGraphicsScene *parent = nullptr);
+    explicit GameScene(QWidget* widget, User* user, QJsonObject dataFile, int gameNumber, bool isMiniGame, QGraphicsScene *parent = nullptr);
 
     bool saveProgress();
     bool saveScore();
@@ -35,6 +35,7 @@ public:
     QJsonObject dataFile;//!QJsonObject member dataFile that holds information of the user
 
     int gameNumber;
+    bool isMiniGame;
 
 private:
     virtual void saveProgressHelper(QJsonObject &userObject) const = 0;

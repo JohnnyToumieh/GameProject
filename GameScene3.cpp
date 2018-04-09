@@ -20,7 +20,7 @@
  * @param bool resume determines is the game is being resumed
  * @param int level determines if the game should start at a specific level
  */
-GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level) : GameScene(widget, user, dataFile, 2)
+GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level, bool isMiniGame) : GameScene(widget, user, dataFile, 2, isMiniGame)
 {
     srand(QTime::currentTime().msec());
 
@@ -577,7 +577,7 @@ void GameScene3::checkGameState() {
 
             //Enter game2
             //Games shouldn't be able to be paused. It should show only the exit button that makes it like rejecting the patient (not losing the game).
-            GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, 1);
+            GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, 1, true);
             miniGameView = new QGraphicsView(game1);
             miniGameView->setFixedSize(800,500);
             miniGameView->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));

@@ -21,13 +21,14 @@
  * @param bool resume determines is the game is being resumed
  * @param int level determines if the game should start at a specific level
  */
-GameScene::GameScene(QWidget *widget, User* user, QJsonObject dataFile, int gameNumber, QGraphicsScene *parent) : QGraphicsScene(parent)
+GameScene::GameScene(QWidget *widget, User* user, QJsonObject dataFile, int gameNumber, bool isMiniGame, QGraphicsScene *parent) : QGraphicsScene(parent)
 {
     this->widget = widget;
     this->user = user;
     this->dataFile = dataFile;
 
     this->gameNumber = gameNumber;
+    this->isMiniGame = isMiniGame;
 }
 
 /**
@@ -37,8 +38,10 @@ GameScene::GameScene(QWidget *widget, User* user, QJsonObject dataFile, int game
  */
 void GameScene::backToGamePage() {
     views()[0]->close();
-    GamePage *gamePage = new GamePage(widget, gameNumber, user, dataFile);
-    widget->show();
+    if (!isMiniGame) {
+        GamePage *gamePage = new GamePage(widget, gameNumber, user, dataFile);
+        widget->show();
+    }
 }
 
 /**

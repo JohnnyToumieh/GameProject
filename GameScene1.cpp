@@ -20,7 +20,7 @@
  * @param bool resume determines is the game is being resumed
  * @param int level determines if the game should start at a specific level
  */
-GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level) : GameScene(widget, user, dataFile, 1)
+GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level, bool isMiniGame) : GameScene(widget, user, dataFile, 1, isMiniGame)
 {
     srand(QTime::currentTime().msec());
 
@@ -514,7 +514,7 @@ void GameScene1::unpauseClicked() {
  * A member function that exists the game and goes back to the GamePage.
  */
 void GameScene1::quitClicked() {
-    if (spongeBob->lives > 0) {
+    if (spongeBob->lives > 0 && !isMiniGame) {
         saveProgress();
 
         saveFile();
@@ -929,7 +929,7 @@ void GameScene1::gameOver(bool result) {
 
     quit2->show();
 
-    if (result && aquarium->level < 3) {
+    if (result && aquarium->level < 3 && !isMiniGame) {
         setUpNextLevel();
 
         nextLevelButton->show();
@@ -939,7 +939,9 @@ void GameScene1::gameOver(bool result) {
     } else {
         quit2->move(this->width() / 2 - quit2->width() / 2, this->height() / 1.4);
 
-        saveScore();
-        saveFile();
+        if (!isMiniGame) {
+            saveScore();
+            saveFile();
+        }
     }
 }
