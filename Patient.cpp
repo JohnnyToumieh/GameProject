@@ -30,7 +30,8 @@ Patient::Patient(int type, Office* office, QObject *parent)
     this->justPaused = true;
     this->toDelete = false;
 
-    this->state = Patient::Arriving;
+    this->motionState = Patient::Arriving;
+    this->statusState = Patient::None;
 
     if(type==1){
         imageName = ":patient1";
@@ -97,34 +98,35 @@ void Patient::checkGameState() {
 
 void Patient::update(){
     if (x() + 30 > 1000) {
-        toDelete = true;
+        motionState == Left;
+        //toDelete = true;
         speedTimer->stop();
         checkGameStateTimer->stop();
         return;
     } else {
-        if (state == Arriving && x() <= 700) {
-            state = Waiting;
+        if (motionState == Arriving && x() <= 700) {
+            motionState = Waiting;
         }
 
-        if (state == Arriving) {
+        if (motionState == Arriving) {
             setX(x() - 30);
         }
 
-        if (state == Rejected || state == Unsatisfied) {
+        if (motionState == Leaving) {
             setX(x() + 30);
         }
 
-        if (state == Accepted) {
+        if (motionState == GettingReady) {
             if (x() > 600) {
                 setX(x() - 30);
             } else {
                 setPos(300, 350);
                 setRotation(-60);
-                state = Ready;
+                motionState = Ready;
             }
         }
 
-        if (state == Done) {
+        if (motionState == Done) {
             setPos(600, 350);
             setRotation(0);
         }

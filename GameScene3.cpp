@@ -363,9 +363,11 @@ void GameScene3::handlePatient(int status) {
     int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
 
     if (status == 1) {
-        patients[index]->state = Patient::Accepted;
+        patients[index]->motionState = Patient::GettingReady;
+        patients[index]->statusState = Patient::Accepted;
     } else if (status == 0) {
-        patients[index]->state = Patient::Rejected;
+        patients[index]->motionState = Patient::Leaving;
+        patients[index]->statusState = Patient::Rejected;
 
         //Reduce reputation
         if (office->currentReputation >= office->levels[office->level]["incrementReputation"]) {
@@ -567,16 +569,16 @@ void GameScene3::checkGameState() {
     // Check patient's status
     int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
     if (patients[index] != NULL) {
-        if (patients[index]->state == Patient::Waiting) {
+        if (patients[index]->motionState == Patient::Waiting) {
             patientBox->show();
             description->show();
             accept->show();
             reject->show();
-        } else if (patients[index]->state == Patient::Ready) {
-            patients[index]->state = Patient::InProgress;
+        } else if (patients[index]->motionState == Patient::Ready) {
+            patients[index]->motionState = Patient::InProgress;
 
             //Enter game2
-            //Games shouldn't be able to be paused. It should show only the exit button that makes it like rejecting the patient (not losing the game).
+            //Games shouldn't be able to be saved. It should show only the exit button that makes it like rejecting the patient (not losing the game).
             GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, 1, true);
             miniGameView = new QGraphicsView(game1);
             miniGameView->setFixedSize(800,500);
@@ -585,10 +587,11 @@ void GameScene3::checkGameState() {
             addWidget(miniGameView);
             miniGameView->setFocus();
             miniGameView->move(100, 50);
-        } else if (patients[index]->state == Patient::InProgress) {
+        } else if (patients[index]->motionState == Patient::InProgress) {
             miniGameView->setFocus();
             if (!miniGameView->scene()->isActive()) {
-                patients[index]->state = Patient::Done;
+                patients[index]->motionState = Patient::Done;
+                patients[index]->statusState = Patient::Unsatisfied;
             }
         }
     }
