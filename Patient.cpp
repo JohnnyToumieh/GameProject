@@ -97,7 +97,7 @@ void Patient::checkGameState() {
  */
 
 void Patient::update(){
-    if (x() + 30 > 1000) {
+    if (x() + 30 > 1100) {
         motionState == Left;
         //toDelete = true;
         speedTimer->stop();
