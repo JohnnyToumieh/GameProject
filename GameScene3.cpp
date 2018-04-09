@@ -20,7 +20,7 @@
  * @param bool resume determines is the game is being resumed
  * @param int level determines if the game should start at a specific level
  */
-GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool resume, int level) : GameScene(widget, user, dataFile, 2)
+GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level) : GameScene(widget, user, dataFile, 2)
 {
     srand(QTime::currentTime().msec());
 
@@ -34,8 +34,8 @@ GameScene3::GameScene3(QWidget *widget, User* user, QJsonObject dataFile, bool r
         office = new Office(level, 0, 0, 0);
     }
 
-    setBackgroundBrush(QBrush(QImage(":game2Background").scaledToHeight(600).scaledToWidth(1000)));
-    setSceneRect(0,0,1000,600);
+    setBackgroundBrush(QBrush(QImage(":game2Background").scaledToHeight(height).scaledToWidth(width)));
+    setSceneRect(0,0,width,height);
 
     aquarium = new QGraphicsPixmapItem();
     QPixmap *picAquarium  = new QPixmap(":aquarium0");
@@ -578,7 +578,7 @@ void GameScene3::checkGameState() {
             //Enter game2
             //Games shouldn't be able to be paused. It should show only the exit button that makes it like rejecting the patient (not losing the game).
             QGraphicsView *view;
-            GameScene1 *game1 = new GameScene1(widget, user, dataFile, false, 1);
+            GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, 1);
             view = new QGraphicsView(game1);
             view->setFixedSize(800,500);
             view->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));

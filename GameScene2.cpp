@@ -20,7 +20,7 @@
  * @param bool resume determines is the game is being resumed
  * @param int level determines if the game should start at a specific level
  */
-GameScene2::GameScene2(QWidget *widget, User* user, QJsonObject dataFile, bool resume, int level) : GameScene(widget, user, dataFile, 2)
+GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level) : GameScene(widget, user, dataFile, 2)
 {
     srand(QTime::currentTime().msec());
 
@@ -34,8 +34,8 @@ GameScene2::GameScene2(QWidget *widget, User* user, QJsonObject dataFile, bool r
         aquarium = new Aquarium(level, 0, 0, 0);
     }
 
-    setBackgroundBrush(QBrush(QImage(":miniGame2Background").scaledToHeight(600).scaledToWidth(1000)));
-    setSceneRect(0,0,1000,600);
+    setBackgroundBrush(QBrush(QImage(":miniGame2Background").scaledToHeight(height).scaledToWidth(width)));
+    setSceneRect(0,0,width,height);
 
     timeLabel = new QLabel();
     movie = new QMovie(":movingEyes");

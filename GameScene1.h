@@ -26,7 +26,7 @@ class GameScene1 : public GameScene
 {
     Q_OBJECT
 public:
-    explicit GameScene1(QWidget* widget, User* user, QJsonObject dataFile, bool resume = false, int level = 1);
+    explicit GameScene1(QWidget* widget, int width, int height, User* user, QJsonObject dataFile, bool resume = false, int level = 1);
 
     void setUpNextLevel();
 

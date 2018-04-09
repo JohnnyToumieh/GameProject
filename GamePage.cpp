@@ -113,11 +113,11 @@ void GamePage::startNewGameClicked(){
 
     QGraphicsView *view;
     if (gameNumber == 1) {
-        GameScene1 *game1 = new GameScene1(widget, user, dataFile, false, level);
+        GameScene1 *game1 = new GameScene1(widget, 1000, 600, user, dataFile, false, level);
 
         view = new QGraphicsView(game1);
     } else {
-        GameScene3 *game2 = new GameScene3(widget, user, dataFile, false, level);
+        GameScene3 *game2 = new GameScene3(widget, 1000, 600, user, dataFile, false, level);
 
         view = new QGraphicsView(game2);
     }
@@ -182,11 +182,11 @@ void GamePage::resumeGameClicked(){
 
     QGraphicsView *view;
     if (gameNumber == 1) {
-        GameScene1 *game1 = new GameScene1(widget, user, dataFile, true);
+        GameScene1 *game1 = new GameScene1(widget, 1000, 600, user, dataFile, true);
 
         view = new QGraphicsView(game1);
     } else {
-        GameScene3 *game2 = new GameScene3(widget, user, dataFile, true);
+        GameScene3 *game2 = new GameScene3(widget, 1000, 600, user, dataFile, true);
 
         view = new QGraphicsView(game2);
     }
