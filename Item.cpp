@@ -114,7 +114,7 @@ void Item::checkGameState() {
     if(!scene()->collidingItems(this).isEmpty()){
         QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
         for (int i = 0; i < collisions.size(); i++) {
-            if (collisions.at(i)->hasFocus()) {
+            if (dynamic_cast<SpongeBob*>(collisions.at(i))) {
                 int degree=spongeBob->immunityLevelDegree;
 
                 int steps = aquarium->levels[aquarium->level]["stepsPerImmunity"];

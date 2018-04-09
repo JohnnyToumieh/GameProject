@@ -99,7 +99,7 @@ void Bacteria::checkGameState() {
     if(!scene()->collidingItems(this).isEmpty()){
         QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
         for (int i = 0; i < collisions.size(); i++) {
-            if (collisions.at(i)->hasFocus()) {
+            if (dynamic_cast<SpongeBob*>(collisions.at(i))) {
                 if (this->type > this->spongeBob->immunityLevel && this->spongeBob->canCollide) {
                     //decrease score
                     if (aquarium->score <= type * 50) {

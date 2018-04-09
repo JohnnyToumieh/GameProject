@@ -89,7 +89,7 @@ void Virus::checkGameState() {
     if(!scene()->collidingItems(this).isEmpty()){
         QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
         for (int i = 0; i < collisions.size(); i++) {
-            if (collisions.at(i)->hasFocus()) {
+            if (dynamic_cast<SpongeBob*>(collisions.at(i))) {
                 //make SpongeBob vulnerable to all bacteria
                 spongeBob->setVulnerable(type);
 
