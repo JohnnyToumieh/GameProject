@@ -129,6 +129,10 @@ void Patient::update(){
         if (motionState == Done) {
             setPos(600, 350);
             setRotation(0);
+
+            if (statusState == Rejected || statusState == Unsatisfied) {
+                motionState = Leaving;
+            }
         }
     }
 }
