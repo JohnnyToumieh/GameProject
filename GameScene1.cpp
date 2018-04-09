@@ -109,7 +109,7 @@ GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJson
     pixmapLifeList[2]=pixmapLife3;
 
     greenColorItem= new QGraphicsPixmapItem();
-    greenColorItem->setPos(15,51);
+    greenColorItem->setPos(this->width() / 66.67, this->height() / 11.7647);
     QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));

@@ -50,7 +50,7 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
         setPixmap(pic->scaled(size, size));
     }
 
-    baseY = (rand() % (this->aquarium->height * 2 / 3)) + this->aquarium->height * 3 / 12;
+    baseY = (rand() % (this->aquarium->height / 2)) + this->aquarium->height * 3 / 12;
     setPos(0, baseY);
 
     if (this->type == 1) {
