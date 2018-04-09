@@ -91,27 +91,6 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
                                                pixmapNeedle->boundingRect().center().y());
     addItem(pixmapNeedle);
 
-    pixmapLife1 = new QGraphicsPixmapItem();
-    pixmapLife2 = new QGraphicsPixmapItem();
-    pixmapLife3 = new QGraphicsPixmapItem();
-    QPixmap *picLife  = new QPixmap(":life");
-
-    pixmapLife1->setPixmap(picLife->scaled(50,50));
-    pixmapLife1->setPos(600,30);
-    addItem(pixmapLife1);
-    pixmapLife2->setPixmap(picLife->scaled(50,50));
-    pixmapLife2->setPos(650,30);
-    addItem(pixmapLife2);
-    pixmapLife3->setPixmap(picLife->scaled(50,50));
-    pixmapLife3->setPos(700,30);
-    addItem(pixmapLife3);
-
-    pixmapLifeList = new QGraphicsPixmapItem*[3];
-
-    pixmapLifeList[0]=pixmapLife1;
-    pixmapLifeList[1]=pixmapLife2;
-    pixmapLifeList[2]=pixmapLife3;
-
     greenColorItem= new QGraphicsPixmapItem();
     greenColorItem->setPos(15,51);
     QPixmap *greenColor = new QPixmap(":needle");

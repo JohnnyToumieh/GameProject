@@ -84,12 +84,7 @@ public:
 
     QGraphicsPixmapItem *greenColorItem;
     QGraphicsPixmapItem *pixmapNeedle;
-    QGraphicsPixmapItem *pixmapLife1;
-    QGraphicsPixmapItem *pixmapLife2;
-    QGraphicsPixmapItem *pixmapLife3;
     QGraphicsPixmapItem *aquarium;
-
-    QGraphicsPixmapItem** pixmapLifeList;
 
 private:
     void saveProgressHelper(QJsonObject &userObject) const;
