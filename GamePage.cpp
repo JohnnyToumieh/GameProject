@@ -113,7 +113,7 @@ void GamePage::startNewGameClicked(){
 
     QGraphicsView *view;
     if (gameNumber == 1) {
-        GameScene1 *game1 = new GameScene1(widget, 1000, 600, user, dataFile, false, level);
+        GameScene2 *game1 = new GameScene2(widget, 1000, 600, user, dataFile, false, level);
 
         view = new QGraphicsView(game1);
     } else {

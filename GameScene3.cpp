@@ -715,7 +715,7 @@ void GameScene3::checkGameState() {
 
             //Enter game2
             //Games shouldn't be able to be saved. It should show only the exit button that makes it like rejecting the patient (not losing the game).
-            GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, 1, true);
+            GameScene2 *game1 = new GameScene2(widget, 800, 500, user, dataFile, false, 1, true);
             miniGameView = new QGraphicsView(game1);
             miniGameView->setFixedSize(800, 500);
             miniGameView->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
@@ -724,7 +724,7 @@ void GameScene3::checkGameState() {
             miniGameView->setFocus();
             miniGameView->move(100, 50);
         } else if (patients[index]->motionState == Patient::InProgress) {         
-            GameScene1* game1 = (GameScene1*) miniGameView->scene();
+            GameScene2* game1 = (GameScene2*) miniGameView->scene();
             office->currentMiniGameScore = game1->aquarium->score;
 
             if (!game1->hasFocus()) {
