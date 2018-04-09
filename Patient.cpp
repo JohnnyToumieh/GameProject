@@ -110,7 +110,7 @@ void Patient::update(){
             setX(x() - 30);
         }
 
-        if (state == Rejected) {
+        if (state == Rejected || state == Unsatisfied) {
             setX(x() + 30);
         }
 
@@ -122,6 +122,11 @@ void Patient::update(){
                 setRotation(-60);
                 state = Ready;
             }
+        }
+
+        if (state == Done) {
+            setPos(600, 350);
+            setRotation(0);
         }
     }
 }

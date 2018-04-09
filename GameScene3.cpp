@@ -587,6 +587,9 @@ void GameScene3::checkGameState() {
             miniGameView->move(100, 50);
         } else if (patients[index]->state == Patient::InProgress) {
             miniGameView->setFocus();
+            if (!miniGameView->scene()->isActive()) {
+                patients[index]->state = Patient::Done;
+            }
         }
     }
 
