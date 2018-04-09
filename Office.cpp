@@ -32,6 +32,7 @@ Office::Office(int level, int currentReputation, int currentTime, int currentAqu
 
     this->gamePaused = false;
     this->requestForUnpause = false;
+    this->inAMiniGame = false;
 }
 
 /**

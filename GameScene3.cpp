@@ -593,8 +593,10 @@ void GameScene3::checkGameState() {
     }
 
     // Check if Aquarium clicked
-    if (aquarium->hasFocus()) {
+    if (aquarium->hasFocus() && !office->inAMiniGame) {
         if (office->currentAquariumState > 0) {
+            office->inAMiniGame = true;
+
             GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, office->currentAquariumState, true);
             miniGameView = new QGraphicsView(game1);
             miniGameView->setFixedSize(800, 500);
@@ -603,9 +605,13 @@ void GameScene3::checkGameState() {
             addWidget(miniGameView);
             miniGameView->setFocus();
             miniGameView->move(100, 50);
-        } else {
-            //timeLabel->setFocus();
         }
+    } else if (office->inAMiniGame) {
+        if (!miniGameView->scene()->isActive()) {
+            office->inAMiniGame = false;
+        }
+    } else {
+        //timeLabel->setFocus();
     }
 
     // Remove patients
@@ -627,6 +633,7 @@ void GameScene3::checkGameState() {
         } else if (patients[index]->motionState == Patient::Ready) {
             patients[index]->motionState = Patient::InProgress;
 
+            office->inAMiniGame = true;
             //Enter game2
             //Games shouldn't be able to be saved. It should show only the exit button that makes it like rejecting the patient (not losing the game).
             GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, 1, true);
@@ -642,6 +649,8 @@ void GameScene3::checkGameState() {
             if (!miniGameView->scene()->isActive()) {
                 patients[index]->motionState = Patient::Done;
                 patients[index]->statusState = Patient::Unsatisfied;
+
+                office->inAMiniGame = false;
             }
         }
     }

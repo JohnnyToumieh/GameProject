@@ -28,6 +28,7 @@ public:
 
     bool gamePaused;//!<Boolean member that state wether the game is paused or not
     bool requestForUnpause;//!<Boolean member that state wether there is a request to unpause or not
+    bool inAMiniGame;
 
 private:
     std::map<std::string, int> setUpLevelsHelper(int startTime, int endTime, int minuteInMilliSeconds,
