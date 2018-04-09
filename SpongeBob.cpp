@@ -152,7 +152,7 @@ void SpongeBob::toggleVisibility() {
     if (!blinkerStatus) {
         setPixmap((QPixmap(imageName)).scaled(0,0));
     } else {
-        setPixmap((QPixmap(imageName)).scaled(80,80));
+        setPixmap((QPixmap(imageName)).scaled(this->aquarium->width / 12.5, this->aquarium->width / 12.5));
     }
     blinkerStatus = !blinkerStatus;
 }
