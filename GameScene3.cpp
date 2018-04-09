@@ -387,9 +387,6 @@ void GameScene3::updateTimer() {
  * A member function that generates a new patients.
  */
 void GameScene3::updatePatients(){
-    int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
-    //updatePatientsTimer->start(time);
-
     if (patientsIndex > 19) {
         patientsIndex = 0;
     }
@@ -659,7 +656,7 @@ void GameScene3::checkGameState() {
         if (!game1->hasFocus()) {
             office->inAMiniGame = false;
 
-            if (game1->aquarium->levels[game1->aquarium->level]["levelWon"] == 1) {
+            if (game1->aquarium->levels[game1->aquarium->level]["levelState"] == 1) {
                 office->score += office->currentMiniGameScore;
                 office->currentAquariumState = 0;
             }
@@ -693,6 +690,7 @@ void GameScene3::checkGameState() {
             patients[index]->motionState = Patient::InProgress;
 
             office->inAMiniGame = true;
+
             //Enter game2
             //Games shouldn't be able to be saved. It should show only the exit button that makes it like rejecting the patient (not losing the game).
             GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, 1, true);
@@ -703,13 +701,29 @@ void GameScene3::checkGameState() {
             addWidget(miniGameView);
             miniGameView->setFocus();
             miniGameView->move(100, 50);
-        } else if (patients[index]->motionState == Patient::InProgress) {
-            miniGameView->setFocus();
-            if (!miniGameView->scene()->isActive()) {
+        } else if (patients[index]->motionState == Patient::InProgress) {         
+            GameScene1* game1 = (GameScene1*) miniGameView->scene();
+            office->currentMiniGameScore = game1->aquarium->score;
+
+            if (!game1->hasFocus()) {
                 patients[index]->motionState = Patient::Done;
-                patients[index]->statusState = Patient::Unsatisfied;
 
                 office->inAMiniGame = false;
+
+                if (game1->aquarium->levels[game1->aquarium->level]["levelState"] == 1) {
+                    patients[index]->statusState = Patient::Satisfied;
+
+                    office->score += office->currentMiniGameScore;
+                } else if (game1->aquarium->levels[game1->aquarium->level]["levelState"] == 2) {
+                    patients[index]->statusState = Patient::Unsatisfied;
+                } else if (game1->aquarium->levels[game1->aquarium->level]["levelState"] == 0) {
+                    patients[index]->statusState = Patient::Rejected;
+                }
+
+                office->currentMiniGameScore = 0;
+
+                int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+                updatePatientsTimer->start(time);
             }
         }
     }
