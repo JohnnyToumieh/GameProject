@@ -56,6 +56,7 @@ public:
     QLabel* goLabel;
 
     int order[3];
+    bool guessedOrder[3];
     int orderIndex;
 
     QTimer* toothUpdater;

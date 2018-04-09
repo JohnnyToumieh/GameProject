@@ -863,23 +863,59 @@ void GameScene2::checkGameState() {
         for (int i = 0; i < 12; i++) {
             if ((i < 6 && upperTeeth[i]->hasFocus())
                     || (i >= 6 && lowerTeeth[i - 6]->hasFocus())) {
-                if (order[orderIndex] == i) {
-                    if (i < 6) {
-                        upperTeeth[i]->setStyleSheet("QLabel { background-color : green; }");
-                    } else {
-                        lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : green; }");
-                    }
-                    orderIndex++;
-                } else {
-                    if (i < 6) {
-                        upperTeeth[i]->setStyleSheet("QLabel { background-color : red; }");
-                    } else {
-                        lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : red; }");
-                    }
+                if (aquarium->level == 1) {
+                    int j = 0;
+                    for (j = 0; j < 3; j++) {
+                        if (order[j] == i && !guessedOrder[j]) {
+                            if (i < 6) {
+                                upperTeeth[i]->setStyleSheet("QLabel { background-color : green; }");
+                            } else {
+                                lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : green; }");
+                            }
 
-                    gameState = GameLost;
+                            guessedOrder[j] = true;
+                            break;
+                        }
+                    }
+                    if (j == 3) {
+                        if (i < 6) {
+                            upperTeeth[i]->setStyleSheet("QLabel { background-color : red; }");
+                        } else {
+                            lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : red; }");
+                        }
+
+                        gameState = GameLost;
+                    }
+                } else if (aquarium->level == 2) {
+                    if (order[orderIndex] == i) {
+                        if (i < 6) {
+                            upperTeeth[i]->setStyleSheet("QLabel { background-color : green; }");
+                        } else {
+                            lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : green; }");
+                        }
+
+                        guessedOrder[orderIndex] = true;
+
+                        orderIndex++;
+                    } else {
+                        if (i < 6) {
+                            upperTeeth[i]->setStyleSheet("QLabel { background-color : red; }");
+                        } else {
+                            lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : red; }");
+                        }
+
+                        gameState = GameLost;
+                    }
                 }
                 break;
+            }
+        }
+
+        if (aquarium->level == 1) {
+            for (orderIndex = 0; orderIndex < 3; orderIndex++) {
+                if (!guessedOrder[orderIndex]) {
+                    break;
+                }
             }
         }
 
