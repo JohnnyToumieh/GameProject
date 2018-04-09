@@ -40,6 +40,8 @@ public:
     int savedImmunityLevelDegree;//!<Integer member save immunity level degree
     int lives;//!<Integer member indicates lives of sponegbob
 
+    int speed;
+
     bool unchangeableImmunityLevel;//!<Boolean member that state if immunity level is changeable
     bool vulnerable;//!<Boolean member that state if spongebob is vulnerable
     bool canCollide;//!<Boolean member that state if spongebob can Collide

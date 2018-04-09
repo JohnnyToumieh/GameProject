@@ -34,8 +34,10 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
     this->canCollide = true;
     this->blinkerStatus = false;
 
+    this->speed = 10;
+
     changeGlow();
-    setPos(500,100);
+    setPos(this->aquarium->width / 2 - (this->aquarium->width / 12.5) / 2, this->aquarium->height / 6);
 
     this->numCollisionsWithBacterias=new int[3];
     this->numCollisionsWithBacterias[0] = 0;
@@ -77,7 +79,7 @@ void SpongeBob::reset() {
     this->blinkerStatus = false;
 
     changeGlow();
-    setPos(500,100);
+    setPos(this->aquarium->width / 2 - (this->aquarium->width / 12.5) / 2, this->aquarium->height / 6);
 }
 
 /**
@@ -100,7 +102,7 @@ void SpongeBob::changeGlow(){
         if(immunityLevel==3){
             imageName = ":spongeBob3";
         }
-        setPixmap((QPixmap(imageName)).scaled(80,80));
+        setPixmap((QPixmap(imageName)).scaled(this->aquarium->width / 12.5, this->aquarium->width / 12.5));
     }
 }
 
@@ -121,14 +123,22 @@ void SpongeBob::keyPressEvent(QKeyEvent *event){
         }
     }
     if (!aquarium->gamePaused) {
-        if (event->key() == Qt::Key_Right && x()+10 < 930)
-            setPos(x()+10,y());
-        if (event->key() == Qt::Key_Left && x()-10 > -30)
-            setPos(x()-10,y());
-        if (event->key() == Qt::Key_Up && y()-10 > 80)
-            setPos(x(),y()-10);
-        if (event->key() == Qt::Key_Down && y()+10 < 470)
-            setPos(x(),y()+10);
+        if (event->key() == Qt::Key_Right) {
+            int newX = x() + speed;
+            (newX > aquarium->width - aquarium->width / 12.5) ? setX(aquarium->width - aquarium->width / 12.5) : setX(newX);
+        }
+        if (event->key() == Qt::Key_Left) {
+            int newX = x() - speed;
+            (newX < 0) ? setX(0) : setX(newX);
+        }
+        if (event->key() == Qt::Key_Up) {
+            int newY = y() - speed;
+            (newY < this->aquarium->height / 6) ? setY(this->aquarium->height / 6) : setY(newY);
+        }
+        if (event->key() == Qt::Key_Down) {
+            int newY = y() + speed;
+            (newY > aquarium->height * 11 / 12 - aquarium->width / 12.5) ? setY(aquarium->height * 11 / 12 - aquarium->width / 12.5) : setY(newY);
+        }
     }
 }
 
@@ -242,6 +252,4 @@ void SpongeBob::resetVulnerability() {
     }else{
         needle->setRotation(80+48+(48/steps) * immunityLevelDegree);
     }
-
-
 }

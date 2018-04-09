@@ -34,26 +34,29 @@ GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJson
         aquarium = new Aquarium(level, 0, 0, 0);
     }
 
+    aquarium->width = width;
+    aquarium->height = height;
+
     setBackgroundBrush(QBrush(QImage(":game1Background").scaledToHeight(height).scaledToWidth(width)));
     setSceneRect(0,0,width,height);
 
-    timeLabel = new QLabel();
+    timeLabel = new QLabel("00:00");
     timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
-    timeLabel->move(this->width() / 2 - 30, 25);
     addWidget(timeLabel);
-
-    pestilenceTimeLabel = new QLabel();
-    pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");
-    pestilenceTimeLabel->move(this->width() / 2 + 320, 160);
-    addWidget(pestilenceTimeLabel);
-    pestilenceTimeLabel->hide();
+    timeLabel->move(this->width() / 2 - timeLabel->width() / 2, this->height() / 24);
 
     pestilenceTimeLabel2 = new QLabel("Pestilence will get summoned after:");
     pestilenceTimeLabel2->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : black; font: 20px; }");
-    pestilenceTimeLabel2->move(this->width() / 2 + 310, 110);
     pestilenceTimeLabel2->setWordWrap(true);
     addWidget(pestilenceTimeLabel2);
+    pestilenceTimeLabel2->move(this->width() - pestilenceTimeLabel2->width() - this->width() / 100, this->height() / 5.45);
     pestilenceTimeLabel2->hide();
+
+    pestilenceTimeLabel = new QLabel("00:00");
+    pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");
+    addWidget(pestilenceTimeLabel);
+    pestilenceTimeLabel->move(this->width() - pestilenceTimeLabel->width() - this->width() / 100, pestilenceTimeLabel2->y() + pestilenceTimeLabel2->height() + this->height() / 100);
+    pestilenceTimeLabel->hide();
 
     unpauseLabel = new QLabel();
     unpauseLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : white; font: 140px; }");
@@ -65,21 +68,21 @@ GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJson
 
     levelLabel = new QLabel();
     levelLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
-    levelLabel->move(300, 20);
+    levelLabel->move(this->width() / 3.33, this->height() / 30);
     levelLabel->setText(QStringLiteral("Level: %1").arg(aquarium->level));
     addWidget(levelLabel);
 
     scoreLabel = new QLabel();
     scoreLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
-    scoreLabel->move(300, 50);
+    scoreLabel->move(this->width() / 3.33, levelLabel->y() + levelLabel->height() + this->height() / 100);
     scoreLabel->setText(QStringLiteral("Score: %1").arg(aquarium->score));
     scoreLabel->adjustSize();
     addWidget(scoreLabel);
 
     pixmapNeedle = new QGraphicsPixmapItem();
     QPixmap *picNeedle  = new QPixmap(":needle");
-    pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
-    pixmapNeedle->setPos(850, 80);
+    pixmapNeedle->setPixmap(picNeedle->scaled(this->width() / 12.5, this->height() / 30));
+    pixmapNeedle->setPos(this->width() - this->width() / 6.67, this->height() / 7.5);
     pixmapNeedle->setTransformOriginPoint(pixmapNeedle->boundingRect().center().x() + 20,
                                                pixmapNeedle->boundingRect().center().y());
     addItem(pixmapNeedle);
@@ -89,14 +92,14 @@ GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJson
     pixmapLife3 = new QGraphicsPixmapItem();
     QPixmap *picLife  = new QPixmap(":life");
 
-    pixmapLife1->setPixmap(picLife->scaled(50,50));
-    pixmapLife1->setPos(600,30);
+    pixmapLife1->setPixmap(picLife->scaled(this->width() / 20, this->width() / 20));
+    pixmapLife1->setPos(this->width() - this->width() / 2.5, this->height() / 20);
     addItem(pixmapLife1);
-    pixmapLife2->setPixmap(picLife->scaled(50,50));
-    pixmapLife2->setPos(650,30);
+    pixmapLife2->setPixmap(picLife->scaled(this->width() / 20, this->width() / 20));
+    pixmapLife2->setPos(pixmapLife1->x() + this->width() / 20, this->height() / 20);
     addItem(pixmapLife2);
-    pixmapLife3->setPixmap(picLife->scaled(50,50));
-    pixmapLife3->setPos(700,30);
+    pixmapLife3->setPixmap(picLife->scaled(this->width() / 20, this->width() / 20));
+    pixmapLife3->setPos(pixmapLife2->x() + this->width() / 20, this->height() / 20);
     addItem(pixmapLife3);
 
     pixmapLifeList = new QGraphicsPixmapItem*[3];
@@ -219,21 +222,21 @@ GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJson
     greyForeground->hide();
 
     unpause = new QPushButton("Unpause");
-    unpause->move(this->width() / 2 - 30, this->height() / 2 - 20);
     proxyWidget = addWidget(unpause);
+    unpause->move(this->width() / 2 - unpause->width() / 2, this->height() / 2 - unpause->height() * 3 / 4);
     proxyWidget->setZValue(10000);
     unpause->hide();
 
     quit = new QPushButton("Quit");
-    quit->move(this->width() / 2 - 30, this->height() / 2 + 10);
     proxyWidget = addWidget(quit);
+    quit->move(this->width() / 2 - quit->width() / 2, this->height() / 2 + quit->height() * 3 / 4);
     proxyWidget->setZValue(10000);
     quit->hide();
 
     gameOverLabel = new QLabel("GAME OVER");
     gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
-    gameOverLabel->move(90, 150);
     proxyWidget = addWidget(gameOverLabel);
+    gameOverLabel->move(this->width() / 2 - gameOverLabel->width() / 2, this->height() / 4);
     proxyWidget->setZValue(10000);
     gameOverLabel->hide();
 
@@ -244,14 +247,14 @@ GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJson
     scoreLabel2->hide();
 
     quit2 = new QPushButton("Quit");
-    quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
     proxyWidget = addWidget(quit2);
+    quit2->move(this->width() / 2 + quit2->width() * 1 / 4, this->height() / 1.4);
     proxyWidget->setZValue(10000);
     quit2->hide();
 
     nextLevelButton = new QPushButton("Next Level");
-    nextLevelButton->move(this->width() / 2 - 50, this->height() / 2 + 150);
     proxyWidget = addWidget(nextLevelButton);
+    nextLevelButton->move(this->width() / 2 - nextLevelButton->width() * 5 / 4, this->height() / 1.4);
     proxyWidget->setZValue(10000);
     nextLevelButton->hide();
 
@@ -921,7 +924,7 @@ void GameScene1::gameOver(bool result) {
 
     scoreLabel2->setText(QStringLiteral("Score: %1").arg(aquarium->score));
     scoreLabel2->adjustSize();
-    scoreLabel2->move((this->width() - scoreLabel2->width()) / 2, 330);
+    scoreLabel2->move((this->width() - scoreLabel2->width()) / 2, this->height() / 2 + this->height() / 20);
     scoreLabel2->show();
 
     quit2->show();
@@ -931,10 +934,10 @@ void GameScene1::gameOver(bool result) {
 
         nextLevelButton->show();
 
-        quit2->move(this->width() / 2 - 110, this->height() / 2 + 150);
-        nextLevelButton->move(this->width() / 2 + 10, this->height() / 2 + 150);
+        quit2->move(this->width() / 2 + quit2->width() * 1 / 4, this->height() / 1.4);
+        nextLevelButton->move(this->width() / 2 - nextLevelButton->width() * 5 / 4, this->height() / 1.4);
     } else {
-        quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
+        quit2->move(this->width() / 2 - quit2->width() / 2, this->height() / 1.4);
 
         saveScore();
         saveFile();

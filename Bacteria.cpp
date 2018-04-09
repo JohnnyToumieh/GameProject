@@ -33,22 +33,24 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
     this->justPaused = true;
     this->toDelete = false;
 
+    int size = this->aquarium->width / 12.5;
+
     if(type==1){
         imageName = ":bacteria1";
         QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(80,80));
+        setPixmap(pic->scaled(size, size));
     }
     else if(type==2){
         imageName = ":bacteria2";
         QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(80,80));
+        setPixmap(pic->scaled(size, size));
     }else{
         imageName = ":bacteria3";
         QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(80,80));
+        setPixmap(pic->scaled(size, size));
     }
 
-    baseY = (rand() % 400) + 100;
+    baseY = (rand() % (this->aquarium->height * 2 / 3)) + this->aquarium->height * 3 / 12;
     setPos(0, baseY);
 
     if (this->type == 1) {
@@ -138,7 +140,7 @@ void Bacteria::checkGameState() {
  */
 
 void Bacteria::update(){
-    if (x() + 30 >= 950) {
+    if (x() + 30 >= aquarium->width) {
         toDelete = true;
         speedTimer->stop();
         checkGameStateTimer->stop();

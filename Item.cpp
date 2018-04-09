@@ -35,34 +35,40 @@ Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, Q
         this->type = (rand()%3)+1;
     }
 
+    int size1 = this->aquarium->width / 25;
+    int size21 = this->aquarium->width / 16.67;
+    int size22 = this->aquarium->height / 20;
+    int size31 = this->aquarium->width / 33.33;
+    int size32 = this->aquarium->height / 10;
+
     if(this->type==1){
         if (this->isHealthy) {
             imageName = ":healthyItem1";
-            setPixmap((QPixmap(imageName)).scaled(60,30));
+            setPixmap((QPixmap(imageName)).scaled(size21, size22));
         } else {
             imageName = ":unhealthyItem1";
-            setPixmap((QPixmap(imageName)).scaled(40,40));
+            setPixmap((QPixmap(imageName)).scaled(size1, size1));
         }
     }
     else if(this->type==2){
         if (this->isHealthy) {
             imageName = ":healthyItem2";
-            setPixmap((QPixmap(imageName)).scaled(40,40));
+            setPixmap((QPixmap(imageName)).scaled(size1, size1));
         } else {
             imageName = ":unhealthyItem2";
-            setPixmap((QPixmap(imageName)).scaled(40,40));
+            setPixmap((QPixmap(imageName)).scaled(size1, size1));
         }
     }
     else{
         if (this->isHealthy) {
             imageName = ":healthyItem3";
-            setPixmap((QPixmap(imageName)).scaled(30,60));
+            setPixmap((QPixmap(imageName)).scaled(size31, size32));
         } else {
             imageName = ":unhealthyItem3";
-            setPixmap((QPixmap(imageName)).scaled(40,40));
+            setPixmap((QPixmap(imageName)).scaled(size1, size1));
         }
     }
-    setPos((rand() % 800) + 100, 100);
+    setPos((rand() % (this->aquarium->width * 8 / 10)) + this->aquarium->width / 10, this->aquarium->height / 6);
 
     if (this->isHealthy) {
         this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["healthyItemSpeed"] - 50;
@@ -159,12 +165,12 @@ void Item::checkGameState() {
  *
  */
 void Item::update(){
-    if((y()+30) >= 500) {
+    if(y() + 30 >= this->aquarium->height * 11 / 12) {
         speedTimer->stop();
         checkGameStateTimer->stop();
         toDelete = true;
         return;
     }
     else
-        setPos(x(),y()+30);
+        setPos(x(), y()+30);
 }

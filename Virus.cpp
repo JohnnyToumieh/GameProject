@@ -33,20 +33,23 @@ Virus::Virus(int type,SpongeBob* spongeBob,Aquarium* aquarium,QObject *parent)
         this->speed = this->aquarium->levels[this->aquarium->level]["virusSpeed3"];
     }
 
+    int size1 = this->aquarium->width / 16.67;
+    int size2 = this->aquarium->width / 8.33;
+
     if(type==1){
         imageName = ":virus1";
         QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(60,60));
+        setPixmap(pic->scaled(size1, size1));
     }else if (type==2){
         imageName = ":virus2";
         QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(60,60));
+        setPixmap(pic->scaled(size1, size1));
     }else if (type==3){
         imageName = ":pestilence";
         QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(120,120));
+        setPixmap(pic->scaled(size2, size2));
     }
-    baseY = (rand() % 300) + 250;
+    baseY = (rand() % this->aquarium->height * 2.5 / 6) + this->aquarium->height * 2.5 / 6;
     setPos(0, baseY);
 
     speedTimer = new QTimer(this);
@@ -107,7 +110,7 @@ void Virus::checkGameState() {
  *
  */
 void Virus::update(){
-    if (x() + 30 >= 950) {
+    if (x() + 30 >= aquarium->width) {
         toDelete = true;
         speedTimer->stop();
         checkGameStateTimer->stop();
