@@ -195,15 +195,15 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     patientBox->move(this->width() / 2 - patientBox->width() / 2, this->height() / 2 - patientBox->height() / 2 + 50);
     patientBox->hide();
 
-    accept = new QPushButton("Accept");
-    addWidget(accept);
-    accept->move(patientBox->x() + 30, patientBox->y() + patientBox->height() - 20 - accept->height());
-    accept->hide();
-
     reject = new QPushButton("Reject");
     addWidget(reject);
-    reject->move(patientBox->x() + patientBox->width() - 30 - reject->width(), patientBox->y() + patientBox->height() - 20 - reject->height());
+    reject->move(patientBox->x() + 30, patientBox->y() + patientBox->height() - 20 - reject->height());
     reject->hide();
+
+    accept = new QPushButton("Accept");
+    addWidget(accept);
+    accept->move(patientBox->x() + patientBox->width() - 30 - accept->width(), patientBox->y() + patientBox->height() - 20 - accept->height());
+    accept->hide();
 
     description = new QLabel("long long string");
     description->setWordWrap(true);
@@ -219,15 +219,15 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     aquariumBox->move(this->width() / 2 - aquariumBox->width() / 2, this->height() / 2 - aquariumBox->height() / 2 + 50);
     aquariumBox->hide();
 
-    cleanAquarium = new QPushButton("Clean");
-    addWidget(cleanAquarium);
-    cleanAquarium->move(aquariumBox->x() + 30, aquariumBox->y() + aquariumBox->height() - 20 - cleanAquarium->height());
-    cleanAquarium->hide();
-
     cancelAquarium = new QPushButton("Cancel");
     addWidget(cancelAquarium);
-    cancelAquarium->move(aquariumBox->x() + aquariumBox->width() - 30 - cancelAquarium->width(), aquariumBox->y() + aquariumBox->height() - 20 - cancelAquarium->height());
+    cancelAquarium->move(aquariumBox->x() + 30, aquariumBox->y() + aquariumBox->height() - 20 - cancelAquarium->height());
     cancelAquarium->hide();
+
+    cleanAquarium = new QPushButton("Clean");
+    addWidget(cleanAquarium);
+    cleanAquarium->move(aquariumBox->x() + aquariumBox->width() - 30 - cleanAquarium->width(), aquariumBox->y() + aquariumBox->height() - 20 - cleanAquarium->height());
+    cleanAquarium->hide();
 
     aquariumDescription = new QLabel("long long");
     aquariumDescription->setWordWrap(true);
