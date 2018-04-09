@@ -29,6 +29,7 @@ public:
                         bool resume = false, int level = 1, bool isMiniGame = false);
 
     void setUpNextLevel();
+    void updateAquariumImage();
 
     void gameOver(bool result);
     int getCurrentScore();
@@ -54,6 +55,8 @@ public:
     int pausedTimeUpdater;//!<int member helper to save the QTimer's time left when the game pauses
     QTimer* updatePatientsTimer;//!<QTimer member that creates a new patient
     int pausedUpdatePatientsTimer;//!<int member helper to save the QTimer's time left when the game pause
+    QTimer* updateAquariumTimer;//!<QTimer member that updates the aquarium
+    int pausedUpdateAquariumTimer;//!<int member helper to save the QTimer's time left when the game pause
 
     QTimer* unpauseTimer;//!<QTimer member that counts down the time until the game can be interactable again
 
@@ -92,6 +95,7 @@ signals:
 
 public slots:
     void updatePatients();
+    void updateAquarium();
     void updateTimer();
     void unpauseClicked();//!<Member function that triggers when the unpause button is clicked
     void quitClicked();//!<Member function that triggers when the quit button is clicked

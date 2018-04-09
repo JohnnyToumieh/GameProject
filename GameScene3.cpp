@@ -29,17 +29,17 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
         office = new Office(officeSave["level"].toInt(),
                 officeSave["currentReputation"].toInt(),
                 officeSave["currentTime"].toInt(),
+                officeSave["currentAquariumState"].toInt(),
                 officeSave["score"].toInt());
     } else {
-        office = new Office(level, 0, 0, 0);
+        office = new Office(level, 0, 0, 0, 0);
     }
 
     setBackgroundBrush(QBrush(QImage(":game2Background").scaledToHeight(height).scaledToWidth(width)));
     setSceneRect(0,0,width,height);
 
     aquarium = new QGraphicsPixmapItem();
-    QPixmap *picAquarium  = new QPixmap(":aquarium0");
-    aquarium->setPixmap(picAquarium->scaled(153,87));
+    updateAquariumImage();
     aquarium->setPos(52, 313);
     addItem(aquarium);
 
@@ -236,9 +236,12 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     connect(unpauseTimer, SIGNAL(timeout()), this, SLOT(unpauseGame()));
     updatePatientsTimer = new QTimer(this);
     connect(updatePatientsTimer, SIGNAL(timeout()), this, SLOT(updatePatients()));
+    updateAquariumTimer = new QTimer(this);
+    connect(updateAquariumTimer, SIGNAL(timeout()), this, SLOT(updateAquarium()));
 
     unpauseTimer->setSingleShot(true);
     updatePatientsTimer->setSingleShot(true);
+    updateAquariumTimer->setSingleShot(true);
 
     if (resume) {
         QJsonObject pausedTimesSave = read("pausedTimes").object();
@@ -247,13 +250,16 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
 
         timeUpdater->start(pausedTimesSave["pausedTimeUpdater"].toInt());
         updatePatientsTimer->start(pausedTimesSave["pausedUpdatePatientsTimer"].toInt());
+        updateAquariumTimer->start(pausedTimesSave["pausedUpdateAquariumTimer"].toInt());
     } else {
         timeUpdater->start(500);
         updatePatientsTimer->start(office->levels[office->level]["patientGenerationRate"]);
+        updateAquariumTimer->start(office->levels[office->level]["dirtinessRate"]);
     }
 
     this->pausedTimeUpdater = 0;
     this->pausedUpdatePatientsTimer = 0;
+    this->pausedUpdateAquariumTimer = 0;
 
     updateTimer();
 }
@@ -276,6 +282,7 @@ void GameScene3::nextLevel() {
 
     checkGameStateTimer->start(100);
     updatePatientsTimer->start(office->levels[office->level]["patientGenerationRate"]);
+    updateAquariumTimer->start(office->levels[office->level]["dirtinessRate"]);
     timeUpdater->start(500);
 
     pausedTime = 0;
@@ -300,6 +307,30 @@ void GameScene3::setUpNextLevel() {
     pixmapNeedle->setTransformOriginPoint(pixmapNeedle->boundingRect().center().x() + 20,
                                                pixmapNeedle->boundingRect().center().y());
     pixmapNeedle->setRotation(0);
+}
+
+void GameScene3::updateAquariumImage() {
+    QPixmap *picAquarium;
+    if (office->currentAquariumState == 0) {
+        picAquarium  = new QPixmap(":aquarium0");
+    } else if (office->currentAquariumState == 1) {
+        picAquarium  = new QPixmap(":aquarium1");
+    } else if (office->currentAquariumState == 2) {
+        picAquarium  = new QPixmap(":aquarium2");
+    } else if (office->currentAquariumState == 3) {
+        picAquarium  = new QPixmap(":aquarium3");
+    }
+    aquarium->setPixmap(picAquarium->scaled(153, 87));
+}
+
+void GameScene3::updateAquarium() {
+    int time = (rand() % 1000) + office->levels[office->level]["dirtinessRate"] - 500;
+    updateAquariumTimer->start(time);
+
+    if (office->currentAquariumState < 3) {
+        office->currentAquariumState++;
+    }
+    updateAquariumImage();
 }
 
 /**
@@ -415,6 +446,7 @@ void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
 
     office["currentReputation"] = this->office->currentReputation;
     office["currentTime"] = this->office->currentTime;
+    office["currentAquariumState"] = this->office->currentAquariumState;
 
     office["score"] = this->office->score;
 
@@ -444,6 +476,7 @@ void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
 
     pausedTimes["pausedTimeUpdater"] = this->pausedTimeUpdater;
     pausedTimes["pausedUpdatePatientsTimer"] = this->pausedUpdatePatientsTimer;
+    pausedTimes["pausedUpdateAquariumTimer"] = this->pausedUpdateAquariumTimer;
 
     saveObject["pausedTimes"] = pausedTimes;
 
@@ -581,7 +614,7 @@ void GameScene3::checkGameState() {
             //Games shouldn't be able to be saved. It should show only the exit button that makes it like rejecting the patient (not losing the game).
             GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, 1, true);
             miniGameView = new QGraphicsView(game1);
-            miniGameView->setFixedSize(800,500);
+            miniGameView->setFixedSize(800, 500);
             miniGameView->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
             miniGameView->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
             addWidget(miniGameView);

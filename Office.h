@@ -14,7 +14,7 @@ class Office : public QObject
 {
     Q_OBJECT
 public:
-    explicit Office(int level, int currentReputation, int currentTime, int score, QObject *parent = nullptr);
+    explicit Office(int level, int currentReputation, int currentTime, int currentAquariumState, int score, QObject *parent = nullptr);
     void setUpLevels();
 
     int level;//!<Integer member (1,2 or 3) that represents level of the game
@@ -22,6 +22,7 @@ public:
 
     int currentReputation;//!<Integer member that represents the current cleanliness of the office
     int currentTime;//!<Integer member that represents the current Time
+    int currentAquariumState;
 
     int score;//!<Integer member that represents the score
 

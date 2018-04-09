@@ -18,7 +18,7 @@
  * @param currentTime argument integer indicating the time of the game timer
  * @param score argument integer indicating the score
  */
-Office::Office(int level, int currentReputation, int currentTime, int score, QObject *parent) : QObject(parent)
+Office::Office(int level, int currentReputation, int currentTime, int currentAquariumState, int score, QObject *parent) : QObject(parent)
 {
     this->level = level;
 
@@ -26,6 +26,7 @@ Office::Office(int level, int currentReputation, int currentTime, int score, QOb
 
     this->currentReputation = currentReputation;
     this->currentTime = currentTime;
+    this->currentAquariumState = currentAquariumState;
 
     this->score = score;
 
