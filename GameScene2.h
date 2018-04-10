@@ -25,7 +25,7 @@ public:
     enum State {NotStarted, DisplayingTeeth, GuessingTeeth, GameWon, GameLost};
 
     explicit GameScene2(QWidget* widget, int width, int height, User* user, QJsonObject dataFile,
-                        bool resume = false, int level = 1, bool isMiniGame = false);
+                        bool resume = false, int level = 1, int difficulity = 1, bool isMiniGame = false);
 
     void setUpNextLevel();
 
@@ -54,9 +54,11 @@ public:
     QPushButton* start;
     QLabel* goLabel;
 
-    int order[3];
-    bool guessedOrder[3];
+    int* order;
+    bool* guessedOrder;
     int orderIndex;
+    int orderSize;
+    int orderSpeed;
 
     QTimer* toothUpdater;
     QTimer* teethUpdater;

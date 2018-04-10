@@ -18,9 +18,10 @@
  * @param currentTime argument integer indicating the time of the game timer
  * @param score argument integer indicating the score
  */
-StateTracker2::StateTracker2(int level, int currentTime, int score, QObject *parent) : QObject(parent)
+StateTracker2::StateTracker2(int level, int difficulity, int currentTime, int score, QObject *parent) : QObject(parent)
 {
     this->level = level;
+    this->difficulity = difficulity;
 
     setUpLevels();
 
@@ -38,11 +39,20 @@ StateTracker2::StateTracker2(int level, int currentTime, int score, QObject *par
  * function that fill the array of the levels with 3 levels each with specified attributes.
  */
 void StateTracker2::setUpLevels() {
-    this->levels[1] = setUpLevelsHelper(300000);
+    this->levels[1] = setUpLevelsHelper(300000,
+                                        3, 5000,
+                                        4, 4000,
+                                        5, 3000);
 
-    this->levels[2] = setUpLevelsHelper(300000);
+    this->levels[2] = setUpLevelsHelper(300000,
+                                        3, 3000,
+                                        5, 2000,
+                                        7, 1000);
 
-    this->levels[3] = setUpLevelsHelper(300000);
+    this->levels[3] = setUpLevelsHelper(300000,
+                                        0, 0,
+                                        0, 0,
+                                        0, 0);
 }
 
 /**
@@ -75,10 +85,22 @@ void StateTracker2::setUpLevels() {
  * @param virusSpeed3  integer indicates the speed of virus 3
  * @return std::map<std::string, int> a map between attributes discriptions and values
  */
-std::map<std::string, int> StateTracker2::setUpLevelsHelper(int maxTime) {
+std::map<std::string, int> StateTracker2::setUpLevelsHelper(int maxTime,
+                                                            int difficulity1NumberOfTeeth, int difficulity1SpeedOfTeeth,
+                                                            int difficulity2NumberOfTeeth, int difficulity2SpeedOfTeeth,
+                                                            int difficulity3NumberOfTeeth, int difficulity3SpeedOfTeeth) {
     std::map<std::string, int> level;
 
     level["maxTime"] = maxTime;
+
+    level["difficulity1NumberOfTeeth"] = difficulity1NumberOfTeeth;
+    level["difficulity1SpeedOfTeeth"] = difficulity1SpeedOfTeeth;
+
+    level["difficulity2NumberOfTeeth"] = difficulity2NumberOfTeeth;
+    level["difficulity2SpeedOfTeeth"] = difficulity2SpeedOfTeeth;
+
+    level["difficulity3NumberOfTeeth"] = difficulity3NumberOfTeeth;
+    level["difficulity3SpeedOfTeeth"] = difficulity3SpeedOfTeeth;
 
     level["levelState"] = 0;
 

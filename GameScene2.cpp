@@ -20,7 +20,7 @@
  * @param bool resume determines is the game is being resumed
  * @param int level determines if the game should start at a specific level
  */
-GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level, bool isMiniGame) : GameScene(widget, user, dataFile, 2, isMiniGame)
+GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level, int difficulity, bool isMiniGame) : GameScene(widget, user, dataFile, 2, isMiniGame)
 {
     srand(QTime::currentTime().msec());
 
@@ -29,10 +29,11 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     if (resume) {
         QJsonObject stateTracker2Save = read("stateTracker2").object();
         stateTracker2 = new StateTracker2(stateTracker2Save["level"].toInt(),
+                stateTracker2Save["difficulity"].toInt(),
                 stateTracker2Save["currentTime"].toInt(),
                 stateTracker2Save["score"].toInt());
     } else {
-        stateTracker2 = new StateTracker2(level, 0, 0);
+        stateTracker2 = new StateTracker2(level, difficulity, 0, 0);
     }
 
     setBackgroundBrush(QBrush(QImage(":miniGame2Background").scaledToHeight(height).scaledToWidth(width)));
@@ -258,25 +259,59 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
 void GameScene2::startClicked() {
     start->hide();
 
-    order[0] = 1;
-    order[1] = 3;
-    order[2] = 8;
+    orderSize = 0;
+    if (stateTracker2->difficulity == 1) {
+        orderSize = stateTracker2->levels[stateTracker2->level]["difficulity1NumberOfTeeth"];
+    } else if (stateTracker2->difficulity == 2) {
+        orderSize = stateTracker2->levels[stateTracker2->level]["difficulity2NumberOfTeeth"];
+    } else if (stateTracker2->difficulity == 3) {
+        orderSize = stateTracker2->levels[stateTracker2->level]["difficulity3NumberOfTeeth"];
+    }
+    orderSpeed = 0;
+    if (stateTracker2->difficulity == 1) {
+        orderSpeed = stateTracker2->levels[stateTracker2->level]["difficulity1SpeedOfTeeth"];
+    } else if (stateTracker2->difficulity == 2) {
+        orderSpeed = stateTracker2->levels[stateTracker2->level]["difficulity2SpeedOfTeeth"];
+    } else if (stateTracker2->difficulity == 3) {
+        orderSpeed = stateTracker2->levels[stateTracker2->level]["difficulity3SpeedOfTeeth"];
+    }
+
+    order = new int[orderSize];
+    guessedOrder = new bool[orderSize];
+
+    for (int i = 0; i < orderSize; i++) {
+        bool isDuplicate = true;
+        while (isDuplicate) {
+            int randNumb = (rand() % 12);
+            int j = 0;
+            for (j = 0; j < i; j++) {
+                if (order[j] == randNumb) {
+                    break;
+                }
+            }
+            if (j == i) {
+                order[i] = randNumb;
+                isDuplicate = false;
+            }
+        }
+        guessedOrder[i] = false;
+    }
 
     orderIndex = 0;
 
     if (stateTracker2->level == 1) {
         highlightAllTeeth();
-        teethUpdater->start(5000);
+        teethUpdater->start(orderSpeed);
     } else if (stateTracker2->level == 2) {
         highlightTooth();
-        toothUpdater->start(3000);
+        toothUpdater->start(orderSpeed);
     }
 
     gameState = DisplayingTeeth;
 }
 
 void GameScene2::highlightAllTeeth() {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < orderSize; i++) {
         if (order[i] < 6) {
             upperTeeth[order[i]]->setStyleSheet("QLabel { background-color : black; }");
         } else {
@@ -314,7 +349,7 @@ void GameScene2::highlightTooth() {
         }
     }
 
-    if (orderIndex < 3) {
+    if (orderIndex < orderSize) {
         if (order[orderIndex] < 6) {
             upperTeeth[order[orderIndex]]->setStyleSheet("QLabel { background-color : black; }");
         } else {
@@ -323,7 +358,7 @@ void GameScene2::highlightTooth() {
 
         orderIndex++;
 
-        toothUpdater->start(3000);
+        toothUpdater->start(orderSpeed);
     } else {
         orderIndex = 0;
 
@@ -376,7 +411,7 @@ void GameScene2::setUpNextLevel() {
     goLabel->hide();
     start->show();
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < orderSize; i++) {
         guessedOrder[i] = false;
     }
 
@@ -452,6 +487,7 @@ void GameScene2::saveProgressHelper(QJsonObject &saveObject) const
     QJsonObject stateTracker2;
 
     stateTracker2["level"] = this->stateTracker2->level;
+    stateTracker2["difficulity"] = this->stateTracker2->difficulity;
 
     stateTracker2["currentTime"] = this->stateTracker2->currentTime;
 
@@ -570,7 +606,7 @@ void GameScene2::checkGameState() {
                     || (i >= 6 && lowerTeeth[i - 6]->hasFocus())) {
                 if (stateTracker2->level == 1) {
                     int j = 0;
-                    for (j = 0; j < 3; j++) {
+                    for (j = 0; j < orderSize; j++) {
                         if (order[j] == i && !guessedOrder[j]) {
                             if (i < 6) {
                                 upperTeeth[i]->setStyleSheet("QLabel { background-color : green; }");
@@ -582,7 +618,7 @@ void GameScene2::checkGameState() {
                             break;
                         }
                     }
-                    if (j == 3) {
+                    if (j == orderSize) {
                         if (i < 6) {
                             upperTeeth[i]->setStyleSheet("QLabel { background-color : red; }");
                         } else {
@@ -621,13 +657,13 @@ void GameScene2::checkGameState() {
         // Check if we guessed all teeth
 
         int i = 0;
-        for (i = 0; i < 3; i++) {
+        for (i = 0; i < orderSize; i++) {
             if (!guessedOrder[i]) {
                 break;
             }
         }
 
-        if (i == 3) {
+        if (i == orderSize) {
             orderIndex = 0;
             gameState = GameWon;
             gameOver(true);
