@@ -106,7 +106,7 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     start = new QPushButton("Start");
     addWidget(start);
     start->resize(150, 70);
-    start->move(this->width() / 2 + 150, this->height() / 2 - 35);
+    start->move(this->width() / 2 + 150, this->height() / 2 + 70);
     start->setFocusPolicy(Qt::NoFocus);
 
     connect(start, SIGNAL(clicked()), SLOT(startClicked()));
@@ -123,14 +123,33 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
 
     goLabel = new QLabel("GO!");
     goLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : black; font: 80px; }");
-    goLabel->move(this->width() / 2 + 150, this->height() / 2 - 35);
+    goLabel->move(this->width() / 2 + 150, this->height() / 2 + 70);
     addWidget(goLabel);
     goLabel->hide();
 
     timeLabel = new QLabel("00:00");
     timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
     addWidget(timeLabel);
-    timeLabel->move(this->width() / 2 - timeLabel->width() / 2, this->height() / 24);
+    timeLabel->move(this->width() / 2 + 150, this->height() / 2 - 150);
+
+    levelLabel = new QLabel();
+    levelLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
+    levelLabel->setText(QStringLiteral("Level: %1").arg(stateTracker2->level));
+    addWidget(levelLabel);
+    levelLabel->move(this->width() / 2 + 150, this->height() / 2 - 50);
+
+    difficulityLabel = new QLabel();
+    difficulityLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
+    difficulityLabel->setText(QStringLiteral("Diff: %1").arg(stateTracker2->difficulity));
+    addWidget(difficulityLabel);
+    difficulityLabel->move(this->width() / 2 + 150, this->height() / 2 - 20);
+
+    scoreLabel = new QLabel();
+    scoreLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
+    scoreLabel->setText(QStringLiteral("Score: %1").arg(stateTracker2->score));
+    scoreLabel->adjustSize();
+    addWidget(scoreLabel);
+    scoreLabel->move(this->width() / 2 + 150, this->height() / 2 + 10);
 
     unpauseLabel = new QLabel();
     unpauseLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : white; font: 140px; }");
@@ -139,25 +158,6 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     QGraphicsProxyWidget* proxyWidget = addWidget(unpauseLabel);
     proxyWidget->setZValue(10000);
     unpauseLabel->hide();
-
-    levelLabel = new QLabel();
-    levelLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
-    levelLabel->move(300, 20);
-    levelLabel->setText(QStringLiteral("Level: %1").arg(stateTracker2->level));
-    addWidget(levelLabel);
-
-    difficulityLabel = new QLabel();
-    difficulityLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
-    difficulityLabel->move(300, 50);
-    difficulityLabel->setText(QStringLiteral("Diff: %1").arg(stateTracker2->difficulity));
-    addWidget(difficulityLabel);
-
-    scoreLabel = new QLabel();
-    scoreLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
-    scoreLabel->move(300, 80);
-    scoreLabel->setText(QStringLiteral("Score: %1").arg(stateTracker2->score));
-    scoreLabel->adjustSize();
-    addWidget(scoreLabel);
 
     if (resume) {
          pausedTime = stateTracker2->currentTime;
