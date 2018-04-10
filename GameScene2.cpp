@@ -186,12 +186,14 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     proxyWidget = addWidget(unpause);
     proxyWidget->setZValue(10000);
     unpause->hide();
+    unpause->setFocusPolicy(Qt::NoFocus);
 
     quit = new QPushButton("Quit");
     quit->move(this->width() / 2 - 30, this->height() / 2 + 10);
     proxyWidget = addWidget(quit);
     proxyWidget->setZValue(10000);
     quit->hide();
+    quit->setFocusPolicy(Qt::NoFocus);
 
     gameOverLabel = new QLabel("GAME OVER");
     gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
@@ -211,12 +213,14 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     proxyWidget = addWidget(quit2);
     proxyWidget->setZValue(10000);
     quit2->hide();
+    quit2->setFocusPolicy(Qt::NoFocus);
 
     nextLevelButton = new QPushButton("Next Level");
     nextLevelButton->move(this->width() / 2 - 50, this->height() / 2 + 150);
     proxyWidget = addWidget(nextLevelButton);
     proxyWidget->setZValue(10000);
     nextLevelButton->hide();
+    nextLevelButton->setFocusPolicy(Qt::NoFocus);
 
     QObject::connect(unpause, SIGNAL(clicked()), SLOT(unpauseClicked()));
     QObject::connect(quit, SIGNAL(clicked()), SLOT(quitClicked()));
