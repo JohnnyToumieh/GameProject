@@ -429,8 +429,10 @@ void GameScene2::unpauseClicked() {
  * A member function that exists the game and goes back to the GamePage.
  */
 void GameScene2::quitClicked() {
-    saveProgress();
-    saveFile();
+    if (!isMiniGame) {
+        saveProgress();
+        saveFile();
+    }
 
     backToGamePage();
 }
@@ -682,7 +684,7 @@ void GameScene2::gameOver(bool result) {
 
     quit2->show();
 
-    if (result && aquarium->level < 3) {
+    if (result && aquarium->level < 3 && !isMiniGame) {
         setUpNextLevel();
 
         nextLevelButton->show();
@@ -692,7 +694,9 @@ void GameScene2::gameOver(bool result) {
     } else {
         quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
 
-        saveScore();
-        saveFile();
+        if (!isMiniGame) {
+            saveScore();
+            saveFile();
+        }
     }
 }
