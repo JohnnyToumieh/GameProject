@@ -91,13 +91,8 @@ public:
     QPushButton* quit2;
 
     QLabel* levelLabel;
+    QLabel* difficulityLabel;
     QLabel* scoreLabel;
-
-    QGraphicsPixmapItem *pixmapLife1;
-    QGraphicsPixmapItem *pixmapLife2;
-    QGraphicsPixmapItem *pixmapLife3;
-
-    QGraphicsPixmapItem** pixmapLifeList;
 
 private:
     void saveProgressHelper(QJsonObject &userObject) const;

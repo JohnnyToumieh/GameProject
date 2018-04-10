@@ -146,33 +146,18 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     levelLabel->setText(QStringLiteral("Level: %1").arg(stateTracker2->level));
     addWidget(levelLabel);
 
+    difficulityLabel = new QLabel();
+    difficulityLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
+    difficulityLabel->move(300, 50);
+    difficulityLabel->setText(QStringLiteral("Diff: %1").arg(stateTracker2->difficulity));
+    addWidget(difficulityLabel);
+
     scoreLabel = new QLabel();
     scoreLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
-    scoreLabel->move(300, 50);
+    scoreLabel->move(300, 80);
     scoreLabel->setText(QStringLiteral("Score: %1").arg(stateTracker2->score));
     scoreLabel->adjustSize();
     addWidget(scoreLabel);
-
-    pixmapLife1 = new QGraphicsPixmapItem();
-    pixmapLife2 = new QGraphicsPixmapItem();
-    pixmapLife3 = new QGraphicsPixmapItem();
-    QPixmap *picLife  = new QPixmap(":life");
-
-    pixmapLife1->setPixmap(picLife->scaled(50,50));
-    pixmapLife1->setPos(600,30);
-    addItem(pixmapLife1);
-    pixmapLife2->setPixmap(picLife->scaled(50,50));
-    pixmapLife2->setPos(650,30);
-    addItem(pixmapLife2);
-    pixmapLife3->setPixmap(picLife->scaled(50,50));
-    pixmapLife3->setPos(700,30);
-    addItem(pixmapLife3);
-
-    pixmapLifeList = new QGraphicsPixmapItem*[3];
-
-    pixmapLifeList[0]=pixmapLife1;
-    pixmapLifeList[1]=pixmapLife2;
-    pixmapLifeList[2]=pixmapLife3;
 
     if (resume) {
          pausedTime = stateTracker2->currentTime;
@@ -681,6 +666,10 @@ void GameScene2::checkGameState() {
     // Update level
     levelLabel->setText(QStringLiteral("Level: %1").arg(stateTracker2->level));
     levelLabel->adjustSize();
+
+    // Update difficulity
+    difficulityLabel->setText(QStringLiteral("Diff: %1").arg(stateTracker2->difficulity));
+    difficulityLabel->adjustSize();
 
     // Check if time is up
     if (time->elapsed() + pausedTime >= stateTracker2->levels[stateTracker2->level]["maxTime"]) {
