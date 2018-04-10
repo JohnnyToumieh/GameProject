@@ -21,7 +21,8 @@ SOURCES += \
     GameScene3.cpp \
     Office.cpp \
     Patient.cpp \
-    StateTracker2.cpp
+    StateTracker2.cpp \
+    Tooth.cpp
 
 HEADERS += \
     HomePage.h \
@@ -43,7 +44,8 @@ HEADERS += \
     GameScene3.h \
     Office.h \
     Patient.h \
-    StateTracker2.h
+    StateTracker2.h \
+    Tooth.h
 
 RESOURCES += \
     resources.qrc

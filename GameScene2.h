@@ -10,6 +10,7 @@
 
 #include "StateTracker2.h"
 #include "GameScene.h"
+#include "Tooth.h"
 
 /**
  *\file GameScene2.h
@@ -41,10 +42,10 @@ public:
     User* user;//!<User member that represents the signed in user
     QJsonObject dataFile;//!QJsonObject member dataFile that holds information of the user
 
-    QLabel** upperTeeth;
+    Tooth** upperTeeth;
     int upperTeethIndex;
 
-    QLabel** lowerTeeth;
+    Tooth** lowerTeeth;
     int lowerTeethIndex;
 
     QGraphicsPixmapItem* mouth;
@@ -109,6 +110,7 @@ public slots:
     void highlightAllTeeth();
     void dehighlightAllTeeth();
     void highlightTooth();
+    void toothClicked(int toothIndex);
     void updateTimer();
     void unpauseClicked();//!<Member function that triggers when the unpause button is clicked
     void quitClicked();//!<Member function that triggers when the quit button is clicked

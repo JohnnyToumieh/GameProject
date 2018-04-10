@@ -53,9 +53,11 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     mouth->setPos(this->width() / 2 - 200 - 150, this->height() / 2 - 50);
     mouth->setFlag(QGraphicsItem::ItemIsFocusable);
 
-    upperTeeth = new QLabel*[6];
+    QSignalMapper* signalMapper = new QSignalMapper(this);
+
+    upperTeeth = new Tooth*[6];
     for (int i = 0; i < 6; i++) {
-        upperTeeth[i] = new QLabel();
+        upperTeeth[i] = new Tooth();
         upperTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
         addWidget(upperTeeth[i]);
         upperTeeth[i]->setFocusPolicy(Qt::ClickFocus);
@@ -71,12 +73,14 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
             upperTeeth[i]->setFixedSize(65, 50);
             upperTeeth[i]->move(this->width() / 2 - 70 - 150 + 71 * (i - 2), this->height() / 2 + 18);
         }
+        connect(upperTeeth[i], SIGNAL(clicked()), signalMapper, SLOT(map()));
+        signalMapper->setMapping(upperTeeth[i], i);
     }
     upperTeethIndex = 0;
 
-    lowerTeeth = new QLabel*[6];
+    lowerTeeth = new Tooth*[6];
     for (int i = 0; i < 6; i++) {
-        lowerTeeth[i] = new QLabel();
+        lowerTeeth[i] = new Tooth();
         lowerTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
         addWidget(lowerTeeth[i]);
         lowerTeeth[i]->setFocusPolicy(Qt::ClickFocus);
@@ -92,8 +96,12 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
             lowerTeeth[i]->setFixedSize(65, 50);
             lowerTeeth[i]->move(this->width() / 2 - 70 - 150 + 71 * (i - 2), this->height() / 2 + 132);
         }
+        connect(lowerTeeth[i], SIGNAL(clicked()), signalMapper, SLOT(map()));
+        signalMapper->setMapping(lowerTeeth[i], i + 6);
     }
     lowerTeethIndex = 0;
+
+    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(toothClicked(int)));
 
     start = new QPushButton("Start");
     addWidget(start);
@@ -308,6 +316,70 @@ void GameScene2::startClicked() {
     }
 
     gameState = DisplayingTeeth;
+}
+
+void GameScene2::toothClicked(int toothIndex) {
+    if (gameState == GuessingTeeth) {
+        if (stateTracker2->level == 1) {
+            int j = 0;
+            for (j = 0; j < orderSize; j++) {
+                if (order[j] == toothIndex && !guessedOrder[j]) {
+                    if (toothIndex < 6) {
+                        upperTeeth[toothIndex]->setStyleSheet("QLabel { background-color : green; }");
+                    } else {
+                        lowerTeeth[toothIndex - 6]->setStyleSheet("QLabel { background-color : green; }");
+                    }
+
+                    guessedOrder[j] = true;
+                    break;
+                }
+            }
+            if (j == orderSize) {
+                if (toothIndex < 6) {
+                    upperTeeth[toothIndex]->setStyleSheet("QLabel { background-color : red; }");
+                } else {
+                    lowerTeeth[toothIndex - 6]->setStyleSheet("QLabel { background-color : red; }");
+                }
+
+                gameState = GameLost;
+                gameOver(false);
+            }
+        } else if (stateTracker2->level == 2) {
+            if (order[orderIndex] == toothIndex) {
+                if (toothIndex < 6) {
+                    upperTeeth[toothIndex]->setStyleSheet("QLabel { background-color : green; }");
+                } else {
+                    lowerTeeth[toothIndex - 6]->setStyleSheet("QLabel { background-color : green; }");
+                }
+
+                guessedOrder[orderIndex] = true;
+
+                orderIndex++;
+            } else {
+                if (toothIndex < 6) {
+                    upperTeeth[toothIndex]->setStyleSheet("QLabel { background-color : red; }");
+                } else {
+                    lowerTeeth[toothIndex - 6]->setStyleSheet("QLabel { background-color : red; }");
+                }
+
+                gameState = GameLost;
+                gameOver(false);
+            }
+        }
+        // Check if we guessed all teeth
+        int i = 0;
+        for (i = 0; i < orderSize; i++) {
+            if (!guessedOrder[i]) {
+                break;
+            }
+        }
+
+        if (i == orderSize) {
+            orderIndex = 0;
+            gameState = GameWon;
+            gameOver(true);
+        }
+    }
 }
 
 void GameScene2::highlightAllTeeth() {
@@ -599,76 +671,6 @@ void GameScene2::checkGameState() {
 
         return;
     }
-
-    if (gameState == GuessingTeeth) {
-        for (int i = 0; i < 12; i++) {
-            if ((i < 6 && upperTeeth[i]->hasFocus())
-                    || (i >= 6 && lowerTeeth[i - 6]->hasFocus())) {
-                if (stateTracker2->level == 1) {
-                    int j = 0;
-                    for (j = 0; j < orderSize; j++) {
-                        if (order[j] == i && !guessedOrder[j]) {
-                            if (i < 6) {
-                                upperTeeth[i]->setStyleSheet("QLabel { background-color : green; }");
-                            } else {
-                                lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : green; }");
-                            }
-
-                            guessedOrder[j] = true;
-                            break;
-                        }
-                    }
-                    if (j == orderSize) {
-                        if (i < 6) {
-                            upperTeeth[i]->setStyleSheet("QLabel { background-color : red; }");
-                        } else {
-                            lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : red; }");
-                        }
-
-                        gameState = GameLost;
-                        gameOver(false);
-                    }
-                } else if (stateTracker2->level == 2) {
-                    if (order[orderIndex] == i) {
-                        if (i < 6) {
-                            upperTeeth[i]->setStyleSheet("QLabel { background-color : green; }");
-                        } else {
-                            lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : green; }");
-                        }
-
-                        guessedOrder[orderIndex] = true;
-
-                        orderIndex++;
-                    } else {
-                        if (i < 6) {
-                            upperTeeth[i]->setStyleSheet("QLabel { background-color : red; }");
-                        } else {
-                            lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : red; }");
-                        }
-
-                        gameState = GameLost;
-                        gameOver(false);
-                    }
-                }
-                break;
-            }
-        }
-
-        // Check if we guessed all teeth
-
-        int i = 0;
-        for (i = 0; i < orderSize; i++) {
-            if (!guessedOrder[i]) {
-                break;
-            }
-        }
-
-        if (i == orderSize) {
-            orderIndex = 0;
-            gameState = GameWon;
-            gameOver(true);
-        }
-     }
 
     mouth->setFocus();
 
