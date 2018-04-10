@@ -108,6 +108,11 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
 
     connect(toothUpdater, SIGNAL(timeout()), this, SLOT(highlightTooth()));
 
+    teethUpdater = new QTimer();
+    teethUpdater->setSingleShot(true);
+
+    connect(teethUpdater, SIGNAL(timeout()), this, SLOT(dehighlightAllTeeth()));
+
     goLabel = new QLabel("GO!");
     goLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : black; font: 80px; }");
     goLabel->move(this->width() / 2 + 150, this->height() / 2 - 35);
@@ -160,6 +165,13 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     pixmapLifeList[0]=pixmapLife1;
     pixmapLifeList[1]=pixmapLife2;
     pixmapLifeList[2]=pixmapLife3;
+
+    if (resume) {
+         pausedTime = aquarium->currentTime;
+     } else {
+         pausedTime = 0;
+     }
+     justPaused = true;
 
     greyForeground = new QWidget();
     greyForeground->setStyleSheet("background-color: rgba(105, 105, 105, 100);");
@@ -249,10 +261,45 @@ void GameScene2::startClicked() {
 
     orderIndex = 0;
 
-    highlightTooth();
-    toothUpdater->start(3000);
+    if (aquarium->level == 1) {
+        highlightAllTeeth();
+        teethUpdater->start(5000);
+    } else if (aquarium->level == 2) {
+        highlightTooth();
+        toothUpdater->start(3000);
+    }
 
     gameState = DisplayingTeeth;
+}
+
+void GameScene2::highlightAllTeeth() {
+    for (int i = 0; i < 3; i++) {
+        if (order[i] < 6) {
+            upperTeeth[order[i]]->setStyleSheet("QLabel { background-color : black; }");
+        } else {
+            lowerTeeth[order[i] - 6]->setStyleSheet("QLabel { background-color : black; }");
+        }
+    }
+}
+
+void GameScene2::dehighlightAllTeeth() {
+    resetAllTeeth();
+
+    orderIndex = 0;
+
+    goLabel->show();
+
+    gameState = GuessingTeeth;
+}
+
+void GameScene2::resetAllTeeth() {
+    for (int i = 0; i < 12; i++) {
+        if (i < 6) {
+            upperTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
+        } else {
+            lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : white; }");
+        }
+    }
 }
 
 void GameScene2::highlightTooth() {
@@ -316,6 +363,14 @@ void GameScene2::setUpNextLevel() {
     aquarium->level++;
     aquarium->currentCleanliness = 0;
     aquarium->currentTime = 0;
+
+    resetAllTeeth();
+    orderIndex = 0;
+
+    goLabel->hide();
+    start->show();
+
+    gameState = NotStarted;
 }
 
 /**
@@ -524,6 +579,7 @@ void GameScene2::checkGameState() {
                         }
 
                         gameState = GameLost;
+                        gameOver(false);
                     }
                 } else if (aquarium->level == 2) {
                     if (order[orderIndex] == i) {
@@ -551,15 +607,16 @@ void GameScene2::checkGameState() {
             }
         }
 
-        if (aquarium->level == 1) {
-            for (orderIndex = 0; orderIndex < 3; orderIndex++) {
-                if (!guessedOrder[orderIndex]) {
-                    break;
-                }
+        // Check if we guessed all teeth
+
+        int i = 0;
+        for (i = 0; i < 3; i++) {
+            if (!guessedOrder[i]) {
+                break;
             }
         }
 
-        if (orderIndex == 3) {
+        if (i == 3) {
             orderIndex = 0;
             gameState = GameWon;
             gameOver(true);

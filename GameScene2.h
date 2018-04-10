@@ -32,6 +32,8 @@ public:
     void gameOver(bool result);
     int getCurrentScore();
 
+    void resetAllTeeth();
+
     State gameState;
 
     QWidget* widget;
@@ -56,6 +58,7 @@ public:
     int orderIndex;
 
     QTimer* toothUpdater;
+    QTimer* teethUpdater;
 
     Aquarium* aquarium;//!<Aquarium member that represents the aquarium
 
@@ -100,6 +103,8 @@ signals:
 
 public slots:
     void startClicked();
+    void highlightAllTeeth();
+    void dehighlightAllTeeth();
     void highlightTooth();
     void updateTimer();
     void unpauseClicked();//!<Member function that triggers when the unpause button is clicked
