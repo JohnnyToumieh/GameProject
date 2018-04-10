@@ -374,6 +374,10 @@ void GameScene2::setUpNextLevel() {
     goLabel->hide();
     start->show();
 
+    for (int i = 0; i < 3; i++) {
+        guessedOrder[i] = false;
+    }
+
     gameState = NotStarted;
 }
 
