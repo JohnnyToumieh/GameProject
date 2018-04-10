@@ -657,6 +657,7 @@ void GameScene3::checkGameState() {
     }
 
     // Check if Aquarium clicked
+    int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
     if (aquarium->hasFocus() && !office->inAMiniGame) {
         if (office->currentAquariumState > 0) {
             aquariumBox->show();
@@ -664,7 +665,7 @@ void GameScene3::checkGameState() {
             cleanAquarium->show();
             cancelAquarium->show();
         }
-    } else if (office->inAMiniGame) {
+    } else if (office->inAMiniGame && patients[index]->motionState != Patient::InProgress) {
         GameScene1* game1 = (GameScene1*) miniGameView->scene();
         office->currentMiniGameScore = game1->getCurrentScore();
 
@@ -705,7 +706,7 @@ void GameScene3::checkGameState() {
     }
 
     // Check patient's status
-    int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
+    index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
     if (patients[index] != NULL) {
         if (patients[index]->motionState == Patient::Waiting) {
             patientBox->show();
@@ -713,8 +714,6 @@ void GameScene3::checkGameState() {
             accept->show();
             reject->show();
         } else if (patients[index]->motionState == Patient::Ready) {
-            patients[index]->motionState = Patient::InProgress;
-
             office->inAMiniGame = true;
 
             //Enter game2
@@ -727,6 +726,8 @@ void GameScene3::checkGameState() {
             addWidget(miniGameView);
             miniGameView->setFocus();
             miniGameView->move(100, 50);
+
+            patients[index]->motionState = Patient::InProgress;
         } else if (patients[index]->motionState == Patient::InProgress) {         
             GameScene2* game2 = (GameScene2*) miniGameView->scene();
             office->currentMiniGameScore = game2->getCurrentScore();
