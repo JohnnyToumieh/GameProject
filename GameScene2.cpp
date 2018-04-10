@@ -114,6 +114,11 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     addWidget(goLabel);
     goLabel->hide();
 
+    timeLabel = new QLabel("00:00");
+    timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
+    addWidget(timeLabel);
+    timeLabel->move(this->width() / 2 - timeLabel->width() / 2, this->height() / 24);
+
     unpauseLabel = new QLabel();
     unpauseLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : white; font: 140px; }");
     unpauseLabel->move(this->width() / 2 - 90, this->height() / 2 - 90);
@@ -339,9 +344,9 @@ void GameScene2::updateTimer() {
     int mins = (secs / 60) % 60;
     secs = secs % 60;
 
-    //timeLabel->setText(QString("%1:%2")
-    //.arg(mins, 2, 10, QLatin1Char('0'))
-    //.arg(secs, 2, 10, QLatin1Char('0')) );
+    timeLabel->setText(QString("%1:%2")
+    .arg(mins, 2, 10, QLatin1Char('0'))
+    .arg(secs, 2, 10, QLatin1Char('0')) );
 
     aquarium->currentTime = time->elapsed() + pausedTime;
 }
@@ -576,9 +581,9 @@ void GameScene2::checkGameState() {
         int secs = aquarium->levels[aquarium->level]["maxTime"] / 1000;
         int mins = (secs / 60) % 60;
         secs = secs % 60;
-        //timeLabel->setText(QString("%1:%2")
-        //.arg(mins, 2, 10, QLatin1Char('0'))
-        //.arg(secs, 2, 10, QLatin1Char('0')) );
+        timeLabel->setText(QString("%1:%2")
+        .arg(mins, 2, 10, QLatin1Char('0'))
+        .arg(secs, 2, 10, QLatin1Char('0')) );
 
         aquarium->currentTime = aquarium->levels[aquarium->level]["maxTime"];
 
