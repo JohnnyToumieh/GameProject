@@ -61,9 +61,6 @@ public:
     int orderSize;
     int orderSpeed;
 
-    QTimer* toothUpdater;
-    QTimer* teethUpdater;
-
     StateTracker2* stateTracker2;//!<stateTracker2 member that represents the aquarium
 
     QLabel* timeLabel;
@@ -76,6 +73,10 @@ public:
 
     QTimer* timeUpdater;//!<QTimer member that updates all QLabels that keeps track of time
     int pausedTimeUpdater;//!<int member helper to save the QTimer's time left when the game pauses
+    QTimer* toothUpdater;
+    int pausedToothUpdater;
+    QTimer* teethUpdater;
+    int pausedTeethUpdater;
 
     QTimer* unpauseTimer;//!<QTimer member that counts down the time until the game can be interactable again
 

@@ -2,6 +2,8 @@
 #define STATETRACKER2_H
 
 #include <QObject>
+#include <QGraphicsPixmapItem>
+#include <QKeyEvent>
 
 /**
  *\file StateTracker2.h
@@ -10,12 +12,14 @@
  *
  */
 
-class StateTracker2 : public QObject
+class StateTracker2 : public QObject,  public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
     explicit StateTracker2(int level, int difficulity, int currentTime, int score, QObject *parent = nullptr);
     void setUpLevels();
+
+    void keyPressEvent(QKeyEvent *event);
 
     int level;//!<Integer member (1,2 or 3) that represents level of the game
     int difficulity;

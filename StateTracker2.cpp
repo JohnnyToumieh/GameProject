@@ -33,6 +33,18 @@ StateTracker2::StateTracker2(int level, int difficulity, int currentTime, int sc
     this->requestForUnpause = false;
 }
 
+void StateTracker2::keyPressEvent(QKeyEvent *event){
+    if (event->key() == Qt::Key_Escape) {
+        if (gamePaused && !requestForUnpause) {
+            requestForUnpause = true;
+        } else if (gamePaused && requestForUnpause) {
+            requestForUnpause = false;
+        } else {
+            gamePaused = !gamePaused;
+        }
+    }
+}
+
 /**
  * @brief StateTracker2::setUpLevels member function: sets up the levels
  *

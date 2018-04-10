@@ -35,6 +35,8 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     } else {
         stateTracker2 = new StateTracker2(level, difficulity, 0, 0);
     }
+    stateTracker2->setFlag(QGraphicsItem::ItemIsFocusable);
+    addItem(stateTracker2);
 
     setBackgroundBrush(QBrush(QImage(":miniGame2Background").scaledToHeight(height).scaledToWidth(width)));
     setSceneRect(0,0,width,height);
@@ -111,16 +113,6 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
 
     connect(start, SIGNAL(clicked()), SLOT(startClicked()));
 
-    toothUpdater = new QTimer();
-    toothUpdater->setSingleShot(true);
-
-    connect(toothUpdater, SIGNAL(timeout()), this, SLOT(highlightTooth()));
-
-    teethUpdater = new QTimer();
-    teethUpdater->setSingleShot(true);
-
-    connect(teethUpdater, SIGNAL(timeout()), this, SLOT(dehighlightAllTeeth()));
-
     goLabel = new QLabel("GO!");
     goLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : black; font: 80px; }");
     goLabel->move(this->width() / 2 + 150, this->height() / 2 + 70);
@@ -152,7 +144,7 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     scoreLabel->move(this->width() / 2 + 150, this->height() / 2 + 10);
 
     unpauseLabel = new QLabel();
-    unpauseLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : white; font: 140px; }");
+    unpauseLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : black; font: 140px; }");
     unpauseLabel->move(this->width() / 2 - 90, this->height() / 2 - 90);
     unpauseLabel->setWordWrap(true);
     QGraphicsProxyWidget* proxyWidget = addWidget(unpauseLabel);
@@ -231,8 +223,14 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     connect(unpauseTimer, SIGNAL(timeout()), this, SLOT(unpauseGame()));
     timeUpdater = new QTimer(this);
     connect(timeUpdater, SIGNAL(timeout()), this, SLOT(updateTimer()));
+    toothUpdater = new QTimer(this);
+    connect(toothUpdater, SIGNAL(timeout()), this, SLOT(highlightTooth()));
+    teethUpdater = new QTimer(this);
+    connect(teethUpdater, SIGNAL(timeout()), this, SLOT(dehighlightAllTeeth()));
 
     unpauseTimer->setSingleShot(true);
+    toothUpdater->setSingleShot(true);
+    teethUpdater->setSingleShot(true);
 
     if (resume) {
         QJsonObject pausedTimesSave = read("pausedTimes").object();
@@ -304,7 +302,7 @@ void GameScene2::startClicked() {
 }
 
 void GameScene2::toothClicked(int toothIndex) {
-    if (gameState == GuessingTeeth) {
+    if (gameState == GuessingTeeth && !stateTracker2->gamePaused) {
         if (stateTracker2->level == 1) {
             int j = 0;
             for (j = 0; j < orderSize; j++) {
@@ -586,6 +584,12 @@ void GameScene2::unpauseGame() {
     timeUpdater->setSingleShot(true);
 
     timeUpdater->start(pausedTimeUpdater);
+    if (pausedTeethUpdater > 0) {
+       teethUpdater->start(pausedTeethUpdater);
+    }
+    if (pausedToothUpdater > 0) {
+       toothUpdater->start(pausedToothUpdater);
+    }
 
     greyForeground->hide();
     unpauseLabel->hide();
@@ -635,6 +639,26 @@ void GameScene2::checkGameState() {
                     unpauseTimer->stop();
                 }
 
+                if (teethUpdater->isActive()) {
+                    pausedTeethUpdater = teethUpdater->remainingTime();
+
+                    if (pausedTeethUpdater < 0) {
+                        pausedTeethUpdater = 0;
+                    }
+
+                    teethUpdater->stop();
+                }
+
+                if (toothUpdater->isActive()) {
+                    pausedToothUpdater = toothUpdater->remainingTime();
+
+                    if (pausedToothUpdater < 0) {
+                        pausedToothUpdater = 0;
+                    }
+
+                    toothUpdater->stop();
+                }
+
                 pausedTimeUpdater = timeUpdater->remainingTime();
 
                 if (pausedTimeUpdater < 0) {
@@ -657,7 +681,7 @@ void GameScene2::checkGameState() {
         return;
     }
 
-    mouth->setFocus();
+    stateTracker2->setFocus();
 
     // Update score
     scoreLabel->setText(QStringLiteral("Score: %1").arg(stateTracker2->score));
