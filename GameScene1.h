@@ -33,6 +33,7 @@ public:
 
     void gameOver(bool result);
     int getCurrentScore();
+    int getLevelState();
 
     Aquarium* aquarium;//!<Aquarium member that represents the aquarium
     SpongeBob *spongeBob;//!<SpongeBob member that represents spongebob

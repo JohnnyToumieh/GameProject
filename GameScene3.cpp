@@ -284,6 +284,10 @@ int GameScene3::getCurrentScore() {
     return office->score;
 }
 
+int GameScene3::getLevelState() {
+    return office->levels[office->level]["levelState"];
+}
+
 /**
  * @brief GameScene3::nextLevel
  *
@@ -732,13 +736,13 @@ void GameScene3::checkGameState() {
 
                 office->inAMiniGame = false;
 
-                if (game1->aquarium->levels[game1->aquarium->level]["levelState"] == 1) {
+                if (game1->getLevelState() == 1) {
                     patients[index]->statusState = Patient::Satisfied;
 
                     office->score += office->currentMiniGameScore;
-                } else if (game1->aquarium->levels[game1->aquarium->level]["levelState"] == 2) {
+                } else if (game1->getLevelState() == 2) {
                     patients[index]->statusState = Patient::Unsatisfied;
-                } else if (game1->aquarium->levels[game1->aquarium->level]["levelState"] == 0) {
+                } else if (game1->getLevelState() == 0) {
                     patients[index]->statusState = Patient::Rejected;
                 }
 

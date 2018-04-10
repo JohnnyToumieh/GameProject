@@ -325,6 +325,10 @@ int GameScene1::getCurrentScore() {
     return aquarium->score;
 }
 
+int GameScene1::getLevelState() {
+    return aquarium->levels[aquarium->level]["levelState"];
+}
+
 /**
  * @brief GameScene1::nextLevel
  *

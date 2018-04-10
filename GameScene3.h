@@ -33,6 +33,7 @@ public:
 
     void gameOver(bool result);
     int getCurrentScore();
+    int getLevelState();
 
     Office* office;//!<Office member that represents the office
 

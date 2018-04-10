@@ -8,7 +8,7 @@
 #include <QTime>
 #include <QtWidgets>
 
-#include "Aquarium.h"
+#include "StateTracker2.h"
 #include "GameScene.h"
 
 /**
@@ -31,6 +31,7 @@ public:
 
     void gameOver(bool result);
     int getCurrentScore();
+    int getLevelState();
 
     void resetAllTeeth();
 
@@ -60,7 +61,7 @@ public:
     QTimer* toothUpdater;
     QTimer* teethUpdater;
 
-    Aquarium* aquarium;//!<Aquarium member that represents the aquarium
+    StateTracker2* stateTracker2;//!<stateTracker2 member that represents the aquarium
 
     QLabel* timeLabel;
     QLabel* scoreLabel2;

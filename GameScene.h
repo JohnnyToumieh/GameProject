@@ -29,6 +29,7 @@ public:
 
     virtual void gameOver(bool result) = 0;
     virtual int getCurrentScore() = 0;
+    virtual int getLevelState() = 0;
 
     QWidget* widget;
     User* user;//!<User member that represents the signed in user

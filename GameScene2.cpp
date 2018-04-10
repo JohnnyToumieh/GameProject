@@ -27,13 +27,12 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     gameState = NotStarted;
 
     if (resume) {
-        QJsonObject aquariumSave = read("aquarium").object();
-        aquarium = new Aquarium(aquariumSave["level"].toInt(),
-                aquariumSave["currentCleanliness"].toInt(),
-                aquariumSave["currentTime"].toInt(),
-                aquariumSave["score"].toInt());
+        QJsonObject stateTracker2Save = read("stateTracker2").object();
+        stateTracker2 = new StateTracker2(stateTracker2Save["level"].toInt(),
+                stateTracker2Save["currentTime"].toInt(),
+                stateTracker2Save["score"].toInt());
     } else {
-        aquarium = new Aquarium(level, 0, 0, 0);
+        stateTracker2 = new StateTracker2(level, 0, 0);
     }
 
     setBackgroundBrush(QBrush(QImage(":miniGame2Background").scaledToHeight(height).scaledToWidth(width)));
@@ -135,13 +134,13 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     levelLabel = new QLabel();
     levelLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
     levelLabel->move(300, 20);
-    levelLabel->setText(QStringLiteral("Level: %1").arg(aquarium->level));
+    levelLabel->setText(QStringLiteral("Level: %1").arg(stateTracker2->level));
     addWidget(levelLabel);
 
     scoreLabel = new QLabel();
     scoreLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
     scoreLabel->move(300, 50);
-    scoreLabel->setText(QStringLiteral("Score: %1").arg(aquarium->score));
+    scoreLabel->setText(QStringLiteral("Score: %1").arg(stateTracker2->score));
     scoreLabel->adjustSize();
     addWidget(scoreLabel);
 
@@ -167,7 +166,7 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     pixmapLifeList[2]=pixmapLife3;
 
     if (resume) {
-         pausedTime = aquarium->currentTime;
+         pausedTime = stateTracker2->currentTime;
      } else {
          pausedTime = 0;
      }
@@ -265,10 +264,10 @@ void GameScene2::startClicked() {
 
     orderIndex = 0;
 
-    if (aquarium->level == 1) {
+    if (stateTracker2->level == 1) {
         highlightAllTeeth();
         teethUpdater->start(5000);
-    } else if (aquarium->level == 2) {
+    } else if (stateTracker2->level == 2) {
         highlightTooth();
         toothUpdater->start(3000);
     }
@@ -335,7 +334,11 @@ void GameScene2::highlightTooth() {
 }
 
 int GameScene2::getCurrentScore() {
-    return aquarium->score;
+    return stateTracker2->score;
+}
+
+int GameScene2::getLevelState() {
+    return stateTracker2->levels[stateTracker2->level]["levelState"];
 }
 
 /**
@@ -364,9 +367,8 @@ void GameScene2::nextLevel() {
  * A member function that sets up the next level.
  */
 void GameScene2::setUpNextLevel() {
-    aquarium->level++;
-    aquarium->currentCleanliness = 0;
-    aquarium->currentTime = 0;
+    stateTracker2->level++;
+    stateTracker2->currentTime = 0;
 
     resetAllTeeth();
     orderIndex = 0;
@@ -411,7 +413,7 @@ void GameScene2::updateTimer() {
     .arg(mins, 2, 10, QLatin1Char('0'))
     .arg(secs, 2, 10, QLatin1Char('0')) );
 
-    aquarium->currentTime = time->elapsed() + pausedTime;
+    stateTracker2->currentTime = time->elapsed() + pausedTime;
 }
 
 /**
@@ -420,7 +422,7 @@ void GameScene2::updateTimer() {
  * A member function that unpauses the game (sending it into the 3..2..1 state).
  */
 void GameScene2::unpauseClicked() {
-   aquarium->requestForUnpause = true;
+   stateTracker2->requestForUnpause = true;
 }
 
 /**
@@ -446,17 +448,16 @@ void GameScene2::quitClicked() {
  */
 void GameScene2::saveProgressHelper(QJsonObject &saveObject) const
 {
-    // Add aquarium fields
-    QJsonObject aquarium;
+    // Add stateTracker2 fields
+    QJsonObject stateTracker2;
 
-    aquarium["level"] = this->aquarium->level;
+    stateTracker2["level"] = this->stateTracker2->level;
 
-    aquarium["currentCleanliness"] = this->aquarium->currentCleanliness;
-    aquarium["currentTime"] = this->aquarium->currentTime;
+    stateTracker2["currentTime"] = this->stateTracker2->currentTime;
 
-    aquarium["score"] = this->aquarium->score;
+    stateTracker2["score"] = this->stateTracker2->score;
 
-    saveObject["aquarium"] = aquarium;
+    saveObject["stateTracker2"] = stateTracker2;
 
     // Add paused times
     QJsonObject pausedTimes;
@@ -475,7 +476,7 @@ void GameScene2::saveProgressHelper(QJsonObject &saveObject) const
  */
 void GameScene2::saveScoreHelper(QJsonObject &saveObject) const
 {
-    saveObject["score"] = aquarium->score;
+    saveObject["score"] = stateTracker2->score;
     saveObject["day"] = QDate::currentDate().day();
     saveObject["month"] = QDate::currentDate().month();
     saveObject["year"] = QDate::currentDate().year();
@@ -496,8 +497,8 @@ void GameScene2::unpauseGame() {
     greyForeground->hide();
     unpauseLabel->hide();
 
-    aquarium->gamePaused = false;
-    aquarium->requestForUnpause = false;
+    stateTracker2->gamePaused = false;
+    stateTracker2->requestForUnpause = false;
 }
 
 /**
@@ -507,10 +508,10 @@ void GameScene2::unpauseGame() {
  */
 void GameScene2::checkGameState() {
     // Check if game paused
-    if (aquarium->gamePaused) {
+    if (stateTracker2->gamePaused) {
        // Pause everything. We need those stats anw for the save functionality
 
-        if (aquarium->requestForUnpause) {
+        if (stateTracker2->requestForUnpause) {
             if (!justPaused) {
                 unpauseTimer->start(3000);
 
@@ -567,7 +568,7 @@ void GameScene2::checkGameState() {
         for (int i = 0; i < 12; i++) {
             if ((i < 6 && upperTeeth[i]->hasFocus())
                     || (i >= 6 && lowerTeeth[i - 6]->hasFocus())) {
-                if (aquarium->level == 1) {
+                if (stateTracker2->level == 1) {
                     int j = 0;
                     for (j = 0; j < 3; j++) {
                         if (order[j] == i && !guessedOrder[j]) {
@@ -591,7 +592,7 @@ void GameScene2::checkGameState() {
                         gameState = GameLost;
                         gameOver(false);
                     }
-                } else if (aquarium->level == 2) {
+                } else if (stateTracker2->level == 2) {
                     if (order[orderIndex] == i) {
                         if (i < 6) {
                             upperTeeth[i]->setStyleSheet("QLabel { background-color : green; }");
@@ -636,23 +637,23 @@ void GameScene2::checkGameState() {
     mouth->setFocus();
 
     // Update score
-    scoreLabel->setText(QStringLiteral("Score: %1").arg(aquarium->score));
+    scoreLabel->setText(QStringLiteral("Score: %1").arg(stateTracker2->score));
     scoreLabel->adjustSize();
 
     // Update level
-    levelLabel->setText(QStringLiteral("Level: %1").arg(aquarium->level));
+    levelLabel->setText(QStringLiteral("Level: %1").arg(stateTracker2->level));
     levelLabel->adjustSize();
 
     // Check if time is up
-    if (time->elapsed() + pausedTime >= aquarium->levels[aquarium->level]["maxTime"]) {
-        int secs = aquarium->levels[aquarium->level]["maxTime"] / 1000;
+    if (time->elapsed() + pausedTime >= stateTracker2->levels[stateTracker2->level]["maxTime"]) {
+        int secs = stateTracker2->levels[stateTracker2->level]["maxTime"] / 1000;
         int mins = (secs / 60) % 60;
         secs = secs % 60;
         timeLabel->setText(QString("%1:%2")
         .arg(mins, 2, 10, QLatin1Char('0'))
         .arg(secs, 2, 10, QLatin1Char('0')) );
 
-        aquarium->currentTime = aquarium->levels[aquarium->level]["maxTime"];
+        stateTracker2->currentTime = stateTracker2->levels[stateTracker2->level]["maxTime"];
 
         gameOver(false);
     }
@@ -666,10 +667,16 @@ void GameScene2::checkGameState() {
  * @param bool result whether the level was won or lost.
  */
 void GameScene2::gameOver(bool result) {
+    if (result) {
+        stateTracker2->levels[stateTracker2->level]["levelState"] = 1;
+    } else {
+        stateTracker2->levels[stateTracker2->level]["levelState"] = 2;
+    }
+
     timeUpdater->stop();
 
     if (result) {
-        aquarium->score += aquarium->levels[aquarium->level]["maxTime"] / aquarium->currentTime - 1;
+        stateTracker2->score += stateTracker2->levels[stateTracker2->level]["maxTime"] / stateTracker2->currentTime - 1;
     }
 
     greyForeground->setStyleSheet("background-color: rgba(0, 0, 0, 255);");
@@ -677,14 +684,14 @@ void GameScene2::gameOver(bool result) {
 
     gameOverLabel->show();
 
-    scoreLabel2->setText(QStringLiteral("Score: %1").arg(aquarium->score));
+    scoreLabel2->setText(QStringLiteral("Score: %1").arg(stateTracker2->score));
     scoreLabel2->adjustSize();
     scoreLabel2->move((this->width() - scoreLabel2->width()) / 2, 330);
     scoreLabel2->show();
 
     quit2->show();
 
-    if (result && aquarium->level < 3 && !isMiniGame) {
+    if (result && stateTracker2->level < 3 && !isMiniGame) {
         setUpNextLevel();
 
         nextLevelButton->show();
