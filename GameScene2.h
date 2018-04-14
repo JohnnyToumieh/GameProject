@@ -60,6 +60,7 @@ public:
     int orderIndex;
     int orderSize;
     int orderSpeed;
+    int *infectionTypes;
 
     StateTracker2* stateTracker2;//!<stateTracker2 member that represents the aquarium
 

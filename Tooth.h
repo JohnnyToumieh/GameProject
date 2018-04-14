@@ -10,12 +10,16 @@ class Tooth : public QLabel {
 public:
     explicit Tooth(QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
     ~Tooth();
+    void setType(int type);
 
+private:
+    int type; // white,yellow,blue and black
 signals:
     void clicked();
 
 protected:
     void mousePressEvent(QMouseEvent* event);
+    void updateType();
 
 };
 

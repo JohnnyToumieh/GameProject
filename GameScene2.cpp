@@ -60,7 +60,7 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     upperTeeth = new Tooth*[6];
     for (int i = 0; i < 6; i++) {
         upperTeeth[i] = new Tooth();
-        upperTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
+       // upperTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
         addWidget(upperTeeth[i]);
         upperTeeth[i]->setFocusPolicy(Qt::ClickFocus);
         if (i == 0 || i == 5) {
@@ -83,7 +83,7 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     lowerTeeth = new Tooth*[6];
     for (int i = 0; i < 6; i++) {
         lowerTeeth[i] = new Tooth();
-        lowerTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
+    //    lowerTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
         addWidget(lowerTeeth[i]);
         lowerTeeth[i]->setFocusPolicy(Qt::ClickFocus);
         if (i == 0 || i == 5) {
@@ -269,6 +269,7 @@ void GameScene2::startClicked() {
 
     order = new int[orderSize];
     guessedOrder = new bool[orderSize];
+    infectionTypes = new int[orderSize];
 
     for (int i = 0; i < orderSize; i++) {
         bool isDuplicate = true;
@@ -294,6 +295,15 @@ void GameScene2::startClicked() {
         highlightAllTeeth();
         teethUpdater->start(orderSpeed);
     } else if (stateTracker2->level == 2) {
+        highlightTooth();
+        toothUpdater->start(orderSpeed);
+    }else if(stateTracker2->level == 3){
+
+        for (int i = 0; i < orderSize; i++) {
+                int randNumb = (rand() % 3)+2;
+                    infectionTypes[i] = randNumb;
+        }
+
         highlightTooth();
         toothUpdater->start(orderSpeed);
     }
@@ -395,20 +405,29 @@ void GameScene2::resetAllTeeth() {
     }
 }
 
+// 1 white 2 black 3 yellow 4 blue 5 green 6 red
 void GameScene2::highlightTooth() {
     if (orderIndex > 0) {
         if (order[orderIndex - 1] < 6) {
-            upperTeeth[order[orderIndex - 1]]->setStyleSheet("QLabel { background-color : white; }");
+            upperTeeth[order[orderIndex - 1]]->setType(1);
         } else {
-            lowerTeeth[order[orderIndex - 1] - 6]->setStyleSheet("QLabel { background-color : white; }");
+            lowerTeeth[order[orderIndex - 1] - 6]->setType(1);
         }
     }
 
     if (orderIndex < orderSize) {
-        if (order[orderIndex] < 6) {
-            upperTeeth[order[orderIndex]]->setStyleSheet("QLabel { background-color : black; }");
-        } else {
-            lowerTeeth[order[orderIndex] - 6]->setStyleSheet("QLabel { background-color : black; }");
+        if(stateTracker2->level==2){
+            if (order[orderIndex] < 6) {
+                upperTeeth[order[orderIndex]]->setType(2);
+            } else {
+                lowerTeeth[order[orderIndex] - 6]->setType(2);
+            }
+        }else if(stateTracker2->level==3){
+            if (order[orderIndex] < 6) {
+                upperTeeth[order[orderIndex]]->setType(infectionTypes[orderIndex]);
+            } else {
+                lowerTeeth[order[orderIndex] - 6]->setType(infectionTypes[orderIndex]);
+            }
         }
 
         orderIndex++;

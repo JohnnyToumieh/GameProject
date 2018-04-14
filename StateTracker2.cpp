@@ -20,7 +20,7 @@
  */
 StateTracker2::StateTracker2(int level, int difficulity, int currentTime, int score, QObject *parent) : QObject(parent)
 {
-    this->level = level;
+    this->level = 3;
     this->difficulity = difficulity;
 
     setUpLevels();
@@ -62,9 +62,9 @@ void StateTracker2::setUpLevels() {
                                         7, 1000);
 
     this->levels[3] = setUpLevelsHelper(300000,
-                                        0, 0,
-                                        0, 0,
-                                        0, 0);
+                                        3, 3000,
+                                        5, 2000,
+                                        7, 1000);
 }
 
 /**
