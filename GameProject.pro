@@ -22,7 +22,8 @@ SOURCES += \
     Office.cpp \
     Patient.cpp \
     StateTracker2.cpp \
-    Tooth.cpp
+    Tooth.cpp \
+    Tool.cpp
 
 HEADERS += \
     HomePage.h \
@@ -45,7 +46,8 @@ HEADERS += \
     Office.h \
     Patient.h \
     StateTracker2.h \
-    Tooth.h
+    Tooth.h \
+    Tool.h
 
 RESOURCES += \
     resources.qrc

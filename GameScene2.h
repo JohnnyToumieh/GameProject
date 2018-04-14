@@ -11,6 +11,7 @@
 #include "StateTracker2.h"
 #include "GameScene.h"
 #include "Tooth.h"
+#include "Tool.h"
 
 /**
  *\file GameScene2.h
@@ -41,6 +42,9 @@ public:
     QWidget* widget;
     User* user;//!<User member that represents the signed in user
     QJsonObject dataFile;//!QJsonObject member dataFile that holds information of the user
+
+    Tool** tool;
+    int toolClicked;
 
     Tooth** upperTeeth;
     int upperTeethIndex;
@@ -114,6 +118,7 @@ public slots:
     void nextLevel();//!<Member function that triggers when the next level button is clicked
     void unpauseGame();
     void checkGameState();
+     void updateToolClicked(int toolIndex);
 };
 
 #endif // GAMESCENE2_H
