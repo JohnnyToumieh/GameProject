@@ -37,7 +37,7 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     office->setFlag(QGraphicsItem::ItemIsFocusable);
     addItem(office);
 
-    setBackgroundBrush(QBrush(QImage(":game2Background").scaledToHeight(height).scaledToWidth(width)));
+    setBackgroundBrush(QBrush(QImage(":game2Background2").scaledToHeight(height).scaledToWidth(width)));
     setSceneRect(0,0,width,height);
 
     aquarium = new QGraphicsPixmapItem();
@@ -48,7 +48,7 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
 
     timeLabel = new QLabel();
     timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
-    timeLabel->move(this->width() / 2 - 30, 25);
+    timeLabel->move(400, 15);
     addWidget(timeLabel);
 
     pestilenceTimeLabel = new QLabel();
@@ -74,13 +74,13 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
 
     levelLabel = new QLabel();
     levelLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
-    levelLabel->move(300, 20);
+    levelLabel->move(30, 10);
     levelLabel->setText(QStringLiteral("Level: %1").arg(office->level));
     addWidget(levelLabel);
 
     scoreLabel = new QLabel();
     scoreLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
-    scoreLabel->move(300, 50);
+    scoreLabel->move(30, 30);
     scoreLabel->setText(QStringLiteral("Score: %1").arg(office->score));
     scoreLabel->adjustSize();
     addWidget(scoreLabel);
@@ -88,7 +88,7 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     pixmapNeedle = new QGraphicsPixmapItem();
     QPixmap *picNeedle  = new QPixmap(":needle");
     pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
-    pixmapNeedle->setPos(850, 80);
+    pixmapNeedle->setPos(850, 50);
     pixmapNeedle->setTransformOriginPoint(pixmapNeedle->boundingRect().center().x() + 20,
                                                pixmapNeedle->boundingRect().center().y());
     addItem(pixmapNeedle);

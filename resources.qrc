@@ -30,5 +30,6 @@
         <file alias="patient1">Images/patient1.png</file>
         <file alias="black">Images/black.jpeg</file>
         <file alias="mouth">Images/mouth3.jpg</file>
+        <file alias="game2Background2">Images/bkgd.PNG</file>
     </qresource>
 </RCC>
