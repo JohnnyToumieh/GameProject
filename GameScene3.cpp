@@ -34,6 +34,46 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     } else {
         office = new Office(level, 0, 0, 0, 0);
     }
+
+    QFile file("questions.txt");
+    if(!file.open(QIODevice::ReadOnly)) {
+        QMessageBox::information(0, "error", file.errorString());
+    }
+    QString questionsString="";
+    QTextStream in(&file);
+
+    while(!in.atEnd()) {
+        QString line = in.readLine();
+        questionsString = questionsString +line;
+    }
+
+    questionsString.replace(".","\n");
+    questionsString.replace("?","?\n");
+
+    questionList = questionsString.split("<Q>");
+    file.close();
+
+    QFile file1("answers.txt");
+    if(!file1.open(QIODevice::ReadOnly)) {
+        QMessageBox::information(0, "error", file.errorString());
+    }
+    QString answersString="";
+    QTextStream in1(&file1);
+
+    while(!in1.atEnd()) {
+        QString line = in1.readLine();
+        answersString = answersString +line;
+    }
+
+    answerList = answersString.split(",");
+    file.close();
+
+    for(int i=0;i<questionList.size();i++){
+        questions[questionList[i]] = answerList[i].toInt();
+    }
+
+    answered = false;
+
     office->setFlag(QGraphicsItem::ItemIsFocusable);
     addItem(office);
 
@@ -180,6 +220,24 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     patientBox->move(this->width() / 2 - patientBox->width() / 2, this->height() / 2 - patientBox->height() / 2 + 50);
     patientBox->hide();
 
+    choiceA = new QPushButton("A");
+    addWidget(choiceA);
+    choiceA->move(patientBox->x() + 5, patientBox->y() + patientBox->height() - 20 - choiceA->height());
+    choiceA->hide();
+    choiceA->setFocusPolicy(Qt::NoFocus);
+
+    choiceB = new QPushButton("B");
+    addWidget(choiceB);
+    choiceB->move(choiceA->x()+80, patientBox->y() + patientBox->height() - 20 - choiceB->height());
+    choiceB->hide();
+    choiceB->setFocusPolicy(Qt::NoFocus);
+
+    choiceC = new QPushButton("C");
+    addWidget(choiceC);
+    choiceC->move(choiceB->x()+ 80, patientBox->y() + patientBox->height() - 20 - choiceC->height());
+    choiceC->hide();
+    choiceC->setFocusPolicy(Qt::NoFocus);
+
     reject = new QPushButton("Reject");
     addWidget(reject);
     reject->move(patientBox->x() + 30, patientBox->y() + patientBox->height() - 20 - reject->height());
@@ -232,6 +290,15 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     connect(cleanAquarium, SIGNAL(clicked()), SLOT(handleAquariumRequest()));
     connect(cancelAquarium, SIGNAL(clicked()), SLOT(cancelAquariumRequest()));
 
+    QSignalMapper* signalMapper1 = new QSignalMapper(this);
+    connect(choiceA, SIGNAL(clicked()), signalMapper1, SLOT(map()));
+    connect(choiceB, SIGNAL(clicked()), signalMapper1, SLOT(map()));
+    connect(choiceC, SIGNAL(clicked()), signalMapper1, SLOT(map()));
+    signalMapper1->setMapping(choiceA, 1);
+    signalMapper1->setMapping(choiceB, 2);
+    signalMapper1->setMapping(choiceC, 3);
+    connect(signalMapper1, SIGNAL(mapped(int)), this, SLOT(answerClicked(int))) ;
+
     QSignalMapper* signalMapper = new QSignalMapper(this);
     connect(accept, SIGNAL(clicked()), signalMapper, SLOT(map()));
     connect(reject, SIGNAL(clicked()), signalMapper, SLOT(map()));
@@ -278,6 +345,26 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     this->pausedUpdateAquariumTimer = 0;
 
     updateTimer();
+}
+
+void GameScene3::answerClicked(int answer){
+    this->answer=answer;
+    answered=true;
+    patientBox->hide();
+    description->hide();
+    choiceA->hide();
+    choiceB->hide();
+    choiceC->hide();
+    int steps = office->levels[office->level]["incrementReputation"];
+    if(answer == questions[description->text()]){
+        pixmapNeedle->setRotation(pixmapNeedle->rotation() + 80 / steps);
+    }else{
+        pixmapNeedle->setRotation(pixmapNeedle->rotation() - 80 / steps);
+    }
+
+    int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+    updatePatientsTimer->start(time);
+
 }
 
 int GameScene3::getCurrentScore() {
@@ -492,6 +579,19 @@ void GameScene3::quitClicked() {
     saveFile();
 
     backToGamePage();
+
+}
+
+void GameScene3::showQuestion(){
+    answered = false;
+    int randNumb = (rand() % 10);
+    description->setText(questionList[randNumb]);
+    patientBox->show();
+    description->show();
+    choiceA->show();
+    choiceB->show();
+    choiceC->show();
+
 }
 
 /**
@@ -759,7 +859,7 @@ void GameScene3::checkGameState() {
 
                 if (game2->getLevelState() == 1) {
                     patients[index]->statusState = Patient::Satisfied;
-
+                    showQuestion();
                     office->score += office->currentMiniGameScore;
                 } else if (game2->getLevelState() == 2) {
                     patients[index]->statusState = Patient::Unsatisfied;
@@ -769,8 +869,12 @@ void GameScene3::checkGameState() {
 
                 office->currentMiniGameScore = 0;
 
-                int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
-                updatePatientsTimer->start(time);
+                if(game2->getLevelState() != 1){
+                    int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+                    updatePatientsTimer->start(time);
+                }
+
+
             }
         }
     }

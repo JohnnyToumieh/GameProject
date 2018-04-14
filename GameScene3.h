@@ -34,11 +34,19 @@ public:
     void gameOver(bool result);
     int getCurrentScore();
     int getLevelState();
+    int answer;
+
+
+    void showQuestion();
 
     Office* office;//!<Office member that represents the office
 
     Patient** patients;//!<Patient array member that represents the list of currently visibile patients
     int patientsIndex;//!<Int member that indexes the patients array
+
+    std::map<QString, int> questions;
+    QStringList questionList;
+    QStringList answerList;
 
     QGraphicsView* miniGameView;
 
@@ -64,6 +72,7 @@ public:
     QTimer* checkGameStateTimer;//!<QTimer member that updates the game state
 
     bool justPaused;
+    bool answered;
 
     QWidget* greyForeground;
     QWidget* patientBox;
@@ -77,6 +86,9 @@ public:
     QPushButton* reject;
     QPushButton* cleanAquarium;
     QPushButton* cancelAquarium;
+    QPushButton* choiceA;
+    QPushButton* choiceB;
+    QPushButton* choiceC;
 
     QLabel* levelLabel;
     QLabel* scoreLabel;
@@ -105,6 +117,7 @@ public slots:
     void handlePatient(int status);
     void handleAquariumRequest();
     void cancelAquariumRequest();
+    void answerClicked(int answer);
 };
 
 #endif // GAMESCENE3_H

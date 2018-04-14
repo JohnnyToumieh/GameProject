@@ -196,14 +196,14 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     unpause->setFocusPolicy(Qt::NoFocus);
 
     quit = new QPushButton("Quit");
-    quit->move(this->width() / 2 - 30, this->height() / 2 + 10);
+    quit->move(this->width() / 2 - 30, this->height() / 2 + 30);
     proxyWidget = addWidget(quit);
     proxyWidget->setZValue(10000);
     quit->hide();
     quit->setFocusPolicy(Qt::NoFocus);
 
     gameOverLabel = new QLabel("GAME OVER");
-    gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
+    gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 100px; }");
     gameOverLabel->move(90, 150);
     proxyWidget = addWidget(gameOverLabel);
     proxyWidget->setZValue(10000);
@@ -216,14 +216,14 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     scoreLabel2->hide();
 
     quit2 = new QPushButton("Quit");
-    quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
+    quit2->move(this->width() / 2 - 60, this->height() / 2 + 200);
     proxyWidget = addWidget(quit2);
     proxyWidget->setZValue(10000);
     quit2->hide();
     quit2->setFocusPolicy(Qt::NoFocus);
 
     nextLevelButton = new QPushButton("Next Level");
-    nextLevelButton->move(this->width() / 2 - 50, this->height() / 2 + 150);
+    nextLevelButton->move(this->width() / 2 - 50, this->height() / 2 + 200);
     proxyWidget = addWidget(nextLevelButton);
     proxyWidget->setZValue(10000);
     nextLevelButton->hide();
@@ -815,10 +815,10 @@ void GameScene2::gameOver(bool result) {
 
         nextLevelButton->show();
 
-        quit2->move(this->width() / 2 - 110, this->height() / 2 + 150);
-        nextLevelButton->move(this->width() / 2 + 10, this->height() / 2 + 150);
+        quit2->move(this->width() / 2 - 110, this->height() / 2 + 200);
+        nextLevelButton->move(this->width() / 2 + 10, this->height() / 2 + 200);
     } else {
-        quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
+        quit2->move(this->width() / 2 - 60, this->height() / 2 + 200);
 
         if (!isMiniGame) {
             saveScore();
