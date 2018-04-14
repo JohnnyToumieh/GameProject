@@ -318,9 +318,9 @@ void GameScene2::toothClicked(int toothIndex) {
             for (j = 0; j < orderSize; j++) {
                 if (order[j] == toothIndex && !guessedOrder[j]) {
                     if (toothIndex < 6) {
-                        upperTeeth[toothIndex]->setStyleSheet("QLabel { background-color : green; }");
+                        upperTeeth[toothIndex]->setType(5);
                     } else {
-                        lowerTeeth[toothIndex - 6]->setStyleSheet("QLabel { background-color : green; }");
+                        lowerTeeth[toothIndex - 6]->setType(5);
                     }
 
                     guessedOrder[j] = true;
@@ -329,9 +329,9 @@ void GameScene2::toothClicked(int toothIndex) {
             }
             if (j == orderSize) {
                 if (toothIndex < 6) {
-                    upperTeeth[toothIndex]->setStyleSheet("QLabel { background-color : red; }");
+                    upperTeeth[toothIndex]->setType(5);
                 } else {
-                    lowerTeeth[toothIndex - 6]->setStyleSheet("QLabel { background-color : red; }");
+                    lowerTeeth[toothIndex - 6]->setType(5);
                 }
 
                 gameState = GameLost;
@@ -340,9 +340,9 @@ void GameScene2::toothClicked(int toothIndex) {
         } else if (stateTracker2->level == 2) {
             if (order[orderIndex] == toothIndex) {
                 if (toothIndex < 6) {
-                    upperTeeth[toothIndex]->setStyleSheet("QLabel { background-color : green; }");
+                    upperTeeth[toothIndex]->setType(5);
                 } else {
-                    lowerTeeth[toothIndex - 6]->setStyleSheet("QLabel { background-color : green; }");
+                    lowerTeeth[toothIndex - 6]->setType(5);
                 }
 
                 guessedOrder[orderIndex] = true;
@@ -350,9 +350,9 @@ void GameScene2::toothClicked(int toothIndex) {
                 orderIndex++;
             } else {
                 if (toothIndex < 6) {
-                    upperTeeth[toothIndex]->setStyleSheet("QLabel { background-color : red; }");
+                    upperTeeth[toothIndex]->setType(5);
                 } else {
-                    lowerTeeth[toothIndex - 6]->setStyleSheet("QLabel { background-color : red; }");
+                    lowerTeeth[toothIndex - 6]->setType(5);
                 }
 
                 gameState = GameLost;
@@ -378,9 +378,9 @@ void GameScene2::toothClicked(int toothIndex) {
 void GameScene2::highlightAllTeeth() {
     for (int i = 0; i < orderSize; i++) {
         if (order[i] < 6) {
-            upperTeeth[order[i]]->setStyleSheet("QLabel { background-color : black; }");
+            upperTeeth[order[i]]->setType(2);
         } else {
-            lowerTeeth[order[i] - 6]->setStyleSheet("QLabel { background-color : black; }");
+            lowerTeeth[order[i] - 6]->setType(2);
         }
     }
 }
@@ -398,9 +398,9 @@ void GameScene2::dehighlightAllTeeth() {
 void GameScene2::resetAllTeeth() {
     for (int i = 0; i < 12; i++) {
         if (i < 6) {
-            upperTeeth[i]->setStyleSheet("QLabel { background-color : white; }");
+            upperTeeth[i]->setType(1);
         } else {
-            lowerTeeth[i - 6]->setStyleSheet("QLabel { background-color : white; }");
+            lowerTeeth[i - 6]->setType(1);
         }
     }
 }
