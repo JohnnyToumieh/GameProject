@@ -40,6 +40,8 @@ private:
     std::map<std::string, int> setUpLevelsHelper(int startTime, int endTime, int minuteInMilliSeconds,
                                                  int maxReputation, int incrementReputation,
                                                  int patientGenerationRate, int patientWeight1, int patientWeight2, int patientWeight3,
+                                                 int patientWeight4, int patientWeight5, int patientWeight6,
+                                                 int patientWeight7, int patientWeight8, int patientWeight9,
                                                  int dirtinessRate);//!<Member function sets up different levels according to passed parameters
 
 signals:

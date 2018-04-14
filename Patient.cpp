@@ -37,15 +37,57 @@ Patient::Patient(int type, Office* office, QObject *parent)
         imageName = ":patient1";
         QPixmap *pic  = new QPixmap(imageName);
         setPixmap(pic->scaled(100,230));
+        diff = 1;
     }
     else if(type==2){
         imageName = ":patient1";
         QPixmap *pic  = new QPixmap(imageName);
         setPixmap(pic->scaled(100,230));
-    }else{
+        diff = 2;
+        type =1;
+    }else if(type==3){
         imageName = ":patient1";
         QPixmap *pic  = new QPixmap(imageName);
         setPixmap(pic->scaled(100,230));
+        diff = 3;
+        type = 1;
+    }
+    else if(type ==4){
+        imageName = ":patient1";
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(100,230));
+        diff = 1;
+        type = 2;
+    } else if(type ==5){
+        imageName = ":patient1";
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(100,230));
+        diff = 2;
+        type = 2;
+    } else if(type ==6){
+        imageName = ":patient1";
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(100,230));
+        diff = 3;
+        type = 2;
+    } else if(type ==7){
+        imageName = ":patient1";
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(100,230));
+        diff = 1;
+        type = 3;
+    } else if(type ==8){
+        imageName = ":patient1";
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(100,230));
+        diff = 2;
+        type = 3;
+    } else if(type ==9){
+        imageName = ":patient1";
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(100,230));
+        diff = 3;
+        type = 3;
     }
 
     setPos(900, 350);

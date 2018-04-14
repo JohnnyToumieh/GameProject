@@ -1,5 +1,5 @@
 #include "GameScene3.h"
-
+#include <string>
 #include "Message.h"
 
 /**
@@ -386,15 +386,33 @@ void GameScene3::updatePatients(){
 
     int weight = (rand() % (office->levels[office->level]["patientWeight1"]
                         + office->levels[office->level]["patientWeight2"]
-                        + office->levels[office->level]["patientWeight3"]));
+                        + office->levels[office->level]["patientWeight3"]
+                        +  office->levels[office->level]["patientWeight4"]
+                        + office->levels[office->level]["patientWeight5"]
+                        + office->levels[office->level]["patientWeight6"]
+                        + office->levels[office->level]["patientWeight7"]
+                        + office->levels[office->level]["patientWeight8"]
+                        + office->levels[office->level]["patientWeight9"]));
 
     int type = 1;
     if (weight < office->levels[office->level]["patientWeight1"]) {
         type = 1;
     } else if (weight < office->levels[office->level]["patientWeight1"] + office->levels[office->level]["patientWeight2"]) {
         type = 2;
-    } else {
+    } else if (weight < office->levels[office->level]["patientWeight1"] + office->levels[office->level]["patientWeight2"]+ office->levels[office->level]["patientWeight3"]){
         type = 3;
+    }else if(weight < office->levels[office->level]["patientWeight1"] + office->levels[office->level]["patientWeight2"]+ office->levels[office->level]["patientWeight3"] + office->levels[office->level]["patientWeight4"]){
+         type = 4;
+    }else if(weight < office->levels[office->level]["patientWeight1"] + office->levels[office->level]["patientWeight2"]+ office->levels[office->level]["patientWeight3"] + office->levels[office->level]["patientWeight4"]+ office->levels[office->level]["patientWeight5"]){
+         type = 5;
+    }else if(weight < office->levels[office->level]["patientWeight1"] + office->levels[office->level]["patientWeight2"]+ office->levels[office->level]["patientWeight3"] + office->levels[office->level]["patientWeight4"]+ office->levels[office->level]["patientWeight5"]+ office->levels[office->level]["patientWeight6"]){
+        type = 6;
+    }else if(weight < office->levels[office->level]["patientWeight1"] + office->levels[office->level]["patientWeight2"]+ office->levels[office->level]["patientWeight3"] + office->levels[office->level]["patientWeight4"]+ office->levels[office->level]["patientWeight5"]+office->levels[office->level]["patientWeight6"]+ office->levels[office->level]["patientWeight7"]){
+        type = 7;
+    }else if(weight < office->levels[office->level]["patientWeight1"] + office->levels[office->level]["patientWeight2"]+ office->levels[office->level]["patientWeight3"] + office->levels[office->level]["patientWeight4"]+ office->levels[office->level]["patientWeight5"]+office->levels[office->level]["patientWeight6"]+ office->levels[office->level]["patientWeight7"]+office->levels[office->level]["patientWeight8"] ){
+        type = 8;
+    }else if(weight < office->levels[office->level]["patientWeight1"] + office->levels[office->level]["patientWeight2"]+ office->levels[office->level]["patientWeight3"] + office->levels[office->level]["patientWeight4"]+ office->levels[office->level]["patientWeight5"]+office->levels[office->level]["patientWeight6"]+ office->levels[office->level]["patientWeight7"]+ office->levels[office->level]["patientWeight8"]+ office->levels[office->level]["patientWeight9"]  ){
+        type = 9;
     }
 
     patients[patientsIndex] = new Patient(type, office);
@@ -710,6 +728,8 @@ void GameScene3::checkGameState() {
     if (patients[index] != NULL) {
         if (patients[index]->motionState == Patient::Waiting) {
             patientBox->show();
+            description->setText("Hello Dr."+ user->username +" \n I need your help can you please check my teeth" +
+                                                               "my case is of level: " + QString::number(patients[index]->type) + " and difficulty " + QString::number(patients[index]->diff) +"\n will you please help me?");
             description->show();
             accept->show();
             reject->show();
@@ -718,7 +738,7 @@ void GameScene3::checkGameState() {
 
             //Enter game2
             //Games shouldn't be able to be saved. It should show only the exit button that makes it like rejecting the patient (not losing the game).
-            GameScene2 *game2 = new GameScene2(widget, 800, 500, user, dataFile, false, 1, 1, true);
+            GameScene2 *game2 = new GameScene2(widget, 800, 500, user, dataFile, false, patients[index]->type, patients[index]->diff, true);
             miniGameView = new QGraphicsView(game2);
             miniGameView->setFixedSize(800, 500);
             miniGameView->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));

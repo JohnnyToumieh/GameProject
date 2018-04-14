@@ -58,6 +58,22 @@ void Office::setUpLevels() {
     this->levels[1] = setUpLevelsHelper(480, 840, 1000,
                                           10, 1,
                                           3000, 50, 30, 20,
+                                          50, 30, 20,
+                                          50, 30, 20,
+                                          5000);
+
+    this->levels[2] = setUpLevelsHelper(480, 840, 1000,
+                                          10, 1,
+                                          3000, 50, 30, 20,
+                                          50, 30, 20,
+                                          50, 30, 20,
+                                          5000);
+
+    this->levels[3] = setUpLevelsHelper(480, 840, 1000,
+                                          10, 1,
+                                          3000, 50, 30, 20,
+                                          50, 30, 20,
+                                          50, 30, 20,
                                           5000);
 }
 
@@ -94,6 +110,8 @@ void Office::setUpLevels() {
 std::map<std::string, int> Office::setUpLevelsHelper(int startTime, int endTime, int minuteInMilliSeconds,
                                      int maxReputation, int incrementReputation,
                                      int patientGenerationRate, int patientWeight1, int patientWeight2, int patientWeight3,
+                                     int patientWeight4, int patientWeight5, int patientWeight6,
+                                     int patientWeight7, int patientWeight8, int patientWeight9,
                                      int dirtinessRate) {
     std::map<std::string, int> level;
 
@@ -108,6 +126,14 @@ std::map<std::string, int> Office::setUpLevelsHelper(int startTime, int endTime,
     level["patientWeight1"] = patientWeight1;
     level["patientWeight2"] = patientWeight2;
     level["patientWeight3"] = patientWeight3;
+
+    level["patientWeight4"] = patientWeight4;
+    level["patientWeight5"] = patientWeight5;
+    level["patientWeight6"] = patientWeight6;
+
+    level["patientWeight7"] = patientWeight7;
+    level["patientWeight8"] = patientWeight8;
+    level["patientWeight9"] = patientWeight9;
 
     level["dirtinessRate"] = dirtinessRate;
 
