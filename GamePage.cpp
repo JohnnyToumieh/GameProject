@@ -145,8 +145,8 @@ void GamePage::startNewGameClicked(){
 bool GamePage::resumeGameExists() {
     if (dataFile.contains("games") && dataFile["games"].isArray()) {
         QJsonArray games = dataFile["games"].toArray();
-        if (games.size() > gameNumber - 1 && games.at(gameNumber).isObject()) {
-            QJsonObject gameData = games.at(gameNumber).toObject();
+        if (games.size() > gameNumber - 1 && games.at(gameNumber - 1).isObject()) {
+            QJsonObject gameData = games.at(gameNumber - 1).toObject();
             if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
                 QJsonArray userArray = gameData["users_save"].toArray();
 

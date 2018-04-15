@@ -26,8 +26,10 @@ class GameScene2 : public GameScene
 public:
     enum State {NotStarted, DisplayingTeeth, GuessingTeeth, GameWon, GameLost};
 
-    explicit GameScene2(QWidget* widget, int width, int height, User* user, QJsonObject dataFile,
-                        bool resume = false, int level = 1, int difficulity = 1, bool isMiniGame = false);
+    explicit GameScene2(QWidget* widget, int width, int height, User* user, QJsonObject dataFile, bool resume = false,
+                        int level = 1, int difficulity = 1,
+                        int timeLimit = 0, int specialTimeLimit = 0, int points = 0, int specialPoints = 0,
+                        bool isMiniGame = false);
 
     void setUpNextLevel();
 

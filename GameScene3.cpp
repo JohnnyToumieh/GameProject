@@ -135,7 +135,8 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
         QJsonArray patientsSave = read("patients").array();
         for (patientsIndex = 0; patientsIndex < patientsSave.size(); patientsIndex++) {
             QJsonObject currentPatient = patientsSave[patientsIndex].toObject();
-            patients[patientsIndex] = new Patient(currentPatient["type"].toInt(), office);
+            patients[patientsIndex] = new Patient(currentPatient["type"].toInt(), office,
+                    currentPatient["motionState"].toString(), currentPatient["statusState"].toString());
             patients[patientsIndex]->setX(currentPatient["x"].toDouble());
             patients[patientsIndex]->setY(currentPatient["y"].toDouble());
             addItem(patients[patientsIndex]);
@@ -354,8 +355,12 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
         timeUpdater->setSingleShot(true);
 
         timeUpdater->start(pausedTimesSave["pausedTimeUpdater"].toInt());
-        updatePatientsTimer->start(pausedTimesSave["pausedUpdatePatientsTimer"].toInt());
-        updateAquariumTimer->start(pausedTimesSave["pausedUpdateAquariumTimer"].toInt());
+        if (pausedTimesSave.contains("pausedUpdatePatientsTimer")) {
+            updatePatientsTimer->start(pausedTimesSave["pausedUpdatePatientsTimer"].toInt());
+        }
+        if (pausedTimesSave.contains("pausedUpdateAquariumTimer")) {
+            updateAquariumTimer->start(pausedTimesSave["pausedUpdateAquariumTimer"].toInt());
+        }
     } else {
         timeUpdater->start(100);
         updatePatientsTimer->start(office->levels[office->level]["patientGenerationRate"]);
@@ -695,7 +700,9 @@ void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
 
             currentPatient["x"] = this->patients[i]->x();
             currentPatient["y"] = this->patients[i]->y();
-            currentPatient["type"] = this->patients[i]->type;
+            currentPatient["type"] = 3 * (this->patients[i]->type - 1) + this->patients[i]->diff;
+            currentPatient["motionState"] = this->patients[i]->getMotionState();
+            currentPatient["statusState"] = this->patients[i]->getStatusState();
 
             patients.append(currentPatient);
         }
@@ -709,17 +716,14 @@ void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
     QJsonObject pausedTimes;
 
     pausedTimes["pausedTimeUpdater"] = this->pausedTimeUpdater;
-    pausedTimes["pausedUpdatePatientsTimer"] = this->pausedUpdatePatientsTimer;
-    pausedTimes["pausedUpdateAquariumTimer"] = this->pausedUpdateAquariumTimer;
+    if (this->pausedUpdatePatientsTimer > 0) {
+        pausedTimes["pausedUpdatePatientsTimer"] = this->pausedUpdatePatientsTimer;
+    }
+    if (this->pausedUpdateAquariumTimer > 0) {
+        pausedTimes["pausedUpdateAquariumTimer"] = this->pausedUpdateAquariumTimer;
+    }
 
     saveObject["pausedTimes"] = pausedTimes;
-
-    // Add needle orientation
-    QJsonObject needle;
-
-    needle["rotation"] = this->pixmapNeedle->rotation();
-
-    saveObject["needle"] = needle;
 }
 
 /**
@@ -903,17 +907,26 @@ void GameScene3::checkGameState() {
     // Check patient's status
     index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
     if (patients[index] != NULL) {
+        int timeLimit = (patients[index]->type + patients[index]->diff) * 1000 + 20000;
+        int specialTimeLimit = timeLimit * 2 / 3;
+        int points = (patients[index]->type + patients[index]->diff) * 100;
+        int specialPoints = points * 5 / 4;
+
         if (patients[index]->motionState == Patient::Waiting) {
             QString username;
             patientBox->show();
-            if(user->isGuest){
-                username = "X";
-            }else{
-                username = user->username;
+
+            QString userName;
+            if (user->isGuest) {
+                userName = "X";
+            } else {
+                userName = user->username;
             }
-            description->setText("Hello Dr."+ username +" \nI need your help can you please check my teeth?\n" +
-                                                               "Level: " + QString::number(patients[index]->type)
-                                                             + "\nDifficulty: " + QString::number(patients[index]->diff));
+            description->setText("Help Dr. " + userName + "!\nMy teeth are about to fall out!"
+                                 + "\n\nLevel: " + QString::number(patients[index]->type)
+                                 + "\nDifficulty: " + QString::number(patients[index]->diff)
+                                 + "\n\nTime Limit: " + QString::number(timeLimit / 1000) + "s"
+                                 + "\nSpecial Time Limit: " + QString::number(specialTimeLimit / 1000) + "s");
             description->show();
             accept->show();
             reject->show();
@@ -922,7 +935,10 @@ void GameScene3::checkGameState() {
 
             //Enter game2
             //Games shouldn't be able to be saved. It should show only the exit button that makes it like rejecting the patient (not losing the game).
-            GameScene2 *game2 = new GameScene2(widget, 800, 500, user, dataFile, false, patients[index]->type, patients[index]->diff, true);
+            GameScene2 *game2 = new GameScene2(widget, 800, 500, user, dataFile, false,
+                                               patients[index]->type, patients[index]->diff,
+                                               timeLimit, specialTimeLimit, points, specialPoints,
+                                               true);
             miniGameView = new QGraphicsView(game2);
             miniGameView->setFixedSize(800, 500);
             miniGameView->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
@@ -942,7 +958,11 @@ void GameScene3::checkGameState() {
 
                 if (office->currentMiniGameState == 1) {
                     patients[index]->motionState = Patient::Done;
-                    patients[index]->statusState = Patient::Satisfied;
+                    if (office->currentMiniGameScore == specialPoints) {
+                        patients[index]->statusState = Patient::ReallySatisfied;
+                    } else {
+                        patients[index]->statusState = Patient::Satisfied;
+                    }
                     office->score += office->currentMiniGameScore;
                 } else {
                     // Check if reputation meter full
@@ -964,10 +984,10 @@ void GameScene3::checkGameState() {
                             } else {
                                 office->currentReputation = 0;
                             }
-
                         }
+
                         int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
-                         updatePatientsTimer->start(time);
+                        updatePatientsTimer->start(time);
                     }
                 }
 

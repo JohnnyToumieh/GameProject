@@ -294,11 +294,11 @@ GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJson
         timeUpdater->start(pausedTimesSave["pausedTimeUpdater"].toInt());
         updateItemsTimer->start(pausedTimesSave["pausedUpdateItemsTimer"].toInt());
         updateBacteriasTimer->start(pausedTimesSave["pausedUpdateBacteriasTimer"].toInt());
-        if (pausedTimesSave.contains("virusTimer")) {
-            virusTimer->start(pausedTimesSave["virusTimer"].toInt());
+        if (pausedTimesSave.contains("pausedVirusTimer")) {
+            virusTimer->start(pausedTimesSave["pausedVirusTimer"].toInt());
         }
-        if (pausedTimesSave.contains("pestilenceTimer")) {
-           pestilenceTimer->start(pausedTimesSave["pestilenceTimer"].toInt());
+        if (pausedTimesSave.contains("pausedPestilenceTimer")) {
+           pestilenceTimer->start(pausedTimesSave["pausedPestilenceTimer"].toInt());
            updateTimer();
            pestilenceTimeLabel->show();
            pestilenceTimeLabel2->show();

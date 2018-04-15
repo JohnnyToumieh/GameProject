@@ -20,7 +20,10 @@
  * @param bool resume determines is the game is being resumed
  * @param int level determines if the game should start at a specific level
  */
-GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level, int difficulity, bool isMiniGame) : GameScene(widget, user, dataFile, 2, isMiniGame)
+GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume,
+                       int level, int difficulity,
+                       int timeLimit, int specialTimeLimit, int points, int specialPoints,
+                       bool isMiniGame) : GameScene(widget, user, dataFile, 2, isMiniGame)
 {
     srand(QTime::currentTime().msec());
 
@@ -31,9 +34,9 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
         stateTracker2 = new StateTracker2(stateTracker2Save["level"].toInt(),
                 stateTracker2Save["difficulity"].toInt(),
                 stateTracker2Save["currentTime"].toInt(),
-                stateTracker2Save["score"].toInt());
+                stateTracker2Save["score"].toInt(), 0, 0, 0, 0);
     } else {
-        stateTracker2 = new StateTracker2(level, difficulity, 0, 0);
+        stateTracker2 = new StateTracker2(level, difficulity, 0, 0, points, specialPoints, timeLimit, specialTimeLimit);
     }
     stateTracker2->setFlag(QGraphicsItem::ItemIsFocusable);
     addItem(stateTracker2);
@@ -777,17 +780,23 @@ void GameScene2::checkGameState() {
     difficulityLabel->adjustSize();
 
     // Check if time is up
-    if (time->elapsed() + pausedTime >= stateTracker2->levels[stateTracker2->level]["maxTime"]) {
-        int secs = stateTracker2->levels[stateTracker2->level]["maxTime"] / 1000;
+    if (time->elapsed() + pausedTime >= stateTracker2->timeLimit) {
+        stateTracker2->score = 0;
+
+        int secs = stateTracker2->timeLimit / 1000;
         int mins = (secs / 60) % 60;
         secs = secs % 60;
         timeLabel->setText(QString("%1:%2")
         .arg(mins, 2, 10, QLatin1Char('0'))
         .arg(secs, 2, 10, QLatin1Char('0')) );
 
-        stateTracker2->currentTime = stateTracker2->levels[stateTracker2->level]["maxTime"];
+        stateTracker2->currentTime = stateTracker2->timeLimit;
 
         gameOver(false);
+    } else if (time->elapsed() + pausedTime >= stateTracker2->specialTimeLimit) {
+        stateTracker2->score = stateTracker2->points;
+    } else {
+        stateTracker2->score = stateTracker2->specialPoints;
     }
 }
 
@@ -806,11 +815,6 @@ void GameScene2::gameOver(bool result) {
     }
 
     timeUpdater->stop();
-
-    if (result) {
-        stateTracker2->score += stateTracker2->levels[stateTracker2->level]["maxTime"] / stateTracker2->currentTime - 1;
-        stateTracker2->score *= stateTracker2->level * stateTracker2->difficulity;
-    }
 
     greyForeground->setStyleSheet("background-color: rgba(0, 0, 0, 255);");
     greyForeground->show();

@@ -20,24 +20,42 @@
  * @param QGraphicsPixmapItem** pixmapLifeList the array of spongebob's lives
  */
 
-Patient::Patient(int type, Office* office, QObject *parent)
+Patient::Patient(int type, Office* office, QString motionState, QString statusState, QObject *parent)
 {
     srand(QTime::currentTime().msec());
 
-    this->type=type;
     this->office=office;
 
     this->justPaused = true;
     this->toDelete = false;
 
-    this->motionState = Patient::Arriving;
-    this->statusState = Patient::None;
+    motionStates["Arriving"] = Arriving;
+    motionStates["Waiting"] = Waiting;
+    motionStates["GettingReady"] = GettingReady;
+    motionStates["Ready"] = Ready;
+    motionStates["InProgress"] = InProgress;
+    motionStates["Done"] = Done;
+    motionStates["ReadyForAdvice"] = ReadyForAdvice;
+    motionStates["ReceivingAdvice"] = ReceivingAdvice;
+    motionStates["Leaving"] = Leaving;
+    motionStates["Left"] = Left;
+
+    statusStates["None"] = None;
+    statusStates["Rejected"] = Rejected;
+    statusStates["Accepted"] = Accepted;
+    statusStates["ReallySatisfied"] = ReallySatisfied;
+    statusStates["Satisfied"] = Satisfied;
+    statusStates["Unsatisfied"] = Unsatisfied;
+
+    this->motionState = motionStates[motionState.toStdString()];
+    this->statusState = statusStates[statusState.toStdString()];
 
     if(type==1){
         imageName = ":patient1";
         QPixmap *pic  = new QPixmap(imageName);
         setPixmap(pic->scaled(100,230));
         diff = 1;
+        this->type =1;
     }
     else if(type==2){
         imageName = ":patient1";
@@ -101,6 +119,22 @@ Patient::Patient(int type, Office* office, QObject *parent)
     checkGameStateTimer = new QTimer(this);
     connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
     checkGameStateTimer->start(100);
+}
+
+QString Patient::getMotionState() {
+    for (std::unordered_map<std::string, MotionState>::const_iterator it = motionStates.begin(); it != motionStates.end(); ++it) {
+        if (it->second == motionState) {
+            return QString::fromStdString(it->first);
+        }
+    }
+}
+
+QString Patient::getStatusState() {
+    for (std::unordered_map<std::string, StatusState>::const_iterator it = statusStates.begin(); it != statusStates.end(); ++it) {
+        if (it->second == statusState) {
+            return QString::fromStdString(it->first);
+        }
+    }
 }
 
 /**
@@ -178,9 +212,9 @@ void Patient::update(){
                 }
             }
 
-            if (statusState == Rejected || statusState == Unsatisfied) {
+            if (statusState == Rejected || statusState == Unsatisfied || statusState == Satisfied) {
                 motionState = Leaving;
-            } else if (statusState == Satisfied) {
+            } else if (statusState == ReallySatisfied) {
                 if (x() > 650) {
                     motionState = ReadyForAdvice;
                 }
