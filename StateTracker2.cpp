@@ -18,7 +18,9 @@
  * @param currentTime argument integer indicating the time of the game timer
  * @param score argument integer indicating the score
  */
-StateTracker2::StateTracker2(int level, int difficulity, int currentTime, int score, QObject *parent) : QObject(parent)
+StateTracker2::StateTracker2(int level, int difficulity, int currentTime,
+                             int score, int points, int specialPoints,
+                             int timeLimit, int specialTimeLimit, QObject *parent) : QObject(parent)
 {
     this->level = level;
     this->difficulity = difficulity;
@@ -28,6 +30,10 @@ StateTracker2::StateTracker2(int level, int difficulity, int currentTime, int sc
     this->currentTime = currentTime;
 
     this->score = score;
+    this->points = points;
+    this->specialPoints = specialPoints;
+    this->timeLimit = timeLimit;
+    this->specialTimeLimit = specialTimeLimit;
 
     this->gamePaused = false;
     this->requestForUnpause = false;

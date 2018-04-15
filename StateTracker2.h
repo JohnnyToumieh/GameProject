@@ -16,7 +16,10 @@ class StateTracker2 : public QObject,  public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    explicit StateTracker2(int level, int difficulity, int currentTime, int score, QObject *parent = nullptr);
+    explicit StateTracker2(int level, int difficulity, int currentTime,
+                           int score, int points, int specialPoints,
+                           int timeLimit, int specialTimeLimit,
+                           QObject *parent = nullptr);
     void setUpLevels();
 
     void keyPressEvent(QKeyEvent *event);
@@ -28,6 +31,12 @@ public:
     int currentTime;//!<Integer member that represents the current Time
 
     int score;//!<Integer member that represents the score
+
+    int points;
+    int specialPoints;
+
+    int timeLimit;
+    int specialTimeLimit;
 
     int width;
     int height;

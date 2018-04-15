@@ -905,10 +905,24 @@ void GameScene3::checkGameState() {
     // Check patient's status
     index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
     if (patients[index] != NULL) {
+        int timeLimit = (patients[index]->type + patients[index]->diff) * 1000 + 10000;
+        int specialTimeLimit = timeLimit * 2 / 3;
+        int points = (patients[index]->type + patients[index]->diff) * 100;
+        int specialPoints = points * 5 / 4;
+
         if (patients[index]->motionState == Patient::Waiting) {
             patientBox->show();
-            description->setText("Hello Dr."+ user->username +" \n I need your help can you please check my teeth" +
-                                                               "my case is of level: " + QString::number(patients[index]->type) + " and difficulty " + QString::number(patients[index]->diff) +"\n will you please help me?");
+            QString userName;
+            if (user->isGuest) {
+                userName = "X";
+            } else {
+                userName = user->username;
+            }
+            description->setText("Help Dr. " + userName + "!\nMy teeth are about to fall out!"
+                                 + "\n\nLevel: " + QString::number(patients[index]->type)
+                                 + "\nDifficulty: " + QString::number(patients[index]->diff)
+                                 + "\n\nTime Limit: " + QString::number(timeLimit / 1000) + "s"
+                                 + "\nSpecial Time Limit: " + QString::number(specialTimeLimit / 1000) + "s");
             description->show();
             accept->show();
             reject->show();
@@ -917,7 +931,10 @@ void GameScene3::checkGameState() {
 
             //Enter game2
             //Games shouldn't be able to be saved. It should show only the exit button that makes it like rejecting the patient (not losing the game).
-            GameScene2 *game2 = new GameScene2(widget, 800, 500, user, dataFile, false, patients[index]->type, patients[index]->diff, true);
+            GameScene2 *game2 = new GameScene2(widget, 800, 500, user, dataFile, false,
+                                               patients[index]->type, patients[index]->diff,
+                                               timeLimit, specialTimeLimit, points, specialPoints,
+                                               true);
             miniGameView = new QGraphicsView(game2);
             miniGameView->setFixedSize(800, 500);
             miniGameView->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));

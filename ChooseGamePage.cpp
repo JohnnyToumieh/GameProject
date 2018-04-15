@@ -33,7 +33,7 @@ ChooseGamePage::ChooseGamePage(QWidget *widget, User* user, QJsonObject dataFile
     grid = new QGridLayout();
 
     game1 = new QPushButton("Game 1: Aqua Clean");
-    game2 = new QPushButton("Game 2: TBA");
+    game2 = new QPushButton("Game 2: The Clinic");
     back = new QPushButton("Back to home");
 
     profilePictureL = new QLabel();
