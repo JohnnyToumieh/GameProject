@@ -355,8 +355,12 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
         timeUpdater->setSingleShot(true);
 
         timeUpdater->start(pausedTimesSave["pausedTimeUpdater"].toInt());
-        updatePatientsTimer->start(pausedTimesSave["pausedUpdatePatientsTimer"].toInt());
-        updateAquariumTimer->start(pausedTimesSave["pausedUpdateAquariumTimer"].toInt());
+        if (pausedTimesSave.contains("pausedUpdatePatientsTimer")) {
+            updatePatientsTimer->start(pausedTimesSave["pausedUpdatePatientsTimer"].toInt());
+        }
+        if (pausedTimesSave.contains("pausedUpdateAquariumTimer")) {
+            updateAquariumTimer->start(pausedTimesSave["pausedUpdateAquariumTimer"].toInt());
+        }
     } else {
         timeUpdater->start(100);
         updatePatientsTimer->start(office->levels[office->level]["patientGenerationRate"]);
@@ -711,8 +715,12 @@ void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
     QJsonObject pausedTimes;
 
     pausedTimes["pausedTimeUpdater"] = this->pausedTimeUpdater;
-    pausedTimes["pausedUpdatePatientsTimer"] = this->pausedUpdatePatientsTimer;
-    pausedTimes["pausedUpdateAquariumTimer"] = this->pausedUpdateAquariumTimer;
+    if (this->pausedUpdatePatientsTimer > 0) {
+        pausedTimes["pausedUpdatePatientsTimer"] = this->pausedUpdatePatientsTimer;
+    }
+    if (this->pausedUpdateAquariumTimer > 0) {
+        pausedTimes["pausedUpdateAquariumTimer"] = this->pausedUpdateAquariumTimer;
+    }
 
     saveObject["pausedTimes"] = pausedTimes;
 }
