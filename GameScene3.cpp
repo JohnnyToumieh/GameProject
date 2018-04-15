@@ -699,7 +699,7 @@ void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
 
             currentPatient["x"] = this->patients[i]->x();
             currentPatient["y"] = this->patients[i]->y();
-            currentPatient["type"] = this->patients[i]->type;
+            currentPatient["type"] = 3 * (this->patients[i]->type - 1) + this->patients[i]->diff;
             currentPatient["motionState"] = this->patients[i]->getMotionState();
             currentPatient["statusState"] = this->patients[i]->getStatusState();
 
