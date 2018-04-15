@@ -17,14 +17,14 @@
  * @param QWidget *widget represents the main widget holding all items
  * @param int gameNumber 1 or 2 depends on what user chose at ChooseGamePage
  * @param User* user is the user signed in
- * @param QJsonObject usersFile holds the info of the user
+ * @param QJsonObject dataFile holds the info of the user
  */
-HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile)
+HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObject dataFile)
 {
     this->gameNumber = gameNumber;
     this->widget = widget;
     this->user = user;
-    this->usersFile = usersFile;
+    this->dataFile = dataFile;
 
     top10ScoresL = new QLabel("Your top 10 scores are:");
     scores = new QListWidget();
@@ -36,7 +36,7 @@ HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObjec
 
     top10Scores = new QString[10]();
 
-    read(usersFile);
+    read(dataFile);
     for(int i=0;i<10;i++){
         QListWidgetItem *item = new QListWidgetItem(top10Scores[i]);
          scores->addItem(item);
@@ -64,7 +64,7 @@ HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObjec
 void HistoryPage::backClicked(){
     qDeleteAll(widget->children());
 
-    GameOnePage *chooseGamePage = new GameOnePage(widget, gameNumber, user, usersFile);
+    GamePage *chooseGamePage = new GamePage(widget, gameNumber, user, dataFile);
 }
 
 /**

@@ -25,6 +25,8 @@ public:
     int type;//!<Integer member type (1,2 or 3) that represents type of the bacteria
     int speed;//!<Integer member speed that represents the speed of the bacteria
 
+    QString imageName;
+
     bool toDelete;//!<Boolean member that state if the bacteria is to be deleted from the saving list
 
     Aquarium* aquarium;//!<Aquarium member that represents the aquarium

@@ -1,32 +1,28 @@
-#include "Game1Scene.h"
+#include "GameScene1.h"
 
 #include "Message.h"
 
 /**
- *\file Game1Scene.cpp
- *@brief contains Game1Scene class definition which represents the game 1 shell.
+ *\file GameScene1.cpp
+ *@brief contains GameScene1 class definition which represents the game 1 shell.
  *
  * It handles saving of games, the creation and deletion of elements and tracking the game state.
  *
  */
 
 /**
- * @brief Game1Scene::Game1Scene constructor of Game1Scene class
+ * @brief GameScene1::GameScene1 constructor of GameScene1 class
  *
  * A constructor that sets up the game with all initial attributes.
  * @param QWidget *widget represents the main widget holding all items
  * @param User* user is the user signed in
- * @param QJsonObject usersFile holds the info of the user
+ * @param QJsonObject dataFile holds the info of the user
  * @param bool resume determines is the game is being resumed
  * @param int level determines if the game should start at a specific level
  */
-Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool resume, int level, QGraphicsScene *parent) : QGraphicsScene(parent)
+GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level, bool isMiniGame) : GameScene(widget, user, dataFile, 1, isMiniGame)
 {
     srand(QTime::currentTime().msec());
-
-    this->widget = widget;
-    this->user = user;
-    this->usersFile = usersFile;
 
     if (resume) {
         QJsonObject aquariumSave = read("aquarium").object();
@@ -38,26 +34,29 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         aquarium = new Aquarium(level, 0, 0, 0);
     }
 
-    setBackgroundBrush(QBrush(QImage("background2.JPG").scaledToHeight(600).scaledToWidth(1000)));
-    setSceneRect(0,0,1000,600);
+    aquarium->width = width;
+    aquarium->height = height;
 
-    timeLabel = new QLabel();
+    setBackgroundBrush(QBrush(QImage(":game1Background").scaledToHeight(height).scaledToWidth(width)));
+    setSceneRect(0,0,width,height);
+
+    timeLabel = new QLabel("00:00");
     timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
-    timeLabel->move(this->width() / 2 - 30, 25);
     addWidget(timeLabel);
-
-    pestilenceTimeLabel = new QLabel();
-    pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");
-    pestilenceTimeLabel->move(this->width() / 2 + 320, 160);
-    addWidget(pestilenceTimeLabel);
-    pestilenceTimeLabel->hide();
+    timeLabel->move(this->width() / 2 - timeLabel->width() / 2, this->height() / 24);
 
     pestilenceTimeLabel2 = new QLabel("Pestilence will get summoned after:");
     pestilenceTimeLabel2->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : black; font: 20px; }");
-    pestilenceTimeLabel2->move(this->width() / 2 + 310, 110);
     pestilenceTimeLabel2->setWordWrap(true);
     addWidget(pestilenceTimeLabel2);
+    pestilenceTimeLabel2->move(this->width() - pestilenceTimeLabel2->width() - this->width() / 100, this->height() / 5.45);
     pestilenceTimeLabel2->hide();
+
+    pestilenceTimeLabel = new QLabel("00:00");
+    pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");
+    addWidget(pestilenceTimeLabel);
+    pestilenceTimeLabel->move(this->width() - pestilenceTimeLabel->width() - this->width() / 100, pestilenceTimeLabel2->y() + pestilenceTimeLabel2->height() + this->height() / 100);
+    pestilenceTimeLabel->hide();
 
     unpauseLabel = new QLabel();
     unpauseLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : white; font: 140px; }");
@@ -69,21 +68,21 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
 
     levelLabel = new QLabel();
     levelLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
-    levelLabel->move(300, 20);
+    levelLabel->move(this->width() / 3.33, this->height() / 30);
     levelLabel->setText(QStringLiteral("Level: %1").arg(aquarium->level));
     addWidget(levelLabel);
 
     scoreLabel = new QLabel();
     scoreLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 20px; }");
-    scoreLabel->move(300, 50);
+    scoreLabel->move(this->width() / 3.33, levelLabel->y() + levelLabel->height() + this->height() / 100);
     scoreLabel->setText(QStringLiteral("Score: %1").arg(aquarium->score));
     scoreLabel->adjustSize();
     addWidget(scoreLabel);
 
     pixmapNeedle = new QGraphicsPixmapItem();
-    QPixmap *picNeedle  = new QPixmap("needle.png");
-    pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
-    pixmapNeedle->setPos(850, 80);
+    QPixmap *picNeedle  = new QPixmap(":needle");
+    pixmapNeedle->setPixmap(picNeedle->scaled(this->width() / 12.5, this->height() / 30));
+    pixmapNeedle->setPos(this->width() - this->width() / 6.67, this->height() / 7.5);
     pixmapNeedle->setTransformOriginPoint(pixmapNeedle->boundingRect().center().x() + 20,
                                                pixmapNeedle->boundingRect().center().y());
     addItem(pixmapNeedle);
@@ -91,16 +90,16 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     pixmapLife1 = new QGraphicsPixmapItem();
     pixmapLife2 = new QGraphicsPixmapItem();
     pixmapLife3 = new QGraphicsPixmapItem();
-    QPixmap *picLife  = new QPixmap("life.png");
+    QPixmap *picLife  = new QPixmap(":life");
 
-    pixmapLife1->setPixmap(picLife->scaled(50,50));
-    pixmapLife1->setPos(600,30);
+    pixmapLife1->setPixmap(picLife->scaled(this->width() / 20, this->width() / 20));
+    pixmapLife1->setPos(this->width() - this->width() / 2.5, this->height() / 20);
     addItem(pixmapLife1);
-    pixmapLife2->setPixmap(picLife->scaled(50,50));
-    pixmapLife2->setPos(650,30);
+    pixmapLife2->setPixmap(picLife->scaled(this->width() / 20, this->width() / 20));
+    pixmapLife2->setPos(pixmapLife1->x() + this->width() / 20, this->height() / 20);
     addItem(pixmapLife2);
-    pixmapLife3->setPixmap(picLife->scaled(50,50));
-    pixmapLife3->setPos(700,30);
+    pixmapLife3->setPixmap(picLife->scaled(this->width() / 20, this->width() / 20));
+    pixmapLife3->setPos(pixmapLife2->x() + this->width() / 20, this->height() / 20);
     addItem(pixmapLife3);
 
     pixmapLifeList = new QGraphicsPixmapItem*[3];
@@ -110,8 +109,8 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     pixmapLifeList[2]=pixmapLife3;
 
     greenColorItem= new QGraphicsPixmapItem();
-    greenColorItem->setPos(15,51);
-    QPixmap *greenColor = new QPixmap("needle.png");
+    greenColorItem->setPos(this->width() / 66.67, this->height() / 11.7647);
+    QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
     addItem(greenColorItem);
@@ -223,21 +222,21 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     greyForeground->hide();
 
     unpause = new QPushButton("Unpause");
-    unpause->move(this->width() / 2 - 30, this->height() / 2 - 20);
     proxyWidget = addWidget(unpause);
+    unpause->move(this->width() / 2 - unpause->width() / 2, this->height() / 2 - unpause->height() * 3 / 4);
     proxyWidget->setZValue(10000);
     unpause->hide();
 
     quit = new QPushButton("Quit");
-    quit->move(this->width() / 2 - 30, this->height() / 2 + 10);
     proxyWidget = addWidget(quit);
+    quit->move(this->width() / 2 - quit->width() / 2, this->height() / 2 + quit->height() * 3 / 4);
     proxyWidget->setZValue(10000);
     quit->hide();
 
     gameOverLabel = new QLabel("GAME OVER");
     gameOverLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 140px; }");
-    gameOverLabel->move(90, 150);
     proxyWidget = addWidget(gameOverLabel);
+    gameOverLabel->move(this->width() / 2 - gameOverLabel->width() / 2, this->height() / 4);
     proxyWidget->setZValue(10000);
     gameOverLabel->hide();
 
@@ -248,14 +247,14 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     scoreLabel2->hide();
 
     quit2 = new QPushButton("Quit");
-    quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
     proxyWidget = addWidget(quit2);
+    quit2->move(this->width() / 2 + quit2->width() * 1 / 4, this->height() / 1.4);
     proxyWidget->setZValue(10000);
     quit2->hide();
 
     nextLevelButton = new QPushButton("Next Level");
-    nextLevelButton->move(this->width() / 2 - 50, this->height() / 2 + 150);
     proxyWidget = addWidget(nextLevelButton);
+    nextLevelButton->move(this->width() / 2 - nextLevelButton->width() * 5 / 4, this->height() / 1.4);
     proxyWidget->setZValue(10000);
     nextLevelButton->hide();
 
@@ -295,11 +294,11 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
         timeUpdater->start(pausedTimesSave["pausedTimeUpdater"].toInt());
         updateItemsTimer->start(pausedTimesSave["pausedUpdateItemsTimer"].toInt());
         updateBacteriasTimer->start(pausedTimesSave["pausedUpdateBacteriasTimer"].toInt());
-        if (pausedTimesSave.contains("virusTimer")) {
-            virusTimer->start(pausedTimesSave["virusTimer"].toInt());
+        if (pausedTimesSave.contains("pausedVirusTimer")) {
+            virusTimer->start(pausedTimesSave["pausedVirusTimer"].toInt());
         }
-        if (pausedTimesSave.contains("pestilenceTimer")) {
-           pestilenceTimer->start(pausedTimesSave["pestilenceTimer"].toInt());
+        if (pausedTimesSave.contains("pausedPestilenceTimer")) {
+           pestilenceTimer->start(pausedTimesSave["pausedPestilenceTimer"].toInt());
            updateTimer();
            pestilenceTimeLabel->show();
            pestilenceTimeLabel2->show();
@@ -322,12 +321,20 @@ Game1Scene::Game1Scene(QWidget *widget, User* user, QJsonObject usersFile, bool 
     updateTimer();
 }
 
+int GameScene1::getCurrentScore() {
+    return aquarium->score;
+}
+
+int GameScene1::getLevelState() {
+    return aquarium->levels[aquarium->level]["levelState"];
+}
+
 /**
- * @brief Game1Scene::nextLevel
+ * @brief GameScene1::nextLevel
  *
  * A member function that loads the next level and mainly sets the timers.
  */
-void Game1Scene::nextLevel() {
+void GameScene1::nextLevel() {
     scoreLabel2->hide();
     quit2->hide();
     greyForeground->hide();
@@ -352,11 +359,11 @@ void Game1Scene::nextLevel() {
 }
 
 /**
- * @brief Game1Scene::setUpNextLevel
+ * @brief GameScene1::setUpNextLevel
  *
  * A member function that sets up the next level.
  */
-void Game1Scene::setUpNextLevel() {
+void GameScene1::setUpNextLevel() {
     aquarium->level++;
     aquarium->currentCleanliness = 0;
     aquarium->currentTime = 0;
@@ -370,7 +377,7 @@ void Game1Scene::setUpNextLevel() {
 
     spongeBob->reset();
 
-    QPixmap *greenColor = new QPixmap("needle.png");
+    QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
 
@@ -380,11 +387,11 @@ void Game1Scene::setUpNextLevel() {
 }
 
 /**
- * @brief Game1Scene::virusUpdate
+ * @brief GameScene1::virusUpdate
  *
  * A member function that generates a new virus.
  */
-void Game1Scene::virusUpdate(){
+void GameScene1::virusUpdate(){
     int time = (rand() % 2000) + aquarium->levels[aquarium->level]["virusGenerationRate"] - 1000;
     virusTimer->start(time);
 
@@ -421,11 +428,11 @@ void Game1Scene::virusUpdate(){
 }
 
 /**
- * @brief Game1Scene::summonPestilence
+ * @brief GameScene1::summonPestilence
  *
  * A member function that summons Pestilence.
  */
-void Game1Scene::summonPestilence() {
+void GameScene1::summonPestilence() {
     pestilenceTimeLabel->hide();
     pestilenceTimeLabel2->hide();
 
@@ -438,11 +445,11 @@ void Game1Scene::summonPestilence() {
 }
 
 /**
- * @brief Game1Scene::updateTimer
+ * @brief GameScene1::updateTimer
  *
  * A member function that updates time based labels.
  */
-void Game1Scene::updateTimer() {
+void GameScene1::updateTimer() {
     if (timeUpdater->isSingleShot()) {
         timeUpdater->setSingleShot(false);
         timeUpdater->start(500);
@@ -470,11 +477,11 @@ void Game1Scene::updateTimer() {
 }
 
 /**
- * @brief Game1Scene::updateItems
+ * @brief GameScene1::updateItems
  *
  * A member function that generates a new item.
  */
-void Game1Scene::updateItems(){
+void GameScene1::updateItems(){
     int time = (rand() % 500) + aquarium->levels[aquarium->level]["itemDropRate"] - 250;
     updateItemsTimer->start(time);
 
@@ -497,147 +504,37 @@ void Game1Scene::updateItems(){
 }
 
 /**
- * @brief Game1Scene::unpauseClicked
+ * @brief GameScene1::unpauseClicked
  *
  * A member function that unpauses the game (sending it into the 3..2..1 state).
  */
-void Game1Scene::unpauseClicked() {
+void GameScene1::unpauseClicked() {
    aquarium->requestForUnpause = true;
 }
 
 /**
- * @brief Game1Scene::quitClicked
+ * @brief GameScene1::quitClicked
  *
- * A member function that exists the game and goes back to the GameOnePage.
+ * A member function that exists the game and goes back to the GamePage.
  */
-void Game1Scene::quitClicked() {
-    if (spongeBob->lives > 0) {
+void GameScene1::quitClicked() {
+    if (spongeBob->lives > 0 && !isMiniGame) {
         saveProgress();
 
         saveFile();
     }
 
-    views()[0]->close();
-    GameOnePage *gameOnePage = new GameOnePage(widget, 1, user, usersFile);
-    widget->show();
+    backToGamePage();
 }
 
 /**
- * @brief Game1Scene::saveFile
- *
- * A member function that saves the data of usersFile to disk.
- */
-void Game1Scene::saveFile() {
-    QFile saveFile(QStringLiteral("Data.json"));
-
-    if (!saveFile.open(QIODevice::WriteOnly)) {
-        Message *msg = new Message("Couldn't open data file to save.");
-        msg->show();
-    }
-
-    QJsonDocument saveDoc(usersFile);
-    saveFile.write(saveDoc.toJson());
-}
-
-/**
- * @brief Game1Scene::read
- *
- * A member function that reads a specific part of the game saved.
- *
- * @param QString type that specifies the part of the saved progress to load.
- *
- * @return QJsonDocument the saved progress part needed.
- */
-QJsonDocument Game1Scene::read(QString type) {
-    QJsonObject save;
-    if (usersFile.contains("games") && usersFile["games"].isArray()) {
-        QJsonArray games = usersFile["games"].toArray();
-        if (games.size() > 0 && games.at(0).isObject()) {
-            QJsonObject gameData = games.at(0).toObject();
-            if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
-                QJsonArray userArray = gameData["users_save"].toArray();
-
-                // If save for user already created, overwrite it
-                for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
-                    QJsonObject userObject = userArray[userIndex].toObject();
-                    if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
-                        save = userObject["save"].toObject();
-                        if (save[type].isObject()) {
-                            return (QJsonDocument) save[type].toObject();
-                        } else if (save[type].isArray()) {
-                            return (QJsonDocument) save[type].toArray();
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return (QJsonDocument) save;
-}
-
-/**
- * @brief Game1Scene::saveProgress
- *
- * A member function that saves the current game progress.
- *
- * @return bool whether the saving of the game state was successful.
- */
-bool Game1Scene::saveProgress() {
-    QJsonArray games;
-    if (usersFile.contains("games") && usersFile["games"].isArray()) {
-        games = usersFile["games"].toArray();
-    }
-
-    QJsonObject gameData;
-    if (games.size() > 0 && games.at(0).isObject()) {
-        gameData = games.at(0).toObject();
-    }
-
-    QJsonArray userArray;
-    if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
-        userArray = gameData["users_save"].toArray();
-    }
-
-    // If save for user already created, overwrite it
-    for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
-        QJsonObject userObject = userArray[userIndex].toObject();
-        if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
-            QJsonObject saveObject;
-            saveProgressHelper(saveObject);
-            userObject["save"] = saveObject;
-            userArray[userIndex] = userObject;
-            gameData["users_save"] = userArray;
-            games.replace(0, gameData);
-            usersFile["games"] = games;
-            return true;
-        }
-    }
-
-    // If save for user never created before, create it
-    QJsonObject userObject;
-    QJsonObject saveObject;
-    saveProgressHelper(saveObject);
-    userObject["save"] = saveObject;
-    userObject["username"] = this->user->username;
-    userArray.append(userObject);
-    gameData["users_save"] = userArray;
-    if (games.size() > 0) {
-        games.replace(0, gameData);
-    } else {
-        games.insert(0, gameData);
-    }
-    usersFile["games"] = games;
-    return true;
-}
-
-/**
- * @brief Game1Scene::saveProgressHelper
+ * @brief GameScene1::saveProgressHelper
  *
  * A member function that saves all game state parameters.
  *
  * @param QJsonObject &saveObject that helps save all the current game state parameters.
  */
-void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
+void GameScene1::saveProgressHelper(QJsonObject &saveObject) const
 {
     // Add aquarium fields
     QJsonObject aquarium;
@@ -752,100 +649,13 @@ void Game1Scene::saveProgressHelper(QJsonObject &saveObject) const
 }
 
 /**
- * @brief Game1Scene::saveScore
- *
- * A member function that saves the current score of the user and updates the top score.
- *
- * @return bool whether the saving operation was successful.
- */
-bool Game1Scene::saveScore() {
-    QJsonArray games;
-    if (usersFile.contains("games") && usersFile["games"].isArray()) {
-        games = usersFile["games"].toArray();
-    }
-
-    QJsonObject gameData;
-    if (games.size() > 0 && games.at(0).isObject()) {
-        gameData = games.at(0).toObject();
-    }
-
-    if (gameData.contains("top_score") && gameData["top_score"].isObject()) {
-        QJsonObject userObject = gameData["top_score"].toObject();
-        if (userObject.contains("score") && userObject["score"].toInt() < aquarium->score) {
-            userObject["score"] = aquarium->score;
-            userObject["username"] = user->username;
-            gameData["top_score"] = userObject;
-            games.replace(0, gameData);
-            usersFile["games"] = games;
-        }
-    } else {
-        QJsonObject userObject;
-        userObject["score"] = aquarium->score;
-        userObject["username"] = user->username;
-        gameData["top_score"] = userObject;
-        if (games.size() > 0) {
-            games.replace(0, gameData);
-        } else {
-            games.insert(0, gameData);
-        }
-        usersFile["games"] = games;
-    }
-
-    QJsonArray userArray;
-    if (gameData.contains("users_score") && gameData["users_score"].isArray()) {
-        userArray = gameData["users_score"].toArray();
-    }
-
-    // If score for user already created, add another
-    for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
-        QJsonObject userObject = userArray[userIndex].toObject();
-        if (userObject.contains("username") && userObject["username"].isString() && userObject["username"] == this->user->username) {
-            QJsonObject saveObject;
-            saveScoreHelper(saveObject);
-            QJsonArray scoresArray;
-            if (userObject.contains("scores") && userObject["scores"].isArray()) {
-                scoresArray = userObject["scores"].toArray();
-            }
-            scoresArray.append(saveObject);
-            userObject["scores"] = scoresArray;
-            userArray[userIndex] = userObject;
-            gameData["users_score"] = userArray;
-            games.replace(0, gameData);
-            usersFile["games"] = games;
-            return true;
-        }
-    }
-
-    // If score for user never created before, create it
-    QJsonObject userObject;
-    QJsonObject saveObject;
-    saveScoreHelper(saveObject);
-    QJsonArray scoresArray;
-    if (userObject.contains("scores") && userObject["scores"].isArray()) {
-        scoresArray = userObject["scores"].toArray();
-    }
-    scoresArray.append(saveObject);
-    userObject["scores"] = scoresArray;
-    userObject["username"] = this->user->username;
-    userArray.append(userObject);
-    gameData["users_score"] = userArray;
-    if (games.size() > 0) {
-        games.replace(0, gameData);
-    } else {
-        games.insert(0, gameData);
-    }
-    usersFile["games"] = games;
-    return true;
-}
-
-/**
- * @brief Game1Scene::saveScoreHelper
+ * @brief GameScene1::saveScoreHelper
  *
  * A member function that saves the current score alongside the date.
  *
  * @param QJsonObject &saveObject that helps save data related to the score.
  */
-void Game1Scene::saveScoreHelper(QJsonObject &saveObject) const
+void GameScene1::saveScoreHelper(QJsonObject &saveObject) const
 {
     saveObject["score"] = aquarium->score;
     saveObject["day"] = QDate::currentDate().day();
@@ -854,11 +664,11 @@ void Game1Scene::saveScoreHelper(QJsonObject &saveObject) const
 }
 
 /**
- * @brief Game1Scene::updateBacterias
+ * @brief GameScene1::updateBacterias
  *
  * A member function that generates a new bacteria.
  */
-void Game1Scene::updateBacterias() {
+void GameScene1::updateBacterias() {
     int time = (rand() % 1000) + aquarium->levels[aquarium->level]["bacteriaGenerationRate"] - 500;
     updateBacteriasTimer->start(time);
 
@@ -884,11 +694,11 @@ void Game1Scene::updateBacterias() {
 }
 
 /**
- * @brief Game1Scene::unpauseGame
+ * @brief GameScene1::unpauseGame
  *
  * A member function that unpaused the game after the 3..2..1.. state.
  */
-void Game1Scene::unpauseGame() {
+void GameScene1::unpauseGame() {
     time->restart();
 
     timeUpdater->setSingleShot(true);
@@ -898,6 +708,7 @@ void Game1Scene::unpauseGame() {
     updateBacteriasTimer->start(pausedUpdateBacteriasTimer);
     if (pausedVirusTimer > 0) {
         virusTimer->start(pausedVirusTimer);
+        pausedVirusTimer = 0;
     }
     if (pausedPestilenceTimer > 0) {
         pestilenceTimer->start(pausedPestilenceTimer);
@@ -912,11 +723,11 @@ void Game1Scene::unpauseGame() {
 }
 
 /**
- * @brief Game1Scene::checkGameState
+ * @brief GameScene1::checkGameState
  *
  * A member function that checks and updates the game's state.
  */
-void Game1Scene::checkGameState() {
+void GameScene1::checkGameState() {
     // Check if game paused
     if (aquarium->gamePaused) {
        // Pause everything. We need those stats anw for the save functionality
@@ -1044,7 +855,7 @@ void Game1Scene::checkGameState() {
     }
 
     // Check if time is up
-    if (time->elapsed() >= aquarium->levels[aquarium->level]["maxTime"]) {
+    if (time->elapsed() + pausedTime >= aquarium->levels[aquarium->level]["maxTime"]) {
         int secs = aquarium->levels[aquarium->level]["maxTime"] / 1000;
         int mins = (secs / 60) % 60;
         secs = secs % 60;
@@ -1064,13 +875,19 @@ void Game1Scene::checkGameState() {
 }
 
 /**
- * @brief Game1Scene::gameOver
+ * @brief GameScene1::gameOver
  *
  * A member function that shows the game over screen.
  *
  * @param bool result whether the level was won or lost.
  */
-void Game1Scene::gameOver(bool result) {
+void GameScene1::gameOver(bool result) {
+    if (result) {
+        aquarium->levels[aquarium->level]["levelState"] = 1;
+    } else {
+        aquarium->levels[aquarium->level]["levelState"] = 2;
+    }
+
     timeUpdater->stop();
     updateItemsTimer->stop();
     updateBacteriasTimer->stop();
@@ -1118,22 +935,24 @@ void Game1Scene::gameOver(bool result) {
 
     scoreLabel2->setText(QStringLiteral("Score: %1").arg(aquarium->score));
     scoreLabel2->adjustSize();
-    scoreLabel2->move((this->width() - scoreLabel2->width()) / 2, 330);
+    scoreLabel2->move((this->width() - scoreLabel2->width()) / 2, this->height() / 2 + this->height() / 20);
     scoreLabel2->show();
 
     quit2->show();
 
-    if (result && aquarium->level < 3) {
+    if (result && aquarium->level < 3 && !isMiniGame) {
         setUpNextLevel();
 
         nextLevelButton->show();
 
-        quit2->move(this->width() / 2 - 110, this->height() / 2 + 150);
-        nextLevelButton->move(this->width() / 2 + 10, this->height() / 2 + 150);
+        quit2->move(this->width() / 2 + quit2->width() * 1 / 4, this->height() / 1.4);
+        nextLevelButton->move(this->width() / 2 - nextLevelButton->width() * 5 / 4, this->height() / 1.4);
     } else {
-        quit2->move(this->width() / 2 - 60, this->height() / 2 + 150);
+        quit2->move(this->width() / 2 - quit2->width() / 2, this->height() / 1.4);
 
-        saveScore();
-        saveFile();
+        if (!isMiniGame) {
+            saveScore();
+            saveFile();
+        }
     }
 }

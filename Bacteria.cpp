@@ -33,19 +33,24 @@ Bacteria::Bacteria(int type,SpongeBob *spongeBob,Aquarium* aquarium, QGraphicsPi
     this->justPaused = true;
     this->toDelete = false;
 
+    int size = this->aquarium->width / 12.5;
+
     if(type==1){
-        QPixmap *pic  = new QPixmap("bacteria1.png");
-        setPixmap(pic->scaled(80,80));
+        imageName = ":bacteria1";
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(size, size));
     }
     else if(type==2){
-        QPixmap *pic  = new QPixmap("bacteria2.png");
-        setPixmap(pic->scaled(80,80));
+        imageName = ":bacteria2";
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(size, size));
     }else{
-        QPixmap *pic  = new QPixmap("bacteria3.png");
-        setPixmap(pic->scaled(80,80));
+        imageName = ":bacteria3";
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(size, size));
     }
 
-    baseY = (rand() % 400) + 100;
+    baseY = (rand() % (this->aquarium->height / 2)) + this->aquarium->height * 3 / 12;
     setPos(0, baseY);
 
     if (this->type == 1) {
@@ -94,7 +99,7 @@ void Bacteria::checkGameState() {
     if(!scene()->collidingItems(this).isEmpty()){
         QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
         for (int i = 0; i < collisions.size(); i++) {
-            if (collisions.at(i)->hasFocus()) {
+            if (dynamic_cast<SpongeBob*>(collisions.at(i))) {
                 if (this->type > this->spongeBob->immunityLevel && this->spongeBob->canCollide) {
                     //decrease score
                     if (aquarium->score <= type * 50) {
@@ -110,7 +115,7 @@ void Bacteria::checkGameState() {
 
                     //increase cleanliness
                     aquarium->currentCleanliness += aquarium->levels[aquarium->level]["incrementCleanliness"];
-                    QPixmap *greenColor = new QPixmap("needle.png");
+                    QPixmap *greenColor = new QPixmap(":needle");
                     greenColor->fill(Qt::green);
                     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
 
@@ -135,7 +140,7 @@ void Bacteria::checkGameState() {
  */
 
 void Bacteria::update(){
-    if (x() + 30 >= 950) {
+    if (x() + 30 >= aquarium->width) {
         toDelete = true;
         speedTimer->stop();
         checkGameStateTimer->stop();

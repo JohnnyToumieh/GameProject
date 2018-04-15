@@ -1,9 +1,10 @@
-#include "GameOnePage.h"
+#include "GamePage.h"
 
 #include "Message.h"
+
 /**
- *\file GameOnePage.cpp
- *@brief contains GameOnePage class definition which represents the page before starting the game (common between game1 and game2)
+ *\file GamePage.cpp
+ *@brief contains GamePage class definition which represents the page before starting the game (common between game1 and game2)
  *
  *
  * ChooseGamePage class  where user can start new game,resume an old game, check history, and select level.
@@ -11,22 +12,22 @@
  */
 
 /**
- * @brief GameOnePage::GameOnePage constructor of ChooseGamePage class
+ * @brief GamePage::GamePage constructor of ChooseGamePage class
  *
  * A constructor that set page buttons and labels
  *
  * @param QWidget *widget represents the main widget holding all items
  * @param int gameNumber to specify what game it is
  * @param User* user represents the user signed in
- * @param QJsonObject usersFile holds the info of the user
+ * @param QJsonObject dataFile holds the info of the user
  */
 
-GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObject usersFile)
+GamePage::GamePage(QWidget *widget, int gameNumber, User* user, QJsonObject dataFile)
 {
     this->gameNumber = gameNumber;
     this->widget=widget;
     this->user = user;
-    this->usersFile = usersFile;
+    this->dataFile = dataFile;
 
     verticalLayout = new QVBoxLayout();
     gridLayout = new QGridLayout();
@@ -76,12 +77,12 @@ GameOnePage::GameOnePage(QWidget *widget, int gameNumber, User* user, QJsonObjec
 }
 
 /**
- * @brief GameOnePage::descriptionClicked member function: show game description
+ * @brief GamePage::descriptionClicked member function: show game description
  *
  * function that respond to clicking Description button by showing a message
  * that briefly describe the game
  */
-void GameOnePage::descriptionClicked(){
+void GamePage::descriptionClicked(){
     if(gameNumber==1){
         Message *msg = new Message("SpongeBob has to move around the screen\nto collect items that increase his immunity level\nin order to be able to kill more bacteria\nand thus clean the aquarium.");
         msg->show();
@@ -93,12 +94,12 @@ void GameOnePage::descriptionClicked(){
 }
 
 /**
- * @brief GameOnePage::startNewGameClicked member function: starts a new game
+ * @brief GamePage::startNewGameClicked member function: starts a new game
  *
  * function that responds to clicking Start New Game button by starting a new
  * game (depends on what game user chose on ChooseGamePage and level selected).
  */
-void GameOnePage::startNewGameClicked(){
+void GamePage::startNewGameClicked(){
     QString levelSelected = selectLevel->currentText();
     int level = 1;
     if (levelSelected == "2") {
@@ -110,9 +111,16 @@ void GameOnePage::startNewGameClicked(){
     qDeleteAll(widget->children());
     widget->close();
 
-    Game1Scene *game1scene = new Game1Scene(widget, user, usersFile, false, level);
+    QGraphicsView *view;
+    if (gameNumber == 1) {
+        GameScene1 *game1 = new GameScene1(widget, 1000, 600, user, dataFile, false, level);
 
-    QGraphicsView *view = new QGraphicsView(game1scene);
+        view = new QGraphicsView(game1);
+    } else {
+        GameScene3 *game2 = new GameScene3(widget, 1000, 600, user, dataFile, false, level);
+
+        view = new QGraphicsView(game2);
+    }
     view->setFixedSize(1000,600);
     view->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
     view->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
@@ -127,18 +135,18 @@ void GameOnePage::startNewGameClicked(){
 }
 
 /**
- * @brief GameOnePage::resumeGameExists member function: checks if the user has a game saved
+ * @brief GamePage::resumeGameExists member function: checks if the user has a game saved
  *
  * function that checks in JSON file of saved games, and looks if the current user
  * has any existing games to resume
  *
  * @return bool true if a game exist
  */
-bool GameOnePage::resumeGameExists() {
-    if (usersFile.contains("games") && usersFile["games"].isArray()) {
-        QJsonArray games = usersFile["games"].toArray();
-        if (games.size() > 0 && games.at(0).isObject()) {
-            QJsonObject gameData = games.at(0).toObject();
+bool GamePage::resumeGameExists() {
+    if (dataFile.contains("games") && dataFile["games"].isArray()) {
+        QJsonArray games = dataFile["games"].toArray();
+        if (games.size() > gameNumber - 1 && games.at(gameNumber - 1).isObject()) {
+            QJsonObject gameData = games.at(gameNumber - 1).toObject();
             if (gameData.contains("users_save") && gameData["users_save"].isArray()) {
                 QJsonArray userArray = gameData["users_save"].toArray();
 
@@ -156,12 +164,12 @@ bool GameOnePage::resumeGameExists() {
 }
 
 /**
- * @brief GameOnePage::startNewGameClicked member function: resumer an old game
+ * @brief GamePage::startNewGameClicked member function: resumer an old game
  *
  * function that responds to clicking Resume Old Game button by resuming an old
  * game (if the user has any).
  */
-void GameOnePage::resumeGameClicked(){
+void GamePage::resumeGameClicked(){
     if (!resumeGameExists()) {
         Message *msg = new Message("No game found to resume.");
         msg->show();
@@ -172,9 +180,17 @@ void GameOnePage::resumeGameClicked(){
     qDeleteAll(widget->children());
     widget->close();
 
-    Game1Scene *game1scene = new Game1Scene(widget, user, usersFile, true);
+    QGraphicsView *view;
+    if (gameNumber == 1) {
+        GameScene1 *game1 = new GameScene1(widget, 1000, 600, user, dataFile, true);
 
-    QGraphicsView *view = new QGraphicsView(game1scene);
+        view = new QGraphicsView(game1);
+    } else {
+        GameScene3 *game2 = new GameScene3(widget, 1000, 600, user, dataFile, true);
+
+        view = new QGraphicsView(game2);
+    }
+
     view->setFixedSize(1000,600);
     view->setHorizontalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
     view->setVerticalScrollBarPolicy((Qt::ScrollBarAlwaysOff));
@@ -189,33 +205,33 @@ void GameOnePage::resumeGameClicked(){
 }
 
 /**
- * @brief GameOnePage::backClicked member function: takes user back
+ * @brief GamePage::backClicked member function: takes user back
  *
  * function that respond to clicking back button by taking the user to the previous page
  */
-void GameOnePage::backClicked(){
+void GamePage::backClicked(){
     qDeleteAll(widget->children());
 
-    ChooseGamePage *chooseGamePage = new ChooseGamePage(widget, user, usersFile);
+    ChooseGamePage *chooseGamePage = new ChooseGamePage(widget, user, dataFile);
 }
 
 /**
- * @brief GameOnePage::startNewGameClicked member function: display history of the user
+ * @brief GamePage::startNewGameClicked member function: display history of the user
  *
  * function that responds to clicking History button by taking user to  history page
  * where user can check his performance and compare it to others.
  */
-void GameOnePage::checkHistoryClicked(){
+void GamePage::checkHistoryClicked(){
     qDeleteAll(widget->children());
 
-    HistoryPage *historyPage = new HistoryPage(widget, gameNumber, user, usersFile);
+    HistoryPage *historyPage = new HistoryPage(widget, gameNumber, user, dataFile);
 }
 
 /**
- * @brief GameOnePage::setVerticalLayout member function: sets the vertical layout by adding items to it
+ * @brief GamePage::setVerticalLayout member function: sets the vertical layout by adding items to it
  *
  */
-void GameOnePage::setVerticalLayout()
+void GamePage::setVerticalLayout()
 {
     gridLayout->addWidget(profilePictureL,0,0);
     gridLayout->addItem(new QSpacerItem(400,5),0,1);

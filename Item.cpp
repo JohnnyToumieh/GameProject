@@ -35,28 +35,40 @@ Item::Item(Aquarium* aquarium, SpongeBob *spongeBob, bool isHealthy, int type, Q
         this->type = (rand()%3)+1;
     }
 
+    int size1 = this->aquarium->width / 25;
+    int size21 = this->aquarium->width / 16.67;
+    int size22 = this->aquarium->height / 20;
+    int size31 = this->aquarium->width / 33.33;
+    int size32 = this->aquarium->height / 10;
+
     if(this->type==1){
         if (this->isHealthy) {
-            setPixmap((QPixmap("healthy1.png")).scaled(60,30));
+            imageName = ":healthyItem1";
+            setPixmap((QPixmap(imageName)).scaled(size21, size22));
         } else {
-            setPixmap((QPixmap("unhealthy1.png")).scaled(40,40));
+            imageName = ":unhealthyItem1";
+            setPixmap((QPixmap(imageName)).scaled(size1, size1));
         }
     }
     else if(this->type==2){
         if (this->isHealthy) {
-            setPixmap((QPixmap("healthy2.png")).scaled(40,40));
+            imageName = ":healthyItem2";
+            setPixmap((QPixmap(imageName)).scaled(size1, size1));
         } else {
-            setPixmap((QPixmap("unhealthy2.png")).scaled(40,40));
+            imageName = ":unhealthyItem2";
+            setPixmap((QPixmap(imageName)).scaled(size1, size1));
         }
     }
     else{
         if (this->isHealthy) {
-            setPixmap((QPixmap("healthy3.png")).scaled(30,60));
+            imageName = ":healthyItem3";
+            setPixmap((QPixmap(imageName)).scaled(size31, size32));
         } else {
-            setPixmap((QPixmap("unhealthy3.png")).scaled(40,40));
+            imageName = ":unhealthyItem3";
+            setPixmap((QPixmap(imageName)).scaled(size1, size1));
         }
     }
-    setPos((rand() % 800) + 100, 100);
+    setPos((rand() % (this->aquarium->width * 8 / 10)) + this->aquarium->width / 10, this->aquarium->height / 6);
 
     if (this->isHealthy) {
         this->speed = (rand() % 100) + this->aquarium->levels[this->aquarium->level]["healthyItemSpeed"] - 50;
@@ -102,7 +114,7 @@ void Item::checkGameState() {
     if(!scene()->collidingItems(this).isEmpty()){
         QList<QGraphicsItem*> collisions = scene()->collidingItems(this);
         for (int i = 0; i < collisions.size(); i++) {
-            if (collisions.at(i)->hasFocus()) {
+            if (dynamic_cast<SpongeBob*>(collisions.at(i))) {
                 int degree=spongeBob->immunityLevelDegree;
 
                 int steps = aquarium->levels[aquarium->level]["stepsPerImmunity"];
@@ -153,12 +165,12 @@ void Item::checkGameState() {
  *
  */
 void Item::update(){
-    if((y()+30) >= 500) {
+    if(y() + 30 >= this->aquarium->height * 11 / 12) {
         speedTimer->stop();
         checkGameStateTimer->stop();
         toDelete = true;
         return;
     }
     else
-        setPos(x(),y()+30);
+        setPos(x(), y()+30);
 }

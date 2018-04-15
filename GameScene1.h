@@ -1,5 +1,5 @@
-#ifndef GAME1SCENE_H
-#define GAME1SCENE_H
+#ifndef GAMESCENE1_H
+#define GAMESCENE1_H
 
 #include <QObject>
 #include <QGraphicsScene>
@@ -11,32 +11,29 @@
 #include "SpongeBob.h"
 #include "Bacteria.h"
 #include "Aquarium.h"
-#include "GameOnePage.h"
 #include "Item.h"
 #include "Virus.h"
+#include "GameScene.h"
 
 /**
- *\file Game1Scene.h
- *@brief The Game1Scene class, represents the game 1 shell.
+ *\file GameScene1.h
+ *@brief The GameScene1 class, represents the game 1 shell.
  * It handles saving of games, the creation and deletion of elements and tracking the game state.
  *
  */
 
-class Game1Scene : public QGraphicsScene
+class GameScene1 : public GameScene
 {
     Q_OBJECT
 public:
-    explicit Game1Scene(QWidget* widget, User* user, QJsonObject usersFile, bool resume = false, int level = 1, QGraphicsScene *parent = nullptr);
-    void gameOver(bool result);
-    bool saveProgress();
-    bool saveScore();
-    void saveFile();
-    QJsonDocument read(QString type);
+    explicit GameScene1(QWidget* widget, int width, int height, User* user, QJsonObject dataFile,
+                        bool resume = false, int level = 1, bool isMiniGame = false);
+
     void setUpNextLevel();
 
-    QWidget* widget;
-    User* user;//!<User member that represents the signed in user
-    QJsonObject usersFile;//!QJsonObject member usersFile that holds information of the user
+    void gameOver(bool result);
+    int getCurrentScore();
+    int getLevelState();
 
     Aquarium* aquarium;//!<Aquarium member that represents the aquarium
     SpongeBob *spongeBob;//!<SpongeBob member that represents spongebob
@@ -105,13 +102,13 @@ public slots:
     void updateItems();
     void updateBacterias();
     void updateTimer();
-    void checkGameState();
     void unpauseClicked();//!<Member function that triggers when the unpause button is clicked
     void quitClicked();//!<Member function that triggers when the quit button is clicked
     void nextLevel();//!<Member function that triggers when the next level button is clicked
     void virusUpdate();
     void summonPestilence();
     void unpauseGame();
+    void checkGameState();
 };
 
-#endif // GAME1SCENE_H
+#endif // GAMESCENE1_H

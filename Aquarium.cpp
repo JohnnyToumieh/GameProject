@@ -131,5 +131,7 @@ std::map<std::string, int> Aquarium::setUpLevelsHelper(int maxTime,
     level["virusSpeed2"] = virusSpeed2;
     level["virusSpeed3"] = virusSpeed3;
 
+    level["levelState"] = 0;
+
     return level;
 }

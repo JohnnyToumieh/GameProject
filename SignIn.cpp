@@ -16,13 +16,13 @@
  * A constructor that set page buttons and labels
  * @param QWidget *widget represents the main widget holding all items
  * @param User* user is the user signed in
- * @param QJsonObject usersFile holds the info of the user
+ * @param QJsonObject dataFile holds the info of the user
  */
-SignIn::SignIn(QWidget *widget, User* user, QJsonObject usersFile)
+SignIn::SignIn(QWidget *widget, User* user, QJsonObject dataFile)
 {
     this->widget=widget;
     this->user = user;
-    this->usersFile = usersFile;
+    this->dataFile = dataFile;
 
     verticalLayout = new QVBoxLayout();
 
@@ -77,9 +77,9 @@ void SignIn::submitClicked(){
         user->username = username->text();
         user->password = password->text();
 
-        if (user->read(usersFile)) {
+        if (user->read(dataFile)) {
             qDeleteAll(widget->children());
-            ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, usersFile);
+            ChooseGamePage *choosegamePage = new ChooseGamePage(widget, user, dataFile);
         } else {
             Message *msg = new Message("Username/Password combination does not match.");
             msg->show();

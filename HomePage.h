@@ -34,13 +34,14 @@ public:
     QVBoxLayout *VerticalL;
 
     User* user;//!<User member user represents the signed in user
-    QJsonObject usersFile;//!QJsonObject member usersFile that holds information of the user
+    QJsonObject dataFile;//!QJsonObject member dataFile that holds information of the user
 
 signals:
 
 private:
     void setVerticalLayout();
     void RemoveLayout (QWidget* widget);
+    void setUpDataFile();
 public slots:
     void signUpClicked();//!<Member function takes user to sigin page
     void signInClicked();//!<Member function takes user to signup page
