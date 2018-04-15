@@ -58,26 +58,28 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     QSignalMapper* signalMapper = new QSignalMapper(this);
     QSignalMapper* signalMapper1 = new QSignalMapper(this);
 
-    tool = new Tool*[3];
-    toolClicked =0;
-    for (int i=0;i<3;i++){
-        tool[i] = new Tool(i+1);
-        tool[i]->setFocusPolicy(Qt::ClickFocus);
-        tool[i]->setFixedSize(30, 51);
-        if(i==0)
-            tool[i]->move(450,200);
-        if(i==1)
-            tool[i]->move(450,260);
-        if(i==2)
-            tool[i]->move(450,320);
+    if (stateTracker2->level == 3) {
+        tool = new Tool*[3];
+        toolClicked = 0;
 
-        addWidget(tool[i]);
-        connect(tool[i], SIGNAL(clicked()), signalMapper1, SLOT(map()));
-        signalMapper1->setMapping(tool[i], i);
+        for (int i=0;i<3;i++){
+            tool[i] = new Tool(i+1);
+            tool[i]->setFocusPolicy(Qt::ClickFocus);
+            tool[i]->setFixedSize(30, 51);
+            if(i==0)
+                tool[i]->move(450,200);
+            if(i==1)
+                tool[i]->move(450,260);
+            if(i==2)
+                tool[i]->move(450,320);
 
+            addWidget(tool[i]);
+            connect(tool[i], SIGNAL(clicked()), signalMapper1, SLOT(map()));
+            signalMapper1->setMapping(tool[i], i);
+        }
+
+        connect(signalMapper1, SIGNAL(mapped(int)), this, SLOT(updateToolClicked(int)));
     }
-
-    connect(signalMapper1, SIGNAL(mapped(int)), this, SLOT(updateToolClicked(int)));
 
     upperTeeth = new Tooth*[6];
     for (int i = 0; i < 6; i++) {
