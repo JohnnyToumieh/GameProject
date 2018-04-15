@@ -72,8 +72,6 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
         questions[questionList[i]] = answerList[i].toInt();
     }
 
-    answered = false;
-
     office->setFlag(QGraphicsItem::ItemIsFocusable);
     addItem(office);
 
@@ -86,23 +84,10 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     addItem(aquarium);
     aquarium->setFlag(QGraphicsItem::ItemIsFocusable);
 
-    timeLabel = new QLabel();
-    timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
-    timeLabel->move(400, 15);
+    timeLabel = new QLabel("00:00 AM");
+    timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 35px; }");
     addWidget(timeLabel);
-
-    pestilenceTimeLabel = new QLabel();
-    pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");
-    pestilenceTimeLabel->move(this->width() / 2 + 320, 160);
-    addWidget(pestilenceTimeLabel);
-    pestilenceTimeLabel->hide();
-
-    pestilenceTimeLabel2 = new QLabel("Pestilence will get summoned after:");
-    pestilenceTimeLabel2->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : black; font: 20px; }");
-    pestilenceTimeLabel2->move(this->width() / 2 + 310, 110);
-    pestilenceTimeLabel2->setWordWrap(true);
-    addWidget(pestilenceTimeLabel2);
-    pestilenceTimeLabel2->hide();
+    timeLabel->move(this->width() / 2 - timeLabel->width() / 2, 13);
 
     unpauseLabel = new QLabel();
     unpauseLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : white; font: 140px; }");
@@ -128,7 +113,7 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     pixmapNeedle = new QGraphicsPixmapItem();
     QPixmap *picNeedle  = new QPixmap(":needle");
     pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
-    pixmapNeedle->setPos(850, 50);
+    pixmapNeedle->setPos(855, 50);
     pixmapNeedle->setTransformOriginPoint(pixmapNeedle->boundingRect().center().x() + 20,
                                                pixmapNeedle->boundingRect().center().y());
     addItem(pixmapNeedle);
@@ -283,6 +268,36 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     aquariumDescription->move(aquariumBox->x() + 15, aquariumBox->y() + 15);
     aquariumDescription->hide();
 
+    reputationBox = new QWidget();
+    reputationBox->setStyleSheet("background-color: rgba(105, 105, 105, 100);");
+    proxyWidget = addWidget(reputationBox);
+    proxyWidget->setZValue(10000);
+    reputationBox->setFixedSize(250, 250);
+    reputationBox->move(this->width() / 2 - reputationBox->width() / 2, this->height() / 2 - reputationBox->height() / 2 + 50);
+    reputationBox->hide();
+
+    cancelReputation = new QPushButton("Cancel");
+    proxyWidget = addWidget(cancelReputation);
+    proxyWidget->setZValue(10000);
+    cancelReputation->move(reputationBox->x() + 30, reputationBox->y() + reputationBox->height() - 20 - cancelReputation->height());
+    cancelReputation->hide();
+    cancelReputation->setFocusPolicy(Qt::NoFocus);
+
+    useReputation = new QPushButton("Use");
+    proxyWidget = addWidget(useReputation);
+    proxyWidget->setZValue(10000);
+    useReputation->move(reputationBox->x() + reputationBox->width() - 30 - useReputation->width(), reputationBox->y() + reputationBox->height() - 20 - useReputation->height());
+    useReputation->hide();
+    useReputation->setFocusPolicy(Qt::NoFocus);
+
+    reputationDescription = new QLabel("Your reputation is full! Do you want to use up your reputation points to retry the level?");
+    reputationDescription->setWordWrap(true);
+    proxyWidget = addWidget(reputationDescription);
+    proxyWidget->setZValue(10000);
+    reputationDescription->setFixedSize(reputationBox->width() - 2 * 15, reputationBox->height() - 2 * 15 - reputationDescription->height() - 2 * 15);
+    reputationDescription->move(reputationBox->x() + 15, reputationBox->y() + 15);
+    reputationDescription->hide();
+
     connect(unpause, SIGNAL(clicked()), SLOT(unpauseClicked()));
     connect(quit, SIGNAL(clicked()), SLOT(quitClicked()));
     connect(quit2, SIGNAL(clicked()), SLOT(quitClicked()));
@@ -290,21 +305,28 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     connect(cleanAquarium, SIGNAL(clicked()), SLOT(handleAquariumRequest()));
     connect(cancelAquarium, SIGNAL(clicked()), SLOT(cancelAquariumRequest()));
 
-    QSignalMapper* signalMapper1 = new QSignalMapper(this);
-    connect(choiceA, SIGNAL(clicked()), signalMapper1, SLOT(map()));
-    connect(choiceB, SIGNAL(clicked()), signalMapper1, SLOT(map()));
-    connect(choiceC, SIGNAL(clicked()), signalMapper1, SLOT(map()));
-    signalMapper1->setMapping(choiceA, 1);
-    signalMapper1->setMapping(choiceB, 2);
-    signalMapper1->setMapping(choiceC, 3);
-    connect(signalMapper1, SIGNAL(mapped(int)), this, SLOT(answerClicked(int))) ;
-
     QSignalMapper* signalMapper = new QSignalMapper(this);
+    connect(choiceA, SIGNAL(clicked()), signalMapper, SLOT(map()));
+    connect(choiceB, SIGNAL(clicked()), signalMapper, SLOT(map()));
+    connect(choiceC, SIGNAL(clicked()), signalMapper, SLOT(map()));
+    signalMapper->setMapping(choiceA, 1);
+    signalMapper->setMapping(choiceB, 2);
+    signalMapper->setMapping(choiceC, 3);
+    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(answerClicked(int))) ;
+
+    signalMapper = new QSignalMapper(this);
     connect(accept, SIGNAL(clicked()), signalMapper, SLOT(map()));
     connect(reject, SIGNAL(clicked()), signalMapper, SLOT(map()));
     signalMapper->setMapping(accept, 1);
     signalMapper->setMapping(reject, 0);
     connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(handlePatient(int))) ;
+
+    signalMapper = new QSignalMapper(this);
+    connect(useReputation, SIGNAL(clicked()), signalMapper, SLOT(map()));
+    connect(cancelReputation, SIGNAL(clicked()), signalMapper, SLOT(map()));
+    signalMapper->setMapping(useReputation, 1);
+    signalMapper->setMapping(cancelReputation, 0);
+    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(handleReputation(int))) ;
 
     checkGameStateTimer = new QTimer(this);
     connect(checkGameStateTimer, SIGNAL(timeout()), this, SLOT(checkGameState()));
@@ -345,26 +367,6 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     this->pausedUpdateAquariumTimer = 0;
 
     updateTimer();
-}
-
-void GameScene3::answerClicked(int answer){
-    this->answer=answer;
-    answered=true;
-    patientBox->hide();
-    description->hide();
-    choiceA->hide();
-    choiceB->hide();
-    choiceC->hide();
-    int steps = office->levels[office->level]["incrementReputation"];
-    if(answer == questions[description->text()]){
-        pixmapNeedle->setRotation(pixmapNeedle->rotation() + 80 / steps);
-    }else{
-        pixmapNeedle->setRotation(pixmapNeedle->rotation() - 80 / steps);
-    }
-
-    int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
-    updatePatientsTimer->start(time);
-
 }
 
 int GameScene3::getCurrentScore() {
@@ -454,9 +456,19 @@ void GameScene3::updateTimer() {
     int hours = (timeConversion / 60) % 60;
     int mins = timeConversion % 60;
 
-    timeLabel->setText(QString("%1:%2")
+    std::string dayTime;
+    if (hours < 12) {
+        dayTime = "AM";
+    } else {
+        if (hours != 12) {
+            hours = hours - 12;
+        }
+        dayTime = "PM";
+    }
+
+    timeLabel->setText(QString("%1:%2 ")
     .arg(hours, 2, 10, QLatin1Char('0'))
-    .arg(mins, 2, 10, QLatin1Char('0')) );
+    .arg(mins, 2, 10, QLatin1Char('0')) + QString::fromStdString(dayTime));
 
     office->currentTime = time->elapsed() + pausedTime;
 }
@@ -560,6 +572,38 @@ void GameScene3::cancelAquariumRequest() {
     cancelAquarium->hide();
 }
 
+void GameScene3::handleReputation(int status) {
+    reputationBox->hide();
+    reputationDescription->hide();
+    useReputation->hide();
+    cancelReputation->hide();
+
+    int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
+    if (status == 1) {
+        office->currentReputation = 0;
+
+        patients[index]->motionState = Patient::GettingReady;
+        patients[index]->statusState = Patient::Accepted;
+    } else if (status == 0) {
+        if (office->currentMiniGameState == 2) {
+            patients[index]->motionState = Patient::Done;
+            patients[index]->statusState = Patient::Unsatisfied;
+        } else if (office->currentMiniGameState == 0) {
+            patients[index]->motionState = Patient::Done;
+            patients[index]->statusState = Patient::Rejected;
+
+            if (office->currentReputation - office->levels[office->level]["incrementReputation"] > 0) {
+                office->currentReputation -= office->levels[office->level]["incrementReputation"];
+            } else {
+                office->currentReputation = 0;
+            }
+        }
+
+        int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+        updatePatientsTimer->start(time);
+    }
+}
+
 /**
  * @brief GameScene3::unpauseClicked
  *
@@ -583,15 +627,40 @@ void GameScene3::quitClicked() {
 }
 
 void GameScene3::showQuestion(){
-    answered = false;
     int randNumb = (rand() % (questionList.size()));
     description->setText(questionList[randNumb]);
+
     patientBox->show();
     description->show();
     choiceA->show();
     choiceB->show();
     choiceC->show();
+}
 
+void GameScene3::answerClicked(int answer){
+    int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
+    if (patients[index] != NULL) {
+        patients[index]->motionState = Patient::Leaving;
+    } else {
+        return;
+    }
+
+    patientBox->hide();
+    description->hide();
+    choiceA->hide();
+    choiceB->hide();
+    choiceC->hide();
+
+    if(answer == questions[description->text()]){
+        if (office->currentReputation + office->levels[office->level]["incrementReputation"] < office->levels[office->level]["maxReputation"]) {
+            office->currentReputation += office->levels[office->level]["incrementReputation"];
+        } else {
+            office->currentReputation = office->levels[office->level]["maxReputation"];
+        }
+    }
+
+    int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+    updatePatientsTimer->start(time);
 }
 
 /**
@@ -680,9 +749,11 @@ void GameScene3::unpauseGame() {
     timeUpdater->start(pausedTimeUpdater);
     if (pausedUpdatePatientsTimer > 0) {
         updatePatientsTimer->start(pausedUpdatePatientsTimer);
+        pausedUpdatePatientsTimer = 0;
     }
     if (pausedUpdateAquariumTimer > 0) {
         updateAquariumTimer->start(pausedUpdateAquariumTimer);
+        pausedUpdateAquariumTimer = 0;
     }
 
     greyForeground->hide();
@@ -774,6 +845,9 @@ void GameScene3::checkGameState() {
         return;
     }
 
+    // Update reputation meter view
+    pixmapNeedle->setRotation(180 * office->currentReputation / office->levels[office->level]["maxReputation"]);
+
     // Check if Aquarium clicked
     int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
     if (aquarium->hasFocus() && !office->inAMiniGame) {
@@ -789,8 +863,9 @@ void GameScene3::checkGameState() {
 
         if (!game1->hasFocus()) {
             office->inAMiniGame = false;
+            office->currentMiniGameState = game1->getLevelState();
 
-            if (game1->aquarium->levels[game1->aquarium->level]["levelState"] == 1) {
+            if (office->currentMiniGameState == 1) {
                 office->score += office->currentMiniGameScore;
                 office->currentAquariumState = 0;
             }
@@ -853,29 +928,45 @@ void GameScene3::checkGameState() {
             office->currentMiniGameScore = game2->getCurrentScore();
 
             if (!game2->hasFocus()) {
-                patients[index]->motionState = Patient::Done;
-
                 office->inAMiniGame = false;
+                office->currentMiniGameState = game2->getLevelState();
 
-                if (game2->getLevelState() == 1) {
+                if (office->currentMiniGameState == 1) {
+                    patients[index]->motionState = Patient::Done;
                     patients[index]->statusState = Patient::Satisfied;
-                    showQuestion();
                     office->score += office->currentMiniGameScore;
-                } else if (game2->getLevelState() == 2) {
-                    patients[index]->statusState = Patient::Unsatisfied;
-                } else if (game2->getLevelState() == 0) {
-                    patients[index]->statusState = Patient::Rejected;
+                } else {
+                    // Check if reputation meter full
+                    if (office->currentReputation == office->levels[office->level]["maxReputation"]) {
+                        reputationBox->show();
+                        useReputation->show();
+                        cancelReputation->show();
+                        reputationDescription->show();
+                    } else {
+                        if (office->currentMiniGameState == 2) {
+                            patients[index]->motionState = Patient::Done;
+                            patients[index]->statusState = Patient::Unsatisfied;
+                        } else if (office->currentMiniGameState == 0) {
+                            patients[index]->motionState = Patient::Done;
+                            patients[index]->statusState = Patient::Rejected;
+
+                            if (office->currentReputation - office->levels[office->level]["incrementReputation"] > 0) {
+                                office->currentReputation -= office->levels[office->level]["incrementReputation"];
+                            } else {
+                                office->currentReputation = 0;
+                            }
+
+                            int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+                             updatePatientsTimer->start(time);
+                        }
+                    }
                 }
 
                 office->currentMiniGameScore = 0;
-
-                if(game2->getLevelState() != 1){
-                    int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
-                    updatePatientsTimer->start(time);
-                }
-
-
             }
+        } else if (patients[index]->motionState == Patient::ReadyForAdvice) {
+            patients[index]->motionState = Patient::ReceivingAdvice;
+            showQuestion();
         }
     }
 
@@ -892,19 +983,25 @@ void GameScene3::checkGameState() {
             >= office->levels[office->level]["endTime"]) {
         int timeConverted = office->levels[office->level]["endTime"];
         int hours = (timeConverted / 60) % 60;
+
         int mins = timeConverted % 60;
-        timeLabel->setText(QString("%1:%2")
+        std::string dayTime;
+        if (hours < 12) {
+            dayTime = "AM";
+        } else {
+            if (hours != 12) {
+                hours = hours - 12;
+            }
+            dayTime = "PM";
+        }
+
+        timeLabel->setText(QString("%1:%2 ")
         .arg(hours, 2, 10, QLatin1Char('0'))
-        .arg(mins, 2, 10, QLatin1Char('0')) );
+        .arg(mins, 2, 10, QLatin1Char('0')) + QString::fromStdString(dayTime));
 
         office->currentTime = office->levels[office->level]["endTime"];
 
         gameOver(false);
-    }
-
-    // Check if the office is cleaned
-    if (office->currentReputation == office->levels[office->level]["maxReputation"]) {
-        gameOver(true);
     }
 }
 

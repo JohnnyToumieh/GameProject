@@ -657,9 +657,11 @@ void GameScene2::unpauseGame() {
     timeUpdater->start(pausedTimeUpdater);
     if (pausedTeethUpdater > 0) {
        teethUpdater->start(pausedTeethUpdater);
+       pausedTeethUpdater = 0;
     }
     if (pausedToothUpdater > 0) {
        toothUpdater->start(pausedToothUpdater);
+       pausedToothUpdater = 0;
     }
 
     greyForeground->hide();
@@ -799,6 +801,7 @@ void GameScene2::gameOver(bool result) {
 
     if (result) {
         stateTracker2->score += stateTracker2->levels[stateTracker2->level]["maxTime"] / stateTracker2->currentTime - 1;
+        stateTracker2->score *= stateTracker2->level * stateTracker2->difficulity;
     }
 
     greyForeground->setStyleSheet("background-color: rgba(0, 0, 0, 255);");

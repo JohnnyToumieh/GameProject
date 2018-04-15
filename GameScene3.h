@@ -34,8 +34,6 @@ public:
     void gameOver(bool result);
     int getCurrentScore();
     int getLevelState();
-    int answer;
-
 
     void showQuestion();
 
@@ -51,8 +49,6 @@ public:
     QGraphicsView* miniGameView;
 
     QLabel* timeLabel;
-    QLabel* pestilenceTimeLabel;
-    QLabel* pestilenceTimeLabel2;
     QLabel* scoreLabel2;
     QLabel* gameOverLabel;
     QLabel* unpauseLabel;
@@ -72,11 +68,11 @@ public:
     QTimer* checkGameStateTimer;//!<QTimer member that updates the game state
 
     bool justPaused;
-    bool answered;
 
     QWidget* greyForeground;
     QWidget* patientBox;
     QWidget* aquariumBox;
+    QWidget* reputationBox;
 
     QPushButton* unpause;
     QPushButton* quit;
@@ -89,11 +85,14 @@ public:
     QPushButton* choiceA;
     QPushButton* choiceB;
     QPushButton* choiceC;
+    QPushButton* useReputation;
+    QPushButton* cancelReputation;
 
     QLabel* levelLabel;
     QLabel* scoreLabel;
     QLabel* description;
     QLabel* aquariumDescription;
+    QLabel* reputationDescription;
 
     QGraphicsPixmapItem *greenColorItem;
     QGraphicsPixmapItem *pixmapNeedle;
@@ -118,6 +117,7 @@ public slots:
     void handleAquariumRequest();
     void cancelAquariumRequest();
     void answerClicked(int answer);
+    void handleReputation(int status);
 };
 
 #endif // GAMESCENE3_H

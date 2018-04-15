@@ -31,6 +31,7 @@ Office::Office(int level, int currentReputation, int currentTime, int currentAqu
     this->score = score;
 
     this->currentMiniGameScore = 0;
+    this->currentMiniGameState = 0;
 
     this->gamePaused = false;
     this->requestForUnpause = false;

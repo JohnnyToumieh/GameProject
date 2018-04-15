@@ -708,6 +708,7 @@ void GameScene1::unpauseGame() {
     updateBacteriasTimer->start(pausedUpdateBacteriasTimer);
     if (pausedVirusTimer > 0) {
         virusTimer->start(pausedVirusTimer);
+        pausedVirusTimer = 0;
     }
     if (pausedPestilenceTimer > 0) {
         pestilenceTimer->start(pausedPestilenceTimer);
