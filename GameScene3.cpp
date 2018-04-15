@@ -905,7 +905,7 @@ void GameScene3::checkGameState() {
     // Check patient's status
     index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
     if (patients[index] != NULL) {
-        int timeLimit = (patients[index]->type + patients[index]->diff) * 1000 + 10000;
+        int timeLimit = (patients[index]->type + patients[index]->diff) * 1000 + 20000;
         int specialTimeLimit = timeLimit * 2 / 3;
         int points = (patients[index]->type + patients[index]->diff) * 100;
         int specialPoints = points * 5 / 4;
