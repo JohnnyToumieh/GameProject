@@ -113,7 +113,7 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     pixmapNeedle = new QGraphicsPixmapItem();
     QPixmap *picNeedle  = new QPixmap(":needle");
     pixmapNeedle->setPixmap(picNeedle->scaled(80,20));
-    pixmapNeedle->setPos(850, 50);
+    pixmapNeedle->setPos(855, 50);
     pixmapNeedle->setTransformOriginPoint(pixmapNeedle->boundingRect().center().x() + 20,
                                                pixmapNeedle->boundingRect().center().y());
     addItem(pixmapNeedle);
