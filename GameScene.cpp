@@ -19,7 +19,8 @@
  * @param User* user is the user signed in
  * @param QJsonObject dataFile holds the info of the user
  * @param bool resume determines is the game is being resumed
- * @param int level determines if the game should start at a specific level
+ * @param int gameNumber represents the number of the game player is playing
+ * @param bool isMiniGame tells if the game is a main game or a mini game
  */
 GameScene::GameScene(QWidget *widget, User* user, QJsonObject dataFile, int gameNumber, bool isMiniGame, QGraphicsScene *parent) : QGraphicsScene(parent)
 {

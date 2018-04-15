@@ -14,10 +14,9 @@
  *
  * A constructor that set the patient along with its attributes
  * @param int type argument integer indicating the type of the patient
- * @param SpongeBob* spongeBob is the spongebob object of the active game level
- * @param Aquarium* aquarium
- * @param QGraphicsPixmapItem* greenColorItem is the cleanliness green bar
- * @param QGraphicsPixmapItem** pixmapLifeList the array of spongebob's lives
+ * @param office* spongeBob is the spongebob object of the active game level
+ * @param motionState state of the patient (arriving,leaving...)
+ * @param statusState state of the patient's status (satisfied,...)
  */
 
 Patient::Patient(int type, Office* office, QString motionState, QString statusState, QObject *parent)
@@ -121,6 +120,12 @@ Patient::Patient(int type, Office* office, QString motionState, QString statusSt
     checkGameStateTimer->start(100);
 }
 
+/**
+ * @brief Patient::getMotionState
+ *
+ * A member function that returns the motion state of the patient
+ * @return QString the motion state of the patient
+ */
 QString Patient::getMotionState() {
     for (std::unordered_map<std::string, MotionState>::const_iterator it = motionStates.begin(); it != motionStates.end(); ++it) {
         if (it->second == motionState) {
@@ -129,6 +134,12 @@ QString Patient::getMotionState() {
     }
 }
 
+/**
+ * @brief Patient::getStatusState
+ *
+ * A member function that returns the status of the patient
+ * @return QString the status of the patient
+ */
 QString Patient::getStatusState() {
     for (std::unordered_map<std::string, StatusState>::const_iterator it = statusStates.begin(); it != statusStates.end(); ++it) {
         if (it->second == statusState) {
@@ -141,8 +152,7 @@ QString Patient::getStatusState() {
  * @brief Patient::checkGameState triggered on checkGameStateTimer to check the game state and update
  * accordingly
  *
- * A function that check if the game is paused to stop moving the patient and checks for collisions
- * and accordingly modify attributes (score,cleanliness) and mark the patient with toDelete as true
+ * A function that check if the game is paused to stop moving the patient
  *
  */
 void Patient::checkGameState() {
@@ -167,8 +177,7 @@ void Patient::checkGameState() {
 /**
  * @brief Patient::checkGameState triggered on speedTimer to update the place and movement of the patient
  *
- * update() function move the patient in a sinusoidal movement and delete them on borders. When spongebob
- * is vulnerable then patient chase him.
+ * update() function move the patient in and out of the office
  *
  */
 

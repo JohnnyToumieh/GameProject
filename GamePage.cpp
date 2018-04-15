@@ -12,7 +12,7 @@
  */
 
 /**
- * @brief GamePage::GamePage constructor of ChooseGamePage class
+ * @brief GamePage::GamePage constructor of GamePage class
  *
  * A constructor that set page buttons and labels
  *

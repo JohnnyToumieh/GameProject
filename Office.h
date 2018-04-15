@@ -8,7 +8,7 @@
 /**
  *\file Office.h
  *@brief The office class, represents the Office with its main indicators
- * Including cleanliness,score, and time
+ * Including currentReputation,score, and time
  *
  */
 

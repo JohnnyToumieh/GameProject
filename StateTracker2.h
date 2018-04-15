@@ -8,7 +8,6 @@
 /**
  *\file StateTracker2.h
  *@brief The StateTracker2 class, represents the state tracker of game 2 with its main indicators
- * Including cleanliness,score, and time
  *
  */
 

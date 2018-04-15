@@ -3,20 +3,24 @@
  *\file StateTracker2.cpp
  *@brief contains StateTracker2 class definition which represents the state tracker as an object holding main attributes of the game
  *
- * StateTracker2 class set the level,cleanliness,time and score.
+ * StateTracker2 class set the level,difficulity,time, score, and points.
  * Also it sets up each level with a specific attributes that define speed and frequency of object making an
  * overall difficulty of each level (increasing from 1 to 3).
  *
  */
 
 /**
- * @brief StateTracker2::StateTracker2 constructor of Aquarium class
+ * @brief StateTracker2::StateTracker2 constructor of StateTracker2 class
  *
- * A constructor that set different parameters (level,cleanliness,time and score)
+ * A constructor that set different parameters (level,difficulity,time and score)
  * @param level argument integer indicating the level
- * @param currentCleanliness argument integer indicating the Cleanliness
- * @param currentTime argument integer indicating the time of the game timer
+ * @param difficulity specify diffuclity of guessing minigame
+ * @param currentTime the time of the office
  * @param score argument integer indicating the score
+ * @param points points awarded for the minigame
+ * @param specialPoints  bonus points awarded for the minigam when finished early
+ * @param timeLimit to finish the minigam
+ * @param specialTimeLimit to finish the minigame with bonus
  */
 StateTracker2::StateTracker2(int level, int difficulity, int currentTime,
                              int score, int points, int specialPoints,
@@ -39,6 +43,12 @@ StateTracker2::StateTracker2(int level, int difficulity, int currentTime,
     this->requestForUnpause = false;
 }
 
+/**
+ * @brief StateTracker2::keyPressEvent
+ *
+ * function that responed to pressing escape key
+ * @param QKeyEvent *event
+ */
 void StateTracker2::keyPressEvent(QKeyEvent *event){
     if (event->key() == Qt::Key_Escape) {
         if (gamePaused && !requestForUnpause) {
@@ -79,29 +89,12 @@ void StateTracker2::setUpLevels() {
  * function take diffrenet attributes of the level and set them in a map of string key describing the attribute and integer value
  * equal to the passed parameters
  * @param maxTime integer that indicates the maximum time allowed to complete the level
- * @param maxCleanliness ineteger that indicates the cleanliness needed to be reached in order to complete the level
- * @param incrementCleanliness integer indicating how much the cleanliness will increment when a bacterium is killed
- * @param stepsPerImmunity integer indicates how much step it takes to go from one immunity to another
- * @param bacteriaGenerationRate integer indicates the rate at which are bacteria being generated
- * @param bacteriaWeight1 integer indicates the weight of bacteria 1
- * @param bacteriaWeight2 integer indicates the weight of bacteria 2
- * @param bacteriaWeight3 integer indicates the weight of bacteria 3
- * @param bacteriaSpeed1 integer indicate the timer at which the bacteria 1 move (its like a period so the actual "speed" is inversly proprotional to it).
- * @param bacteriaSpeed2 integer indicate the timer at which the bacteria 2 move (its like a period so the actual "speed" is inversly proprotional to it).
- * @param bacteriaSpeed3 integer indicate the timer at which the bacteria 3 move (its like a period so the actual "speed" is inversly proprotional to it).
- * @param itemDropRate integer indicates the rate at which are items being generated
- * @param healthyItemWeight integer indicates the weight of healthy items
- * @param unhealthyItemWeight integer indicates the weight of unhealthy items
- * @param healthyItemSpeed integer indicates the speed of healthy items
- * @param unhealthyItemSpeed integer indicates the speed of unhealthy items
- * @param virusGenerationRate integer indicates the rate at which are viruses being generated
- * @param virusWeight1 integer indicates the weight of virus 1
- * @param virusWeight2 integer indicates the weight of virus 2
- * @param virusWeight3 integer indicates the weight of virus 3
- * @param virusSpeed1  integer indicates the speed of virus 1
- * @param virusSpeed2  integer indicates the speed of virus 2
- * @param virusSpeed3  integer indicates the speed of virus 3
- * @return std::map<std::string, int> a map between attributes discriptions and values
+ * @param difficulity1NumberOfTeeth number of infected teeth for diff 1
+ * @param difficulity1SpeedOfTeeth  speed of showing infected teeth for diff 1
+ * @param difficulity2NumberOfTeeth number of infected teeth for diff 2
+ * @param difficulity2SpeedOfTeeth  speed of showing infected teeth for diff 2
+ * @param difficulity3NumberOfTeeth number of infected teeth for diff 3
+ * @param difficulity3SpeedOfTeeth  speed of showing infected teeth for diff 3
  */
 std::map<std::string, int> StateTracker2::setUpLevelsHelper(int maxTime,
                                                             int difficulity1NumberOfTeeth, int difficulity1SpeedOfTeeth,

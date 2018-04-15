@@ -4,7 +4,7 @@
 
 /**
  *\file GameScene3.cpp
- *@brief contains GameScene3 class definition which represents the game 2 shell.
+ *@brief contains GameScene3 class definition which represents the game 2 main settings (dentist office with arriving patients).
  *
  * It handles saving of games, the creation and deletion of elements and tracking the game state.
  *
@@ -15,10 +15,13 @@
  *
  * A constructor that sets up the game with all initial attributes.
  * @param QWidget *widget represents the main widget holding all items
+ * @param int width the width of the window
+ * @param int height the height of the window
  * @param User* user is the user signed in
  * @param QJsonObject dataFile holds the info of the user
  * @param bool resume determines is the game is being resumed
- * @param int level determines if the game should start at a specific level
+ * @param int specialPoints awarded when finished within special time limit
+ * @param bool isMiniGame specify that it is a minigame
  */
 GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level, bool isMiniGame) : GameScene(widget, user, dataFile, 2, isMiniGame)
 {
@@ -374,10 +377,22 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     updateTimer();
 }
 
+/**
+ * @brief GameScene3::getCurrentScore
+ *
+ * A member function that returns the score of the game 2
+ * @return int score of the game 2
+ */
 int GameScene3::getCurrentScore() {
     return office->score;
 }
 
+/**
+ * @brief GameScene3::getCurrentScore
+ *
+ * A member function that returns the score of game 2
+ * @return int score of the game 2
+ */
 int GameScene3::getLevelState() {
     return office->levels[office->level]["levelState"];
 }
@@ -424,6 +439,12 @@ void GameScene3::setUpNextLevel() {
     pixmapNeedle->setRotation(0);
 }
 
+/**
+ * @brief GameScene3::updateAquariumImage
+ *
+ * A member function that update the image of the aquarium with time
+ * as an indicator of dertiness of the auqrium
+ */
 void GameScene3::updateAquariumImage() {
     QPixmap *picAquarium;
     if (office->currentAquariumState == 0) {
@@ -438,6 +459,11 @@ void GameScene3::updateAquariumImage() {
     aquarium->setPixmap(picAquarium->scaled(153, 87));
 }
 
+/**
+ * @brief GameScene3::updateAquarium
+ *
+ * A member function that update the state (level) of the aquarium minigame
+ */
 void GameScene3::updateAquarium() {
     if (office->currentAquariumState < 2) {
         int time = (rand() % 1000) + office->levels[office->level]["dirtinessRate"] - 500;
@@ -524,6 +550,14 @@ void GameScene3::updatePatients(){
     addItem(patients[patientsIndex++]);
 }
 
+/**
+ * @brief GameScene3::handlePatient
+ *
+ * A member function that gets called when the player
+ * respond to a patient arrivalby accpeting or rejecting
+ * where acceptig the patient will open minigame and rejecting
+ * lead to his leaving with decrease in reputation of the player
+ */
 void GameScene3::handlePatient(int status) {
     reject->hide();
     accept->hide();
@@ -551,6 +585,12 @@ void GameScene3::handlePatient(int status) {
     }
 }
 
+/**
+ * @brief GameScene3::handleAquariumRequest
+ *
+ * A member function that gets called if the user choose
+ * to clean the aquarium opening minigame of game1
+ */
 void GameScene3::handleAquariumRequest() {
     GameScene1 *game1 = new GameScene1(widget, 800, 500, user, dataFile, false, office->currentAquariumState, true);
     miniGameView = new QGraphicsView(game1);
@@ -571,6 +611,12 @@ void GameScene3::handleAquariumRequest() {
     cancelAquarium->hide();
 }
 
+/**
+ * @brief GameScene3::cancelAquariumRequest
+ *
+ * A member function that handles tha cancellation
+ * of aquarium cleaning request
+ */
 void GameScene3::cancelAquariumRequest() {
     aquariumBox->hide();
     aquariumDescription->hide();
@@ -578,6 +624,12 @@ void GameScene3::cancelAquariumRequest() {
     cancelAquarium->hide();
 }
 
+/**
+ * @brief GameScene3::handleReputation
+ *
+ * A member function that handles increase or decrrease of reputation
+ * @param int status
+ */
 void GameScene3::handleReputation(int status) {
     reputationBox->hide();
     reputationDescription->hide();

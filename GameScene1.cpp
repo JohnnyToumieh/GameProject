@@ -15,10 +15,13 @@
  *
  * A constructor that sets up the game with all initial attributes.
  * @param QWidget *widget represents the main widget holding all items
+ * @param int width specify the width of the gamescene window
+ * @param int height specify the height of the gamescene window
  * @param User* user is the user signed in
  * @param QJsonObject dataFile holds the info of the user
  * @param bool resume determines is the game is being resumed
  * @param int level determines if the game should start at a specific level
+ * @param bool isMiniGame specify if the game is a mini game
  */
 GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume, int level, bool isMiniGame) : GameScene(widget, user, dataFile, 1, isMiniGame)
 {
@@ -321,10 +324,22 @@ GameScene1::GameScene1(QWidget *widget, int width, int height, User* user, QJson
     updateTimer();
 }
 
+/**
+ * @brief GameScene1::getCurrentScore
+ *
+ * A member function that returns the score of the aquarium.
+ * @return int score of the aquarium minigame
+ */
 int GameScene1::getCurrentScore() {
     return aquarium->score;
 }
 
+/**
+ * @brief GameScene1::getLevelState
+ *
+ * A member function that returns the level of the aquarium.
+ * @return int level of the aquarium minigame
+ */
 int GameScene1::getLevelState() {
     return aquarium->levels[aquarium->level]["levelState"];
 }

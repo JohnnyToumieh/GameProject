@@ -4,7 +4,7 @@
 
 /**
  *\file GameScene2.cpp
- *@brief contains GameScene2 class definition which represents the game 2 shell.
+ *@brief contains GameScene2 class definition which represents the mini game of guessing the infected teeth.
  *
  * It handles saving of games, the creation and deletion of elements and tracking the game state.
  *
@@ -15,10 +15,19 @@
  *
  * A constructor that sets up the game with all initial attributes.
  * @param QWidget *widget represents the main widget holding all items
+ * @param int width the width of the window
+ * @param int height the height of the window
  * @param User* user is the user signed in
  * @param QJsonObject dataFile holds the info of the user
  * @param bool resume determines is the game is being resumed
  * @param int level determines if the game should start at a specific level
+ * @param int difficulity specify the diffuclity of the arriving patient mini game
+ * @param int timelimit is the time limit of the mini game
+ * @param int specialTimeLimit the time limit that if finished within the player is awarded
+ * @param int points awarded when finished within time
+ * @param int specialPoints awarded when finished within special time limit
+ * @param bool isMiniGame specify that it is a minigame
+ *
  */
 GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJsonObject dataFile, bool resume,
                        int level, int difficulity,
@@ -275,6 +284,11 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     updateTimer();
 }
 
+/**
+ * @brief GameScene2::updateToolClicked
+ *
+ * A member function that handles clicking tools in level 3
+ */
 void GameScene2::updateToolClicked(int toolIndex){
     toolClicked = toolIndex+2;
 
@@ -287,6 +301,12 @@ void GameScene2::updateToolClicked(int toolIndex){
     }
 }
 
+/**
+ * @brief GameScene2::startClicked
+ *
+ * A member function that handles clicking start button in the minigame.
+ * where infected teeth will be displayed according to the level
+ */
 void GameScene2::startClicked() {
     start->hide();
 
@@ -351,6 +371,14 @@ void GameScene2::startClicked() {
     gameState = DisplayingTeeth;
 }
 
+/**
+ * @brief GameScene2::toothClicked
+ *
+ * A member function that handles clicking a tooth when guessing
+ * the function check if the tooth is correct and responds
+ *
+ * @param int toothIndex the index of the clicked tooth
+ */
 void GameScene2::toothClicked(int toothIndex) {
     if (gameState == GuessingTeeth && !stateTracker2->gamePaused) {
         if (stateTracker2->level == 1) {
@@ -438,6 +466,13 @@ void GameScene2::toothClicked(int toothIndex) {
     }
 }
 
+/**
+ * @brief GameScene2::highlightAllTeeth
+ *
+ * A member function that is called in level1 to highlight
+ * all the infected teeth at once
+ *
+ */
 void GameScene2::highlightAllTeeth() {
     for (int i = 0; i < orderSize; i++) {
         if (order[i] < 6) {
@@ -448,6 +483,13 @@ void GameScene2::highlightAllTeeth() {
     }
 }
 
+/**
+ * @brief GameScene2::dehighlightAllTeeth
+ *
+ * A member function that is called to dehighlight all teeth
+ * and reset indexes
+ *
+ */
 void GameScene2::dehighlightAllTeeth() {
     resetAllTeeth();
 
@@ -458,6 +500,13 @@ void GameScene2::dehighlightAllTeeth() {
     gameState = GuessingTeeth;
 }
 
+/**
+ * @brief GameScene2::resetAllTeeth
+ *
+ * A member function that is called from dehighlightAllTeeth to clear colors
+ * of all teeth
+ *
+ */
 void GameScene2::resetAllTeeth() {
     for (int i = 0; i < 12; i++) {
         if (i < 6) {
@@ -468,7 +517,13 @@ void GameScene2::resetAllTeeth() {
     }
 }
 
-// 1 white 2 black 3 yellow 4 blue 5 green 6 red
+/**
+ * @brief GameScene2::highlightTooth
+ *
+ * A member function that is called to highlight tooth in level 2 and 3 patients
+ * it highlight tooth and record the order of tooth highlighted
+ *
+ */
 void GameScene2::highlightTooth() {
     if (orderIndex > 0) {
         if (order[orderIndex - 1] < 6) {
@@ -505,10 +560,22 @@ void GameScene2::highlightTooth() {
     }
 }
 
+/**
+ * @brief GameScene2::getCurrentScore
+ *
+ * A member function that returns the score of the guessing minigame.
+ * @return int score of the guessing minigame
+ */
 int GameScene2::getCurrentScore() {
     return stateTracker2->score;
 }
 
+/**
+ * @brief GameScene2::getLevelState
+ *
+ * A member function that returns the level of the guessing minigame.
+ * @return int level of the guessing minigame
+ */
 int GameScene2::getLevelState() {
     return stateTracker2->levels[stateTracker2->level]["levelState"];
 }
