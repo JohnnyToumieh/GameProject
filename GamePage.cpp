@@ -88,7 +88,7 @@ void GamePage::descriptionClicked(){
         msg->show();
     }
     else{
-        Message *msg = new Message("Game 2 is still in the unknown :)!");
+        Message *msg = new Message("The game follows the daily work life of a dentist.\nThe player will be the dentist and should treat\npatients to the best of his abilities daily. Each\npatient has his own set of defected teeth.");
         msg->show();
     }
 }
