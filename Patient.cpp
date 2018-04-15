@@ -174,6 +174,8 @@ void Patient::update(){
 
             if (statusState == Rejected || statusState == Unsatisfied) {
                 motionState = Leaving;
+            } else if (statusState == Satisfied) {
+                motionState = ReadyForAdvice;
             }
         }
     }

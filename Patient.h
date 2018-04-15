@@ -27,7 +27,7 @@ class Patient : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    enum MotionState {Arriving, Waiting, GettingReady, Ready, InProgress, Done, Leaving, Left};
+    enum MotionState {Arriving, Waiting, GettingReady, Ready, InProgress, Done, ReadyForAdvice, ReceivingAdvice, Leaving, Left};
     enum StatusState {None, Rejected, Accepted, Satisfied, Unsatisfied};
 
     explicit Patient(int type, Office* office, QObject *parent = nullptr);

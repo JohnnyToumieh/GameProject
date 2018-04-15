@@ -347,26 +347,6 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     updateTimer();
 }
 
-void GameScene3::answerClicked(int answer){
-    this->answer=answer;
-    answered=true;
-    patientBox->hide();
-    description->hide();
-    choiceA->hide();
-    choiceB->hide();
-    choiceC->hide();
-    int steps = office->levels[office->level]["incrementReputation"];
-    if(answer == questions[description->text()]){
-        pixmapNeedle->setRotation(pixmapNeedle->rotation() + 80 / steps);
-    }else{
-        pixmapNeedle->setRotation(pixmapNeedle->rotation() - 80 / steps);
-    }
-
-    int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
-    updatePatientsTimer->start(time);
-
-}
-
 int GameScene3::getCurrentScore() {
     return office->score;
 }
@@ -583,15 +563,39 @@ void GameScene3::quitClicked() {
 }
 
 void GameScene3::showQuestion(){
-    answered = false;
     int randNumb = (rand() % 10);
     description->setText(questionList[randNumb]);
+
     patientBox->show();
     description->show();
     choiceA->show();
     choiceB->show();
     choiceC->show();
+}
 
+void GameScene3::answerClicked(int answer){
+    int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
+    if (patients[index] != NULL) {
+        patients[index]->motionState = Patient::Leaving;
+    } else {
+        return;
+    }
+
+    patientBox->hide();
+    description->hide();
+    choiceA->hide();
+    choiceB->hide();
+    choiceC->hide();
+
+    int steps = office->levels[office->level]["incrementReputation"];
+    if(answer == questions[description->text()]){
+        pixmapNeedle->setRotation(pixmapNeedle->rotation() + 80 / steps);
+    }else{
+        pixmapNeedle->setRotation(pixmapNeedle->rotation() - 80 / steps);
+    }
+
+    int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+    updatePatientsTimer->start(time);
 }
 
 /**
@@ -859,7 +863,6 @@ void GameScene3::checkGameState() {
 
                 if (game2->getLevelState() == 1) {
                     patients[index]->statusState = Patient::Satisfied;
-                    showQuestion();
                     office->score += office->currentMiniGameScore;
                 } else if (game2->getLevelState() == 2) {
                     patients[index]->statusState = Patient::Unsatisfied;
@@ -873,9 +876,10 @@ void GameScene3::checkGameState() {
                     int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
                     updatePatientsTimer->start(time);
                 }
-
-
             }
+        } else if (patients[index]->motionState == Patient::ReadyForAdvice) {
+            patients[index]->motionState = Patient::ReceivingAdvice;
+            showQuestion();
         }
     }
 
