@@ -66,7 +66,6 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
             tool[i] = new Tool(i+1);
             tool[i]->setFocusPolicy(Qt::ClickFocus);
             tool[i]->setStyleSheet("QLabel { border-radius: 4px; border: 3px solid black; }");
-        //    tool[i]->setFixedSize(30, 51);
             if(i==0)
                 tool[i]->move(450,200);
             if(i==1)

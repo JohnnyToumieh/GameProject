@@ -357,7 +357,7 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
         updatePatientsTimer->start(pausedTimesSave["pausedUpdatePatientsTimer"].toInt());
         updateAquariumTimer->start(pausedTimesSave["pausedUpdateAquariumTimer"].toInt());
     } else {
-        timeUpdater->start(500);
+        timeUpdater->start(100);
         updatePatientsTimer->start(office->levels[office->level]["patientGenerationRate"]);
         updateAquariumTimer->start(office->levels[office->level]["dirtinessRate"]);
     }

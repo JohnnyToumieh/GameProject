@@ -56,26 +56,26 @@ void Office::keyPressEvent(QKeyEvent *event){
  * function that fill the array of the levels with 3 levels each with specified attributes.
  */
 void Office::setUpLevels() {
-    this->levels[1] = setUpLevelsHelper(480, 840, 1000,
+    this->levels[1] = setUpLevelsHelper(480, 840, 200,
                                           10, 1,
                                           3000, 50, 30, 20,
                                           50, 30, 20,
                                           50, 30, 20,
-                                          5000);
+                                          20000);
 
-    this->levels[2] = setUpLevelsHelper(480, 840, 1000,
+    this->levels[2] = setUpLevelsHelper(480, 840, 200,
                                           10, 1,
                                           3000, 50, 30, 20,
                                           50, 30, 20,
                                           50, 30, 20,
-                                          5000);
+                                          20000);
 
-    this->levels[3] = setUpLevelsHelper(480, 840, 1000,
+    this->levels[3] = setUpLevelsHelper(480, 840, 200,
                                           10, 1,
                                           3000, 50, 30, 20,
                                           50, 30, 20,
                                           50, 30, 20,
-                                          5000);
+                                          20000);
 }
 
 /**
