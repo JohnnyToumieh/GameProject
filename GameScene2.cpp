@@ -656,9 +656,11 @@ void GameScene2::unpauseGame() {
     timeUpdater->start(pausedTimeUpdater);
     if (pausedTeethUpdater > 0) {
        teethUpdater->start(pausedTeethUpdater);
+       pausedTeethUpdater = 0;
     }
     if (pausedToothUpdater > 0) {
        toothUpdater->start(pausedToothUpdater);
+       pausedToothUpdater = 0;
     }
 
     greyForeground->hide();
@@ -717,8 +719,6 @@ void GameScene2::checkGameState() {
                     }
 
                     teethUpdater->stop();
-                } else {
-                    pausedTeethUpdater = 0;
                 }
 
                 if (toothUpdater->isActive()) {
@@ -729,8 +729,6 @@ void GameScene2::checkGameState() {
                     }
 
                     toothUpdater->stop();
-                } else {
-                    pausedToothUpdater = 0;
                 }
 
                 pausedTimeUpdater = timeUpdater->remainingTime();

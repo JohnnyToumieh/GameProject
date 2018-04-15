@@ -749,9 +749,11 @@ void GameScene3::unpauseGame() {
     timeUpdater->start(pausedTimeUpdater);
     if (pausedUpdatePatientsTimer > 0) {
         updatePatientsTimer->start(pausedUpdatePatientsTimer);
+        pausedUpdatePatientsTimer = 0;
     }
     if (pausedUpdateAquariumTimer > 0) {
         updateAquariumTimer->start(pausedUpdateAquariumTimer);
+        pausedUpdateAquariumTimer = 0;
     }
 
     greyForeground->hide();
@@ -812,8 +814,6 @@ void GameScene3::checkGameState() {
                     }
 
                     updatePatientsTimer->stop();
-                } else {
-                    pausedUpdatePatientsTimer = 0;
                 }
                 if (updateAquariumTimer->isActive()) {
                     pausedUpdateAquariumTimer = updateAquariumTimer->remainingTime();
@@ -823,8 +823,6 @@ void GameScene3::checkGameState() {
                     }
 
                     updateAquariumTimer->stop();
-                } else {
-                    pausedUpdateAquariumTimer = 0;
                 }
 
                 if (pausedTimeUpdater < 0) {
