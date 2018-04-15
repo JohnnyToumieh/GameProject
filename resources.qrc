@@ -31,5 +31,8 @@
         <file alias="black">Images/black.jpeg</file>
         <file alias="mouth">Images/mouth3.jpg</file>
         <file alias="game2Background2">Images/bkgd.PNG</file>
+        <file alias="tool3">Images/tool3.png</file>
+        <file alias="tool2">Images/tool2.png</file>
+        <file alias="tool1">Images/tool1.png</file>
     </qresource>
 </RCC>
