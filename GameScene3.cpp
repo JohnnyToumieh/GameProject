@@ -1006,7 +1006,12 @@ void GameScene3::checkGameState() {
 
         office->currentTime = office->levels[office->level]["endTime"];
 
-        gameOver(false);
+        if(office->score>=office->levels[office->level]["dailyGoal"])
+        {
+            gameOver(true);
+        }else{
+             gameOver(false);
+        }
     }
 }
 
