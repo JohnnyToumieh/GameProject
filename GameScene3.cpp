@@ -413,6 +413,7 @@ void GameScene3::setUpNextLevel() {
     office->level++;
     office->currentReputation = 0;
     office->currentTime = 0;
+    office->score=0;
 
     QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
@@ -857,6 +858,7 @@ void GameScene3::checkGameState() {
     if (aquarium->hasFocus() && !office->inAMiniGame) {
         if (office->currentAquariumState > 0) {
             aquariumBox->show();
+            aquariumDescription->setText("Please clean me.\nLevel: "+ QString::number(office->currentAquariumState));
             aquariumDescription->show();
             cleanAquarium->show();
             cancelAquarium->show();
@@ -911,7 +913,9 @@ void GameScene3::checkGameState() {
         int specialPoints = points * 5 / 4;
 
         if (patients[index]->motionState == Patient::Waiting) {
+            QString username;
             patientBox->show();
+
             QString userName;
             if (user->isGuest) {
                 userName = "X";
@@ -998,6 +1002,10 @@ void GameScene3::checkGameState() {
     // Update score
     scoreLabel->setText(QStringLiteral("Score: %1").arg(office->score));
     scoreLabel->adjustSize();
+    if(office->score>=office->levels[office->level]["dailyGoal"])
+    {
+        gameOver(true);
+    }
 
     // Update level
     levelLabel->setText(QStringLiteral("Level: %1").arg(office->level));
@@ -1026,7 +1034,12 @@ void GameScene3::checkGameState() {
 
         office->currentTime = office->levels[office->level]["endTime"];
 
-        gameOver(false);
+        if(office->score>=office->levels[office->level]["dailyGoal"])
+        {
+            gameOver(true);
+        }else{
+             gameOver(false);
+        }
     }
 }
 
