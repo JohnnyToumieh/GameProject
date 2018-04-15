@@ -43,7 +43,7 @@ private:
                                                  int patientGenerationRate, int patientWeight1, int patientWeight2, int patientWeight3,
                                                  int patientWeight4, int patientWeight5, int patientWeight6,
                                                  int patientWeight7, int patientWeight8, int patientWeight9,
-                                                 int dirtinessRate);//!<Member function sets up different levels according to passed parameters
+                                                 int dirtinessRate,int dailyGoal);//!<Member function sets up different levels according to passed parameters
 
 signals:
 

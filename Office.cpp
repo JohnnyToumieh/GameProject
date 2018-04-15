@@ -61,21 +61,21 @@ void Office::setUpLevels() {
                                           3000, 50, 30, 20,
                                           50, 30, 20,
                                           50, 30, 20,
-                                          20000);
+                                          20000,100);
 
     this->levels[2] = setUpLevelsHelper(480, 840, 200,
                                           10, 1,
                                           3000, 50, 30, 20,
                                           50, 30, 20,
                                           50, 30, 20,
-                                          20000);
+                                          20000,200);
 
     this->levels[3] = setUpLevelsHelper(480, 840, 200,
                                           10, 1,
                                           3000, 50, 30, 20,
                                           50, 30, 20,
                                           50, 30, 20,
-                                          20000);
+                                          20000,300);
 }
 
 /**
@@ -113,7 +113,7 @@ std::map<std::string, int> Office::setUpLevelsHelper(int startTime, int endTime,
                                      int patientGenerationRate, int patientWeight1, int patientWeight2, int patientWeight3,
                                      int patientWeight4, int patientWeight5, int patientWeight6,
                                      int patientWeight7, int patientWeight8, int patientWeight9,
-                                     int dirtinessRate) {
+                                     int dirtinessRate,int dailyGoal) {
     std::map<std::string, int> level;
 
     level["startTime"] = startTime;
@@ -135,6 +135,8 @@ std::map<std::string, int> Office::setUpLevelsHelper(int startTime, int endTime,
     level["patientWeight7"] = patientWeight7;
     level["patientWeight8"] = patientWeight8;
     level["patientWeight9"] = patientWeight9;
+
+    level["dailyGoal"] = dailyGoal;
 
     level["dirtinessRate"] = dirtinessRate;
 

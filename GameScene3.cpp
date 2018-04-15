@@ -408,6 +408,7 @@ void GameScene3::setUpNextLevel() {
     office->level++;
     office->currentReputation = 0;
     office->currentTime = 0;
+    office->score=0;
 
     QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);
@@ -956,9 +957,9 @@ void GameScene3::checkGameState() {
                                 office->currentReputation = 0;
                             }
 
-                            int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
-                             updatePatientsTimer->start(time);
                         }
+                        int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+                         updatePatientsTimer->start(time);
                     }
                 }
 
@@ -973,6 +974,10 @@ void GameScene3::checkGameState() {
     // Update score
     scoreLabel->setText(QStringLiteral("Score: %1").arg(office->score));
     scoreLabel->adjustSize();
+    if(office->score>=office->levels[office->level]["dailyGoal"])
+    {
+        gameOver(true);
+    }
 
     // Update level
     levelLabel->setText(QStringLiteral("Level: %1").arg(office->level));
