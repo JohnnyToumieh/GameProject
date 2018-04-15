@@ -954,7 +954,11 @@ void GameScene3::checkGameState() {
 
                 if (office->currentMiniGameState == 1) {
                     patients[index]->motionState = Patient::Done;
-                    patients[index]->statusState = Patient::Satisfied;
+                    if (office->currentMiniGameScore == specialPoints) {
+                        patients[index]->statusState = Patient::ReallySatisfied;
+                    } else {
+                        patients[index]->statusState = Patient::Satisfied;
+                    }
                     office->score += office->currentMiniGameScore;
                 } else {
                     // Check if reputation meter full

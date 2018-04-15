@@ -43,6 +43,7 @@ Patient::Patient(int type, Office* office, QString motionState, QString statusSt
     statusStates["None"] = None;
     statusStates["Rejected"] = Rejected;
     statusStates["Accepted"] = Accepted;
+    statusStates["ReallySatisfied"] = ReallySatisfied;
     statusStates["Satisfied"] = Satisfied;
     statusStates["Unsatisfied"] = Unsatisfied;
 
@@ -211,9 +212,9 @@ void Patient::update(){
                 }
             }
 
-            if (statusState == Rejected || statusState == Unsatisfied) {
+            if (statusState == Rejected || statusState == Unsatisfied || statusState == Satisfied) {
                 motionState = Leaving;
-            } else if (statusState == Satisfied) {
+            } else if (statusState == ReallySatisfied) {
                 if (x() > 650) {
                     motionState = ReadyForAdvice;
                 }
