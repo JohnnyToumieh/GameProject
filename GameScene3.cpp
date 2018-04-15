@@ -854,6 +854,7 @@ void GameScene3::checkGameState() {
     if (aquarium->hasFocus() && !office->inAMiniGame) {
         if (office->currentAquariumState > 0) {
             aquariumBox->show();
+            aquariumDescription->setText("Please clean me.\nLevel: "+ QString::number(office->currentAquariumState));
             aquariumDescription->show();
             cleanAquarium->show();
             cancelAquarium->show();
