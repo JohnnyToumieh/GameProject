@@ -951,10 +951,10 @@ void GameScene3::checkGameState() {
                             } else {
                                 office->currentReputation = 0;
                             }
-
-                            int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
-                             updatePatientsTimer->start(time);
                         }
+
+                        int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+                        updatePatientsTimer->start(time);
                     }
                 }
 
