@@ -65,6 +65,7 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
         for (int i=0;i<3;i++){
             tool[i] = new Tool(i+1);
             tool[i]->setFocusPolicy(Qt::ClickFocus);
+            tool[i]->setStyleSheet("QLabel { border-radius: 4px; border: 3px solid black; }");
         //    tool[i]->setFixedSize(30, 51);
             if(i==0)
                 tool[i]->move(450,200);
@@ -274,6 +275,14 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
 
 void GameScene2::updateToolClicked(int toolIndex){
     toolClicked = toolIndex+2;
+
+    for (int i = 0; i < 3; i++) {
+        if (i == toolIndex) {
+            tool[i]->setStyleSheet("QLabel { border-radius: 4px; border: 3px solid green; }");
+        } else {
+            tool[i]->setStyleSheet("QLabel { border-radius: 4px; border: 3px solid black; }");
+        }
+    }
 }
 
 void GameScene2::startClicked() {
