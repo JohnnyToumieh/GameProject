@@ -135,7 +135,8 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
         QJsonArray patientsSave = read("patients").array();
         for (patientsIndex = 0; patientsIndex < patientsSave.size(); patientsIndex++) {
             QJsonObject currentPatient = patientsSave[patientsIndex].toObject();
-            patients[patientsIndex] = new Patient(currentPatient["type"].toInt(), office);
+            patients[patientsIndex] = new Patient(currentPatient["type"].toInt(), office,
+                    currentPatient["motionState"].toString(), currentPatient["statusState"].toString());
             patients[patientsIndex]->setX(currentPatient["x"].toDouble());
             patients[patientsIndex]->setY(currentPatient["y"].toDouble());
             addItem(patients[patientsIndex]);
@@ -695,6 +696,8 @@ void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
             currentPatient["x"] = this->patients[i]->x();
             currentPatient["y"] = this->patients[i]->y();
             currentPatient["type"] = this->patients[i]->type;
+            currentPatient["motionState"] = this->patients[i]->getMotionState();
+            currentPatient["statusState"] = this->patients[i]->getStatusState();
 
             patients.append(currentPatient);
         }
@@ -712,13 +715,6 @@ void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
     pausedTimes["pausedUpdateAquariumTimer"] = this->pausedUpdateAquariumTimer;
 
     saveObject["pausedTimes"] = pausedTimes;
-
-    // Add needle orientation
-    QJsonObject needle;
-
-    needle["rotation"] = this->pixmapNeedle->rotation();
-
-    saveObject["needle"] = needle;
 }
 
 /**

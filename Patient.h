@@ -16,6 +16,7 @@
 #include <QDebug>
 #include <QTime>
 #include "Office.h"
+#include <unordered_map>
 
 /**
  *\file Patient.h
@@ -30,11 +31,17 @@ public:
     enum MotionState {Arriving, Waiting, GettingReady, Ready, InProgress, Done, ReadyForAdvice, ReceivingAdvice, Leaving, Left};
     enum StatusState {None, Rejected, Accepted, Satisfied, Unsatisfied};
 
-    explicit Patient(int type, Office* office, QObject *parent = nullptr);
+    explicit Patient(int type, Office* office, QString motionState = "Arriving", QString statusState = "None", QObject *parent = nullptr);
+
+    QString getMotionState();
+    QString getStatusState();
 
     int type;//!<Integer member type (1,2 or 3) that represents type of the patient
     int speed;//!<Integer member speed that represents the speed of the patient
     int diff;
+
+    std::unordered_map<std::string, MotionState> motionStates;
+    std::unordered_map<std::string, StatusState> statusStates;
 
     MotionState motionState;
     StatusState statusState;
