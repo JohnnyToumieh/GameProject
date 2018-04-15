@@ -281,12 +281,19 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     aquariumDescription->move(aquariumBox->x() + 15, aquariumBox->y() + 15);
     aquariumDescription->hide();
 
+    reputationButton = new QPushButton("Use Reputation Points");
+    addWidget(reputationButton);
+    reputationButton->move(800, 50);
+    reputationButton->hide();
+    reputationButton->setFocusPolicy(Qt::NoFocus);
+
     connect(unpause, SIGNAL(clicked()), SLOT(unpauseClicked()));
     connect(quit, SIGNAL(clicked()), SLOT(quitClicked()));
     connect(quit2, SIGNAL(clicked()), SLOT(quitClicked()));
     connect(nextLevelButton, SIGNAL(clicked()), SLOT(nextLevel()));
     connect(cleanAquarium, SIGNAL(clicked()), SLOT(handleAquariumRequest()));
     connect(cancelAquarium, SIGNAL(clicked()), SLOT(cancelAquariumRequest()));
+    connect(reputationButton, SIGNAL(clicked()), SLOT(reputationButtonClicked()));
 
     QSignalMapper* signalMapper1 = new QSignalMapper(this);
     connect(choiceA, SIGNAL(clicked()), signalMapper1, SLOT(map()));
@@ -351,6 +358,10 @@ int GameScene3::getCurrentScore() {
 
 int GameScene3::getLevelState() {
     return office->levels[office->level]["levelState"];
+}
+
+void GameScene3::reputationButtonClicked() {
+    office->currentReputation = 0;
 }
 
 /**
@@ -585,11 +596,12 @@ void GameScene3::answerClicked(int answer){
     choiceB->hide();
     choiceC->hide();
 
-    int steps = office->levels[office->level]["incrementReputation"];
     if(answer == questions[description->text()]){
-        pixmapNeedle->setRotation(pixmapNeedle->rotation() + 80 / steps);
-    }else{
-        pixmapNeedle->setRotation(pixmapNeedle->rotation() - 80 / steps);
+        if (office->currentReputation + office->levels[office->level]["incrementReputation"] < office->levels[office->level]["maxReputation"]) {
+            office->currentReputation += office->levels[office->level]["incrementReputation"];
+        } else {
+            office->currentReputation = office->levels[office->level]["maxReputation"];
+        }
     }
 
     int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
@@ -776,6 +788,16 @@ void GameScene3::checkGameState() {
         return;
     }
 
+    // Update reputation meter view
+    pixmapNeedle->setRotation(180 * office->currentReputation / office->levels[office->level]["maxReputation"]);
+
+    // Check if reputation meter full
+    if (office->currentReputation == office->levels[office->level]["maxReputation"]) {
+        reputationButton->show();
+    } else {
+        reputationButton->hide();
+    }
+
     // Check if Aquarium clicked
     int index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
     if (aquarium->hasFocus() && !office->inAMiniGame) {
@@ -866,6 +888,12 @@ void GameScene3::checkGameState() {
                     patients[index]->statusState = Patient::Unsatisfied;
                 } else if (game2->getLevelState() == 0) {
                     patients[index]->statusState = Patient::Rejected;
+
+                    if (office->currentReputation - office->levels[office->level]["incrementReputation"] > 0) {
+                        office->currentReputation -= office->levels[office->level]["incrementReputation"];
+                    } else {
+                        office->currentReputation = 0;
+                    }
                 }
 
                 office->currentMiniGameScore = 0;

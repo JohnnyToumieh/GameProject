@@ -86,6 +86,7 @@ public:
     QPushButton* choiceA;
     QPushButton* choiceB;
     QPushButton* choiceC;
+    QPushButton* reputationButton;
 
     QLabel* levelLabel;
     QLabel* scoreLabel;
@@ -109,6 +110,7 @@ public slots:
     void unpauseClicked();//!<Member function that triggers when the unpause button is clicked
     void quitClicked();//!<Member function that triggers when the quit button is clicked
     void nextLevel();//!<Member function that triggers when the next level button is clicked
+    void reputationButtonClicked();
     void unpauseGame();
     void checkGameState();
     void handlePatient(int status);
