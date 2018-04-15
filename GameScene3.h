@@ -34,8 +34,6 @@ public:
     void gameOver(bool result);
     int getCurrentScore();
     int getLevelState();
-    int answer;
-
 
     void showQuestion();
 
@@ -72,7 +70,6 @@ public:
     QTimer* checkGameStateTimer;//!<QTimer member that updates the game state
 
     bool justPaused;
-    bool answered;
 
     QWidget* greyForeground;
     QWidget* patientBox;

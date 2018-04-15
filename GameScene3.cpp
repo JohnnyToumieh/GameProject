@@ -72,8 +72,6 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
         questions[questionList[i]] = answerList[i].toInt();
     }
 
-    answered = false;
-
     office->setFlag(QGraphicsItem::ItemIsFocusable);
     addItem(office);
 
