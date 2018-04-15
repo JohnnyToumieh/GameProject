@@ -31,6 +31,7 @@ public:
     int score;//!<Integer member that represents the score
 
     int currentMiniGameScore;
+    int currentMiniGameState;
 
     bool gamePaused;//!<Boolean member that state wether the game is paused or not
     bool requestForUnpause;//!<Boolean member that state wether there is a request to unpause or not

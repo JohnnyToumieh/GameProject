@@ -74,6 +74,7 @@ public:
     QWidget* greyForeground;
     QWidget* patientBox;
     QWidget* aquariumBox;
+    QWidget* reputationBox;
 
     QPushButton* unpause;
     QPushButton* quit;
@@ -86,12 +87,14 @@ public:
     QPushButton* choiceA;
     QPushButton* choiceB;
     QPushButton* choiceC;
-    QPushButton* reputationButton;
+    QPushButton* useReputation;
+    QPushButton* cancelReputation;
 
     QLabel* levelLabel;
     QLabel* scoreLabel;
     QLabel* description;
     QLabel* aquariumDescription;
+    QLabel* reputationDescription;
 
     QGraphicsPixmapItem *greenColorItem;
     QGraphicsPixmapItem *pixmapNeedle;
@@ -110,13 +113,13 @@ public slots:
     void unpauseClicked();//!<Member function that triggers when the unpause button is clicked
     void quitClicked();//!<Member function that triggers when the quit button is clicked
     void nextLevel();//!<Member function that triggers when the next level button is clicked
-    void reputationButtonClicked();
     void unpauseGame();
     void checkGameState();
     void handlePatient(int status);
     void handleAquariumRequest();
     void cancelAquariumRequest();
     void answerClicked(int answer);
+    void handleReputation(int status);
 };
 
 #endif // GAMESCENE3_H
