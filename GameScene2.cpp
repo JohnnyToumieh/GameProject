@@ -717,6 +717,8 @@ void GameScene2::checkGameState() {
                     }
 
                     teethUpdater->stop();
+                } else {
+                    pausedTeethUpdater = 0;
                 }
 
                 if (toothUpdater->isActive()) {
@@ -727,6 +729,8 @@ void GameScene2::checkGameState() {
                     }
 
                     toothUpdater->stop();
+                } else {
+                    pausedToothUpdater = 0;
                 }
 
                 pausedTimeUpdater = timeUpdater->remainingTime();

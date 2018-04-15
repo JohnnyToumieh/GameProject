@@ -812,6 +812,8 @@ void GameScene3::checkGameState() {
                     }
 
                     updatePatientsTimer->stop();
+                } else {
+                    pausedUpdatePatientsTimer = 0;
                 }
                 if (updateAquariumTimer->isActive()) {
                     pausedUpdateAquariumTimer = updateAquariumTimer->remainingTime();
@@ -821,6 +823,8 @@ void GameScene3::checkGameState() {
                     }
 
                     updateAquariumTimer->stop();
+                } else {
+                    pausedUpdateAquariumTimer = 0;
                 }
 
                 if (pausedTimeUpdater < 0) {

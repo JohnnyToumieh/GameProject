@@ -784,6 +784,8 @@ void GameScene1::checkGameState() {
                     }
 
                     virusTimer->stop();
+                } else {
+                    pausedVirusTimer = 0;
                 }
 
                 if (pestilenceTimer->isActive()) {
@@ -794,6 +796,8 @@ void GameScene1::checkGameState() {
                     }
 
                     pestilenceTimer->stop();
+                } else {
+                    pausedPestilenceTimer = 0;
                 }
 
                 timeUpdater->stop();
