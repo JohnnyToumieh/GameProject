@@ -84,10 +84,10 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     addItem(aquarium);
     aquarium->setFlag(QGraphicsItem::ItemIsFocusable);
 
-    timeLabel = new QLabel("00:00");
-    timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
+    timeLabel = new QLabel("00:00 AM");
+    timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 35px; }");
     addWidget(timeLabel);
-    timeLabel->move(this->width() / 2 - timeLabel->width() / 2, this->height() / 24);
+    timeLabel->move(this->width() / 2 - timeLabel->width() / 2, 13);
 
     unpauseLabel = new QLabel();
     unpauseLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : white; font: 140px; }");
@@ -456,9 +456,19 @@ void GameScene3::updateTimer() {
     int hours = (timeConversion / 60) % 60;
     int mins = timeConversion % 60;
 
-    timeLabel->setText(QString("%1:%2")
+    std::string dayTime;
+    if (hours < 12) {
+        dayTime = "AM";
+    } else {
+        if (hours != 12) {
+            hours = hours - 12;
+        }
+        dayTime = "PM";
+    }
+
+    timeLabel->setText(QString("%1:%2 ")
     .arg(hours, 2, 10, QLatin1Char('0'))
-    .arg(mins, 2, 10, QLatin1Char('0')) );
+    .arg(mins, 2, 10, QLatin1Char('0')) + QString::fromStdString(dayTime));
 
     office->currentTime = time->elapsed() + pausedTime;
 }
@@ -971,10 +981,21 @@ void GameScene3::checkGameState() {
             >= office->levels[office->level]["endTime"]) {
         int timeConverted = office->levels[office->level]["endTime"];
         int hours = (timeConverted / 60) % 60;
+
         int mins = timeConverted % 60;
-        timeLabel->setText(QString("%1:%2")
+        std::string dayTime;
+        if (hours < 12) {
+            dayTime = "AM";
+        } else {
+            if (hours != 12) {
+                hours = hours - 12;
+            }
+            dayTime = "PM";
+        }
+
+        timeLabel->setText(QString("%1:%2 ")
         .arg(hours, 2, 10, QLatin1Char('0'))
-        .arg(mins, 2, 10, QLatin1Char('0')) );
+        .arg(mins, 2, 10, QLatin1Char('0')) + QString::fromStdString(dayTime));
 
         office->currentTime = office->levels[office->level]["endTime"];
 
