@@ -84,23 +84,10 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     addItem(aquarium);
     aquarium->setFlag(QGraphicsItem::ItemIsFocusable);
 
-    timeLabel = new QLabel();
+    timeLabel = new QLabel("00:00");
     timeLabel->setStyleSheet("QLabel { background-color : black; color : white; font: 40px; }");
-    timeLabel->move(400, 15);
     addWidget(timeLabel);
-
-    pestilenceTimeLabel = new QLabel();
-    pestilenceTimeLabel->setStyleSheet("QLabel { background-color : red; color : green; font: 60px; }");
-    pestilenceTimeLabel->move(this->width() / 2 + 320, 160);
-    addWidget(pestilenceTimeLabel);
-    pestilenceTimeLabel->hide();
-
-    pestilenceTimeLabel2 = new QLabel("Pestilence will get summoned after:");
-    pestilenceTimeLabel2->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : black; font: 20px; }");
-    pestilenceTimeLabel2->move(this->width() / 2 + 310, 110);
-    pestilenceTimeLabel2->setWordWrap(true);
-    addWidget(pestilenceTimeLabel2);
-    pestilenceTimeLabel2->hide();
+    timeLabel->move(this->width() / 2 - timeLabel->width() / 2, this->height() / 24);
 
     unpauseLabel = new QLabel();
     unpauseLabel->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%); color : white; font: 140px; }");

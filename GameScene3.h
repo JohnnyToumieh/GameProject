@@ -49,8 +49,6 @@ public:
     QGraphicsView* miniGameView;
 
     QLabel* timeLabel;
-    QLabel* pestilenceTimeLabel;
-    QLabel* pestilenceTimeLabel2;
     QLabel* scoreLabel2;
     QLabel* gameOverLabel;
     QLabel* unpauseLabel;
