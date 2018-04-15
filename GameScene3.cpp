@@ -903,9 +903,16 @@ void GameScene3::checkGameState() {
     index = (patientsIndex == 0) ? 19 : patientsIndex - 1;
     if (patients[index] != NULL) {
         if (patients[index]->motionState == Patient::Waiting) {
+            QString username;
             patientBox->show();
-            description->setText("Hello Dr."+ user->username +" \n I need your help can you please check my teeth" +
-                                                               "my case is of level: " + QString::number(patients[index]->type) + " and difficulty " + QString::number(patients[index]->diff) +"\n will you please help me?");
+            if(user->isGuest){
+                username = "X";
+            }else{
+                username = user->username;
+            }
+            description->setText("Hello Dr."+ username +" \nI need your help can you please check my teeth?\n" +
+                                                               "Level: " + QString::number(patients[index]->type)
+                                                             + "\nDifficulty: " + QString::number(patients[index]->diff));
             description->show();
             accept->show();
             reject->show();
