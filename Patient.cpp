@@ -169,13 +169,19 @@ void Patient::update(){
         }
 
         if (motionState == Done) {
-            setPos(600, 350);
-            setRotation(0);
+            if (rotation() != 0) {
+                setPos(600, 350);
+                setRotation(0);
+            }
 
             if (statusState == Rejected || statusState == Unsatisfied) {
                 motionState = Leaving;
             } else if (statusState == Satisfied) {
-                motionState = ReadyForAdvice;
+                if (x() <= 650) {
+                    setX(x() + 30);
+                } else {
+                    motionState = ReadyForAdvice;
+                }
             }
         }
     }
