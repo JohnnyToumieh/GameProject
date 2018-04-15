@@ -627,7 +627,7 @@ void GameScene3::quitClicked() {
 }
 
 void GameScene3::showQuestion(){
-    int randNumb = (rand() % 10);
+    int randNumb = (rand() % (questionList.size()));
     description->setText(questionList[randNumb]);
 
     patientBox->show();

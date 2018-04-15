@@ -1,16 +1,19 @@
 #include "Tool.h"
 
-Tool::Tool(int type,QWidget* parent, Qt::WindowFlags f) : QLabel(parent) {
+Tool::Tool(int type, QWidget* parent, Qt::WindowFlags f): QLabel(parent) {
     this->type=type;
 
    if(this->type==1){
-       setStyleSheet("QLabel { background-color : black; }");
+       imageName = ":tool1";
+       setStyleSheet("QLabel { background-color : white;}");
    }else if(this->type==2){
-       setStyleSheet("QLabel { background-color : yellow; }");
+       imageName = ":tool2";
+       setStyleSheet("QLabel { background-color : white;}");
    }else if(this->type==3){
-       setStyleSheet("QLabel { background-color : blue; }");
+       imageName = ":tool3";
+       setStyleSheet("QLabel { background-color : white;}");
    }
-
+    setPixmap(QPixmap(imageName).scaled(70,70));
 }
 
 Tool::~Tool() {}

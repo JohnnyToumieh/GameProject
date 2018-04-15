@@ -65,15 +65,16 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
         for (int i=0;i<3;i++){
             tool[i] = new Tool(i+1);
             tool[i]->setFocusPolicy(Qt::ClickFocus);
-            tool[i]->setFixedSize(30, 51);
+        //    tool[i]->setFixedSize(30, 51);
             if(i==0)
                 tool[i]->move(450,200);
             if(i==1)
-                tool[i]->move(450,260);
+                tool[i]->move(450,280);
             if(i==2)
-                tool[i]->move(450,320);
+                tool[i]->move(450,360);
 
             addWidget(tool[i]);
+
             connect(tool[i], SIGNAL(clicked()), signalMapper1, SLOT(map()));
             signalMapper1->setMapping(tool[i], i);
         }
