@@ -636,9 +636,10 @@ void GameScene2::updateTimer() {
     if (eyesAnimation->state() == QMovie::Running && eyesAnimation->currentFrameNumber() == 10) {
         eyesAnimation->setPaused(true);
     } else if (eyesAnimation->state() == QMovie::Paused){
-        int ran = (rand() % 10);
-        if (ran == 0) {
+        int ran = (rand() % 15);
+        if (ran == 0 || animateEyes) {
             eyesAnimation->setPaused(false);
+            animateEyes = false;
         }
     } else if (eyesAnimation->state() == QMovie::NotRunning) {
         eyesAnimation->start();
@@ -741,6 +742,7 @@ void GameScene2::unpauseGame() {
        toothUpdater->start(pausedToothUpdater);
        pausedToothUpdater = 0;
     }
+    animateEyes = true;
 
     greyForeground->hide();
     unpauseLabel->hide();
@@ -808,6 +810,10 @@ void GameScene2::checkGameState() {
                     }
 
                     toothUpdater->stop();
+                }
+
+                if (eyesAnimation->state() == QMovie::Running) {
+                    eyesAnimation->setPaused(true);
                 }
 
                 pausedTimeUpdater = timeUpdater->remainingTime();

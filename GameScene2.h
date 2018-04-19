@@ -57,6 +57,7 @@ public:
     QGraphicsPixmapItem* mouth;
     QLabel* eyes;
     QMovie* eyesAnimation;
+    bool animateEyes;
 
     QPushButton* start;
     QLabel* goLabel;
