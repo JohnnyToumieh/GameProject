@@ -51,8 +51,8 @@ Patient::Patient(int type, Office* office, QString motionState, QString statusSt
 
     int randomImage = (rand() % 6);
     if (type == 1 || type == 2 || type == 3) {
-        this->diff = 1;
-        this->type = type;
+        this->type = 1;
+        this->diff = type;
 
         width = 140;
         height = 310;
@@ -63,8 +63,8 @@ Patient::Patient(int type, Office* office, QString motionState, QString statusSt
 
         setPos(900, 280);
     } else if (type == 4 || type == 5 || type == 6) {
-        this->diff = 2;
-        this->type = type - 3;
+        this->type = 2;
+        this->diff = type - 3;
 
         width = 120;
         height = 290;
@@ -75,8 +75,8 @@ Patient::Patient(int type, Office* office, QString motionState, QString statusSt
 
         setPos(900, 300);
     } else if (type == 7 || type == 8 || type == 9) {
-        this->diff = 3;
-        this->type = type - 6;
+        this->type = 3;
+        this->diff = type - 6;
 
         width = 100;
         height = 230;
