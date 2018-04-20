@@ -19,7 +19,9 @@
  * @param statusState state of the patient's status (satisfied,...)
  */
 
-Patient::Patient(int type, Office* office, QString motionState, QString statusState, QObject *parent)
+Patient::Patient(int type, Office* office,
+                 QString motionState, QString statusState,
+                 QString imageName, QObject *parent)
 {
     srand(QTime::currentTime().msec());
 
@@ -50,6 +52,13 @@ Patient::Patient(int type, Office* office, QString motionState, QString statusSt
     this->statusState = statusStates[statusState.toStdString()];
 
     int randomImage = (rand() % 6);
+
+    if (imageName != NULL) {
+        this->imageName = imageName;
+    } else {
+        this->imageName = ":patient" + QString::number(randomImage + (type / 3) * 3 + 1);
+    }
+
     if (type == 1 || type == 2 || type == 3) {
         this->type = 1;
         this->diff = type;
@@ -57,8 +66,7 @@ Patient::Patient(int type, Office* office, QString motionState, QString statusSt
         width = 140;
         height = 310;
 
-        imageName = ":patient" + QString::number(randomImage + 1);
-        QPixmap *pic  = new QPixmap(imageName);
+        QPixmap *pic  = new QPixmap(this->imageName);
         setPixmap(pic->scaled(width, height));
 
         setPos(900, 280);
@@ -69,8 +77,7 @@ Patient::Patient(int type, Office* office, QString motionState, QString statusSt
         width = 120;
         height = 290;
 
-        imageName = ":patient" + QString::number(randomImage + 7);
-        QPixmap *pic  = new QPixmap(imageName);
+        QPixmap *pic  = new QPixmap(this->imageName);
         setPixmap(pic->scaled(width, height));
 
         setPos(900, 300);
@@ -81,8 +88,7 @@ Patient::Patient(int type, Office* office, QString motionState, QString statusSt
         width = 100;
         height = 230;
 
-        imageName = ":patient" + QString::number(randomImage + 13);
-        QPixmap *pic  = new QPixmap(imageName);
+        QPixmap *pic  = new QPixmap(this->imageName);
         setPixmap(pic->scaled(width, height));
 
         setPos(900, 360);

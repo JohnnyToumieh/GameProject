@@ -31,7 +31,9 @@ public:
     enum MotionState {Arriving, Waiting, GettingReady, Ready, InProgress, Done, ReadyForAdvice, ReceivingAdvice, Leaving, Left};
     enum StatusState {None, Rejected, Accepted, ReallySatisfied, Satisfied, Unsatisfied};
 
-    explicit Patient(int type, Office* office, QString motionState = "Arriving", QString statusState = "None", QObject *parent = nullptr);
+    explicit Patient(int type, Office* office,
+                     QString motionState = "Arriving", QString statusState = "None",
+                     QString imageName = NULL, QObject *parent = nullptr);
 
     QString getMotionState();
     QString getStatusState();

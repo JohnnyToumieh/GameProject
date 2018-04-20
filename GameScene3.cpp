@@ -139,7 +139,8 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
         for (patientsIndex = 0; patientsIndex < patientsSave.size(); patientsIndex++) {
             QJsonObject currentPatient = patientsSave[patientsIndex].toObject();
             patients[patientsIndex] = new Patient(currentPatient["type"].toInt(), office,
-                    currentPatient["motionState"].toString(), currentPatient["statusState"].toString());
+                    currentPatient["motionState"].toString(), currentPatient["statusState"].toString(),
+                    currentPatient["imageName"].toString());
             patients[patientsIndex]->setX(currentPatient["x"].toDouble());
             patients[patientsIndex]->setY(currentPatient["y"].toDouble());
             addItem(patients[patientsIndex]);
@@ -755,6 +756,7 @@ void GameScene3::saveProgressHelper(QJsonObject &saveObject) const
             currentPatient["type"] = 3 * (this->patients[i]->type - 1) + this->patients[i]->diff;
             currentPatient["motionState"] = this->patients[i]->getMotionState();
             currentPatient["statusState"] = this->patients[i]->getStatusState();
+            currentPatient["imageName"] = this->patients[i]->imageName;
 
             patients.append(currentPatient);
         }
