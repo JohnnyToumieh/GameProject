@@ -987,28 +987,43 @@ void GameScene3::checkGameState() {
         int specialPoints = points * 5 / 4;
 
         if (patients[index]->motionState == Patient::Waiting) {
-            QString username;
-            patientBox->show();
+            if (patientBox->isHidden()) {
+                patientBox->show();
 
-            QString userName;
-            if (user->isGuest) {
-                userName = "X";
-            } else {
-                userName = user->username;
+                QString userName;
+                if (user->isGuest) {
+                    userName = "X";
+                } else {
+                    userName = user->username;
+                }
+
+                int randomMessage = (rand() % 5);
+
+                QString funnyMessage;
+                if (randomMessage == 0) {
+                    funnyMessage = "Help Dr. " + userName + "!\nMy teeth are about to fall out!";
+                } else if (randomMessage == 1) {
+                    funnyMessage = "Hello Dr. " + userName + "!\nWould you mind looking at my teeth?";
+                } else if (randomMessage == 2) {
+                    funnyMessage = "Dr.! Dr.!\nHow does a kid floss between his teeth if he only has one tooth?";
+                } else if (randomMessage == 3) {
+                    funnyMessage = "Hey Dr. wanna hear a joke?\nWhat did the dentist say to the golfer?\nYou have a hole in one!";
+                } else if (randomMessage == 4) {
+                    funnyMessage = "Hey Dr. " + userName + ".\nI'm here for my appointment.";
+                }
+
+                description->setText(funnyMessage
+                                     + "\n\nLevel: " + QString::number(patients[index]->type)
+                                     + "\nDifficulty: " + QString::number(patients[index]->diff)
+                                     + "\n\nTime Limit: " + QString::number(timeLimit / 1000) + "s"
+                                     + "\nSpecial Time Limit: " + QString::number(specialTimeLimit / 1000) + "s");
+                description->show();
+                accept->show();
+                reject->show();
             }
-            description->setText("Help Dr. " + userName + "!\nMy teeth are about to fall out!"
-                                 + "\n\nLevel: " + QString::number(patients[index]->type)
-                                 + "\nDifficulty: " + QString::number(patients[index]->diff)
-                                 + "\n\nTime Limit: " + QString::number(timeLimit / 1000) + "s"
-                                 + "\nSpecial Time Limit: " + QString::number(specialTimeLimit / 1000) + "s");
-            description->show();
-            accept->show();
-            reject->show();
         } else if (patients[index]->motionState == Patient::Ready) {
             office->inAMiniGame = true;
 
-            //Enter game2
-            //Games shouldn't be able to be saved. It should show only the exit button that makes it like rejecting the patient (not losing the game).
             GameScene2 *game2 = new GameScene2(widget, 800, 500, user, dataFile, false,
                                                patients[index]->type, patients[index]->diff,
                                                timeLimit, specialTimeLimit, points, specialPoints,
