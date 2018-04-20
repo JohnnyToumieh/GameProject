@@ -744,6 +744,8 @@ void GameScene2::unpauseGame() {
     }
     animateEyes = true;
 
+    start->setEnabled(true);
+
     greyForeground->hide();
     unpauseLabel->hide();
 
@@ -823,6 +825,8 @@ void GameScene2::checkGameState() {
                 }
 
                 timeUpdater->stop();
+
+                start->setEnabled(false);
 
                 justPaused = false;
 

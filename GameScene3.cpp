@@ -815,6 +815,16 @@ void GameScene3::unpauseGame() {
         pausedUpdateAquariumTimer = 0;
     }
 
+    accept->setEnabled(true);
+    reject->setEnabled(true);
+    cleanAquarium->setEnabled(true);
+    cancelAquarium->setEnabled(true);
+    choiceA->setEnabled(true);
+    choiceB->setEnabled(true);
+    choiceC->setEnabled(true);
+    useReputation->setEnabled(true);
+    cancelReputation->setEnabled(true);
+
     greyForeground->hide();
     unpauseLabel->hide();
 
@@ -889,6 +899,16 @@ void GameScene3::checkGameState() {
                 }
 
                 timeUpdater->stop();
+
+                accept->setEnabled(false);
+                reject->setEnabled(false);
+                cleanAquarium->setEnabled(false);
+                cancelAquarium->setEnabled(false);
+                choiceA->setEnabled(false);
+                choiceB->setEnabled(false);
+                choiceC->setEnabled(false);
+                useReputation->setEnabled(false);
+                cancelReputation->setEnabled(false);
 
                 justPaused = false;
 
