@@ -49,65 +49,44 @@ Patient::Patient(int type, Office* office, QString motionState, QString statusSt
     this->motionState = motionStates[motionState.toStdString()];
     this->statusState = statusStates[statusState.toStdString()];
 
-    if(type==1){
-        imageName = ":patient1";
-        QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(100,230));
-        diff = 1;
-        this->type =1;
-    }
-    else if(type==2){
-        imageName = ":patient1";
-        QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(100,230));
-        diff = 2;
-        this->type =1;
-    }else if(type==3){
-        imageName = ":patient1";
-        QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(100,230));
-        diff = 3;
-        this->type = 1;
-    }
-    else if(type ==4){
-        imageName = ":patient1";
-        QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(100,230));
-        diff = 1;
-        this->type = 2;
-    } else if(type ==5){
-        imageName = ":patient1";
-        QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(100,230));
-        diff = 2;
-        this->type = 2;
-    } else if(type ==6){
-        imageName = ":patient1";
-        QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(100,230));
-        diff = 3;
-        this->type = 2;
-    } else if(type ==7){
-        imageName = ":patient1";
-        QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(100,230));
-        diff = 1;
-        this->type = 3;
-    } else if(type ==8){
-        imageName = ":patient1";
-        QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(100,230));
-        diff = 2;
-        this->type = 3;
-    } else if(type ==9){
-        imageName = ":patient1";
-        QPixmap *pic  = new QPixmap(imageName);
-        setPixmap(pic->scaled(100,230));
-        diff = 3;
-        this->type = 3;
-    }
+    int randomImage = (rand() % 6);
+    if (type == 1 || type == 2 || type == 3) {
+        this->diff = 1;
+        this->type = type;
 
-    setPos(900, 350);
+        width = 140;
+        height = 310;
+
+        imageName = ":patient" + QString::number(randomImage + 1);
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(width, height));
+
+        setPos(900, 280);
+    } else if (type == 4 || type == 5 || type == 6) {
+        this->diff = 2;
+        this->type = type - 3;
+
+        width = 120;
+        height = 290;
+
+        imageName = ":patient" + QString::number(randomImage + 7);
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(width, height));
+
+        setPos(900, 300);
+    } else if (type == 7 || type == 8 || type == 9) {
+        this->diff = 3;
+        this->type = type - 6;
+
+        width = 100;
+        height = 230;
+
+        imageName = ":patient" + QString::number(randomImage + 13);
+        QPixmap *pic  = new QPixmap(imageName);
+        setPixmap(pic->scaled(width, height));
+
+        setPos(900, 360);
+    }
 
     this->speed = 300;
 
@@ -132,6 +111,7 @@ QString Patient::getMotionState() {
             return QString::fromStdString(it->first);
         }
     }
+    return NULL;
 }
 
 /**
@@ -146,6 +126,7 @@ QString Patient::getStatusState() {
             return QString::fromStdString(it->first);
         }
     }
+    return NULL;
 }
 
 /**
@@ -182,7 +163,7 @@ void Patient::checkGameState() {
  */
 
 void Patient::update(){
-    if (x() + 30 > 1000) {
+    if ((!transform().isScaling() && x() + 30 > 1000) || (transform().isScaling() && x() + 30 - width > 1000)) {
         motionState = Left;
         //toDelete = true;
         speedTimer->stop();
@@ -198,6 +179,11 @@ void Patient::update(){
         }
 
         if (motionState == Leaving) {
+            if (!transform().isScaling()) {
+                setTransform(QTransform::fromScale(-1, 1));
+                setX(x() + width);
+            }
+
             setX(x() + 30);
         }
 
@@ -205,15 +191,19 @@ void Patient::update(){
             if (x() > 600) {
                 setX(x() - 30);
             } else {
-                setPos(300, 350);
-                setRotation(-60);
+                setPos(250, y() - 40);
+                setRotation(60);
+
+                setTransform(QTransform::fromScale(-1, 1));
+                setX(x() + width);
+
                 motionState = Ready;
             }
         }
 
         if (motionState == Done) {
             if (rotation() != 0) {
-                setPos(600, 350);
+                setPos(600, y() + 40);
                 setRotation(0);
             } else {
                 if (x() <= 650) {

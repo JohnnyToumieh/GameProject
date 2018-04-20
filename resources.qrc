@@ -34,5 +34,22 @@
         <file alias="tool3">Images/tool3.png</file>
         <file alias="tool2">Images/tool2.png</file>
         <file alias="tool1">Images/tool1.png</file>
+        <file alias="patient18">Images/patient18.png</file>
+        <file alias="patient17">Images/patient17.png</file>
+        <file alias="patient16">Images/patient16.png</file>
+        <file alias="patient15">Images/patient15.png</file>
+        <file alias="patient14">Images/patient14.png</file>
+        <file alias="patient13">Images/patient13.png</file>
+        <file alias="patient12">Images/patient12.png</file>
+        <file alias="patient11">Images/patient11.png</file>
+        <file alias="patient10">Images/patient10.png</file>
+        <file alias="patient9">Images/patient9.png</file>
+        <file alias="patient8">Images/patient8.png</file>
+        <file alias="patient7">Images/patient7.png</file>
+        <file alias="patient6">Images/patient6.png</file>
+        <file alias="patient5">Images/patient5.png</file>
+        <file alias="patient4">Images/patient4.png</file>
+        <file alias="patient3">Images/patient3.png</file>
+        <file alias="patient2">Images/patient2.png</file>
     </qresource>
 </RCC>
