@@ -51,5 +51,7 @@
         <file alias="patient4">Images/patient4.png</file>
         <file alias="patient3">Images/patient3.png</file>
         <file alias="patient2">Images/patient2.png</file>
+        <file alias="questions">Data/questions.txt</file>
+        <file alias="answers">Data/answers.txt</file>
     </qresource>
 </RCC>

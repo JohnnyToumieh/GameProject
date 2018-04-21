@@ -38,7 +38,7 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
         office = new Office(level, 0, 0, 0, 0);
     }
 
-    QFile file("questions.txt");
+    QFile file(":questions");
     if(!file.open(QIODevice::ReadOnly)) {
         QMessageBox::information(0, "error", file.errorString());
     }
@@ -56,7 +56,7 @@ GameScene3::GameScene3(QWidget *widget, int width, int height, User* user, QJson
     questionList = questionsString.split("<Q>");
     file.close();
 
-    QFile file1("answers.txt");
+    QFile file1(":answers");
     if(!file1.open(QIODevice::ReadOnly)) {
         QMessageBox::information(0, "error", file.errorString());
     }

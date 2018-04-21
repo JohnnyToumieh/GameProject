@@ -1,5 +1,7 @@
 QT+= widgets
 
+INCLUDEPATH += .
+
 SOURCES += \
     main.cpp \
     Message.cpp \

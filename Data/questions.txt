@@ -1,0 +1,58 @@
+What toothpaste should I use?
+A) Colgate.
+B) Crest.
+C) You should frequently change your toothpaste brand, and use one with high amount of fluorides.
+
+<Q>
+What should I eat to increase the health of my teeth?
+A) Lot of sweets and candies.
+B) Food rich with calcium such as cheese,milk, and yogurt.
+C) Somking is good for your white teeth.
+
+<Q>
+What causes gengivties?
+A) Poor oral hygiene.
+B) No brushing, and no dental visits.
+C) All of the above.
+
+<Q>
+How often should I visit the dentist?
+A) Everyday.
+B) Monthly.
+C) Every 4 to 6 monthes.
+
+<Q>
+How many times should I toothbrush my teeth per day?
+A) 2-3 times.
+B) 10 times.
+C) 1 time.
+
+<Q>
+I have gum problems, What type of toothbrush do you recommend?
+A) Hard.
+B) Soft.
+C) Medium.
+
+<Q>
+How Do I Prevent Tooth Decay, Gingivitis and Other Problems?
+A) Balanced diet and visit the dentist regularly and maintaining good oral care.
+B) Brushing your teeth the more, the safer you are.
+C) Eating more will make your teeth more immune and stronger.
+
+<Q>
+What is tooth sensitivity?
+A) It is when the tooth is so sensitive, and can't stop crying when you watch titanic.
+B) It is when your tooth can't tolerate food rich with sugar.
+C) Patients with tooth sensitivity feel pain when they consume items that are hot or cold, sweet or acidic.
+
+<Q>
+What causes tooth yellowish color?
+A) Smoking.
+B) Lot of caffiene drinking.
+C) Both A and B.
+
+<Q>
+How Can I Improve the Whiteness of My Teeth?
+A) Less coffee, tobacco and pigmented foods with at-home whitening.
+B) Smile more.
+C) Smoke and drink coffee more.
