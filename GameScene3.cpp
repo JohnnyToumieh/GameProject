@@ -1074,10 +1074,12 @@ void GameScene3::checkGameState() {
                                 office->currentReputation = 0;
                             }
                         }
-
-                        int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
-                        updatePatientsTimer->start(time);
                     }
+                }
+
+                if (patients[index]->statusState != Patient::ReallySatisfied) {
+                    int time = (rand() % 1000) + office->levels[office->level]["patientGenerationRate"] - 500;
+                    updatePatientsTimer->start(time);
                 }
 
                 office->currentMiniGameScore = 0;
