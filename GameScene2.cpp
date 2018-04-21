@@ -254,7 +254,6 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     checkGameStateTimer->start(100);
 
     time = new QTime();
-    time->start();
 
     unpauseTimer = new QTimer(this);
     connect(unpauseTimer, SIGNAL(timeout()), this, SLOT(unpauseGame()));
@@ -308,6 +307,8 @@ void GameScene2::updateToolClicked(int toolIndex){
  * where infected teeth will be displayed according to the level
  */
 void GameScene2::startClicked() {
+    time->start();
+
     start->hide();
 
     orderSize = 0;
