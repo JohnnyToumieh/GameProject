@@ -1143,8 +1143,10 @@ void GameScene3::checkGameState() {
  */
 void GameScene3::gameOver(bool result) {
     if (result) {
+        office->levels[office->level]["levelState"] = 1;
         gameOverLabel->setText("GAME WON!");
     } else {
+        office->levels[office->level]["levelState"] = 2;
         gameOverLabel->setText("GAME OVER");
     }
 
