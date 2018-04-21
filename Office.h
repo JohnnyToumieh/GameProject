@@ -18,6 +18,7 @@ class Office : public QObject, public QGraphicsPixmapItem
 public:
     explicit Office(int level, int currentReputation, int currentTime, int currentAquariumState, int score, QObject *parent = nullptr);
     void setUpLevels();
+    void reset();
 
     void keyPressEvent(QKeyEvent *event);
 

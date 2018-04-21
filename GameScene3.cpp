@@ -427,9 +427,7 @@ void GameScene3::nextLevel() {
  */
 void GameScene3::setUpNextLevel() {
     office->level++;
-    office->currentReputation = 0;
-    office->currentTime = 0;
-    office->score=0;
+    office->reset();
 
     QPixmap *greenColor = new QPixmap(":needle");
     greenColor->fill(Qt::green);

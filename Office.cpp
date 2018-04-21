@@ -39,6 +39,21 @@ Office::Office(int level, int currentReputation, int currentTime, int currentAqu
     this->inAMiniGame = false;
 }
 
+void Office::reset() {
+    this->currentReputation = 0;
+    this->currentTime = 0;
+    this->currentAquariumState = 0;
+
+    this->score = 0;
+
+    this->currentMiniGameScore = 0;
+    this->currentMiniGameState = 0;
+
+    this->gamePaused = false;
+    this->requestForUnpause = false;
+    this->inAMiniGame = false;
+}
+
 /**
  * @brief Office::keyPressEvent member function: sets up the levels
  *
