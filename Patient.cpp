@@ -212,7 +212,7 @@ void Patient::update(){
                 setPos(600, y() + 40);
                 setRotation(0);
             } else {
-                if (x() <= 650) {
+                if (x() <= 650 + width) {
                     setX(x() + 30);
                 }
             }
@@ -220,7 +220,7 @@ void Patient::update(){
             if (statusState == Rejected || statusState == Unsatisfied || statusState == Satisfied) {
                 motionState = Leaving;
             } else if (statusState == ReallySatisfied) {
-                if (x() > 650) {
+                if (x() > 650 + width) {
                     motionState = ReadyForAdvice;
                 }
             }
