@@ -645,9 +645,13 @@ void GameScene2::updateTimer() {
         eyesAnimation->start();
     }
 
-    int secs = (time->elapsed() + pausedTime) / 1000;
+    int secs = (stateTracker2->timeLimit - (time->elapsed() + pausedTime)) / 1000;
     int mins = (secs / 60) % 60;
     secs = secs % 60;
+
+    if (time->elapsed() + pausedTime >= stateTracker2->specialTimeLimit) {
+        timeLabel->setStyleSheet("QLabel { background-color : black; color : red; font: 40px; }");
+    }
 
     timeLabel->setText(QString("%1:%2")
     .arg(mins, 2, 10, QLatin1Char('0'))
@@ -860,9 +864,8 @@ void GameScene2::checkGameState() {
     if (time->elapsed() + pausedTime >= stateTracker2->timeLimit) {
         stateTracker2->score = 0;
 
-        int secs = stateTracker2->timeLimit / 1000;
-        int mins = (secs / 60) % 60;
-        secs = secs % 60;
+        int secs = 0;
+        int mins = 0;
         timeLabel->setText(QString("%1:%2")
         .arg(mins, 2, 10, QLatin1Char('0'))
         .arg(secs, 2, 10, QLatin1Char('0')) );
