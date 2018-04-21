@@ -53,10 +53,11 @@ Patient::Patient(int type, Office* office,
 
     int randomImage = (rand() % 6);
 
+    type = 9;
     if (imageName != NULL) {
         this->imageName = imageName;
     } else {
-        this->imageName = ":patient" + QString::number(randomImage + (type / 3) * 6 + 1);
+        this->imageName = ":patient" + QString::number(randomImage + ((type - 1) / 3) * 6 + 1);
     }
 
     if (type == 1 || type == 2 || type == 3) {
