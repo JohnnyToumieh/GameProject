@@ -1005,9 +1005,9 @@ void GameScene3::checkGameState() {
                 } else if (randomMessage == 1) {
                     funnyMessage = "Hello Dr. " + userName + "!\nWould you mind looking at my teeth?";
                 } else if (randomMessage == 2) {
-                    funnyMessage = "Dr.! Dr.!\nHow does a kid floss between his teeth if he only has one tooth?";
+                    funnyMessage = "Dr.! Dr.! How does a kid floss between his teeth if he only has one tooth?";
                 } else if (randomMessage == 3) {
-                    funnyMessage = "Hey Dr. wanna hear a joke?\nWhat did the dentist say to the golfer?\nYou have a hole in one!";
+                    funnyMessage = "What did the dentist say to the golfer?\nYou have a hole in one!";
                 } else if (randomMessage == 4) {
                     funnyMessage = "Hey Dr. " + userName + ".\nI'm here for my appointment.";
                 }
