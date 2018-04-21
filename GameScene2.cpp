@@ -894,6 +894,7 @@ void GameScene2::gameOver(bool result) {
         stateTracker2->levels[stateTracker2->level]["levelState"] = 1;
     } else {
         stateTracker2->levels[stateTracker2->level]["levelState"] = 2;
+        stateTracker2->score = 0;
     }
 
     timeUpdater->stop();
