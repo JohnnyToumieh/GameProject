@@ -899,8 +899,10 @@ void GameScene1::checkGameState() {
 void GameScene1::gameOver(bool result) {
     if (result) {
         aquarium->levels[aquarium->level]["levelState"] = 1;
+        gameOverLabel->setText("GAME WON!");
     } else {
         aquarium->levels[aquarium->level]["levelState"] = 2;
+        gameOverLabel->setText("GAME OVER");
     }
 
     timeUpdater->stop();

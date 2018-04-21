@@ -1142,6 +1142,12 @@ void GameScene3::checkGameState() {
  * @param bool result whether the level was won or lost.
  */
 void GameScene3::gameOver(bool result) {
+    if (result) {
+        gameOverLabel->setText("GAME WON!");
+    } else {
+        gameOverLabel->setText("GAME OVER");
+    }
+
     timeUpdater->stop();
     checkGameStateTimer->stop();
 

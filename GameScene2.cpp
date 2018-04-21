@@ -892,8 +892,10 @@ void GameScene2::checkGameState() {
 void GameScene2::gameOver(bool result) {
     if (result) {
         stateTracker2->levels[stateTracker2->level]["levelState"] = 1;
+        gameOverLabel->setText("GAME WON!");
     } else {
         stateTracker2->levels[stateTracker2->level]["levelState"] = 2;
+        gameOverLabel->setText("GAME OVER");
         stateTracker2->score = 0;
     }
 
