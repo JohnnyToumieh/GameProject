@@ -281,6 +281,7 @@ GameScene2::GameScene2(QWidget *widget, int width, int height, User* user, QJson
     this->pausedTimeUpdater = 0;
 
     updateTimer();
+    checkGameState();
 }
 
 /**
