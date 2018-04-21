@@ -413,7 +413,7 @@ void GameScene3::nextLevel() {
     checkGameStateTimer->start(100);
     updatePatientsTimer->start(office->levels[office->level]["patientGenerationRate"]);
     updateAquariumTimer->start(office->levels[office->level]["dirtinessRate"]);
-    timeUpdater->start(500);
+    timeUpdater->start(100);
 
     pausedTime = 0;
     time->restart();
@@ -1154,7 +1154,7 @@ void GameScene3::gameOver(bool result) {
     patientsIndex = 0;
 
     if (result) {
-        office->score += office->levels[office->level]["endTime"] / office->currentTime - 1;
+        office->score += (office->levels[office->level]["endTime"] - office->levels[office->level]["startTime"]) / ((time->elapsed() + pausedTime) / office->levels[office->level]["minuteInMilliSeconds"]) - 1;
     }
 
     greyForeground->setStyleSheet("background-color: rgba(0, 0, 0, 255);");
