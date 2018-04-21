@@ -543,7 +543,7 @@ void GameScene3::updatePatients(){
         type = 7;
     }else if(weight < office->levels[office->level]["patientWeight1"] + office->levels[office->level]["patientWeight2"]+ office->levels[office->level]["patientWeight3"] + office->levels[office->level]["patientWeight4"]+ office->levels[office->level]["patientWeight5"]+office->levels[office->level]["patientWeight6"]+ office->levels[office->level]["patientWeight7"]+office->levels[office->level]["patientWeight8"] ){
         type = 8;
-    }else if(weight < office->levels[office->level]["patientWeight1"] + office->levels[office->level]["patientWeight2"]+ office->levels[office->level]["patientWeight3"] + office->levels[office->level]["patientWeight4"]+ office->levels[office->level]["patientWeight5"]+office->levels[office->level]["patientWeight6"]+ office->levels[office->level]["patientWeight7"]+ office->levels[office->level]["patientWeight8"]+ office->levels[office->level]["patientWeight9"]  ){
+    }else {
         type = 9;
     }
 
