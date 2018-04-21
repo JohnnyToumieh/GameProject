@@ -53,7 +53,6 @@ Patient::Patient(int type, Office* office,
 
     int randomImage = (rand() % 6);
 
-    type = 9;
     if (imageName != NULL) {
         this->imageName = imageName;
     } else {
