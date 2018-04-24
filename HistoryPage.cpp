@@ -36,10 +36,10 @@ HistoryPage::HistoryPage(QWidget *widget, int gameNumber, User* user, QJsonObjec
 
     top10Scores = new QString[10]();
 
-    read(dataFile);
+    read();
     for(int i=0;i<10;i++){
         QListWidgetItem *item = new QListWidgetItem(top10Scores[i]);
-         scores->addItem(item);
+        scores->addItem(item);
     }
 
     topScoreL = new QLabel("Top score in the game is: \n" + topScore);
@@ -87,12 +87,13 @@ void HistoryPage::setVerticalLayout()
  * @return bool true if read is successful
  * @param QJsonObject &json reference to the JSON file to read from
  */
-bool HistoryPage::read(const QJsonObject &json)
-{
-    if (json.contains("games") && json["games"].isArray()) {
-        QJsonArray games = json["games"].toArray();
-        if (games.size() > this->gameNumber - 1 && games[this->gameNumber - 1].isObject()) {
-            QJsonObject gameData = games[this->gameNumber - 1].toObject();
+
+bool HistoryPage::read() {
+    QJsonObject save;
+    if (dataFile.contains("games") && dataFile["games"].isArray()) {
+        QJsonArray games = dataFile["games"].toArray();
+        if (games.size() > gameNumber - 1 && games.at(gameNumber - 1).isObject()) {
+            QJsonObject gameData = games.at(gameNumber - 1).toObject();
             if (gameData.contains("users_score") && gameData["users_score"].isArray()) {
                 QJsonArray userArray = gameData["users_score"].toArray();
                 for (int userIndex = 0; userIndex < userArray.size(); userIndex++) {
@@ -101,7 +102,7 @@ bool HistoryPage::read(const QJsonObject &json)
                             && userObject.contains("scores") && userObject["scores"].isArray()) {
                         QJsonArray userScores = userObject["scores"].toArray();
                         for (int scoreIndex = 0; scoreIndex < userScores.size(); scoreIndex++) {
-                            this->top10Scores[scoreIndex] = userScores[scoreIndex].toObject().value("score").toString();
+                            this->top10Scores[scoreIndex] = QString::number(userScores[scoreIndex].toObject().value("score").toInt());
                         }
                     }
                 }
@@ -110,9 +111,9 @@ bool HistoryPage::read(const QJsonObject &json)
             if (gameData.contains("top_score") && gameData["top_score"].isObject()) {
                 QJsonObject topUser = gameData["top_score"].toObject();
                 if (topUser.contains("username") && topUser["username"].isString()
-                        && topUser.contains("score") && topUser["score"].isString()) {
+                        && topUser.contains("score")) {
                     this->topUser = topUser["username"].toString();
-                    this->topScore = topUser["score"].toString();
+                    this->topScore = QString::number(topUser["score"].toInt());
                 }
             }
 

@@ -20,7 +20,7 @@ class HistoryPage : public QVBoxLayout
 public:
     explicit HistoryPage(QWidget *widget,int gameNumber, User* user, QJsonObject dataFile);
 
-    bool read(const QJsonObject &json);//!<Member function takes reads userfile
+    bool read();//!<Member function takes reads userfile
 
     int gameNumber;//!<Integer member gameNumber (1,2) that represents number of the game chosen
 
