@@ -109,6 +109,12 @@ void Bacteria::checkGameState() {
                     }
 
                     this->spongeBob->collisionWithBacteria(this->type);
+
+                    //delete this bacteria
+                    toDelete = true;
+                    speedTimer->stop();
+                    checkGameStateTimer->stop();
+                    return;
                 } else if(this->type <= this->spongeBob->immunityLevel) {
                     //increase score
                     aquarium->score += type * 100;
@@ -118,13 +124,14 @@ void Bacteria::checkGameState() {
                     QPixmap *greenColor = new QPixmap(":needle");
                     greenColor->fill(Qt::green);
                     greenColorItem->setPixmap(greenColor->scaled((230 / aquarium->levels[aquarium->level]["maxCleanliness"]) * aquarium->currentCleanliness, 20));
-                }
 
-                //delete this bacteria
-                toDelete = true;
-                speedTimer->stop();
-                checkGameStateTimer->stop();
-                return;
+                    //delete this bacteria
+                    toDelete = true;
+                    speedTimer->stop();
+                    checkGameStateTimer->stop();
+                    return;
+                }
+                break;
             }
         }
     }
