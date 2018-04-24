@@ -173,7 +173,7 @@ bool GameScene::saveScore() {
 
     if (gameData.contains("top_score") && gameData["top_score"].isObject()) {
         QJsonObject userObject = gameData["top_score"].toObject();
-        if (userObject.contains("score") && userObject["score"].toInt() < getCurrentScore()) {
+        if (!userObject.contains("score") || (userObject.contains("score") && userObject["score"].toInt() < getCurrentScore())) {
             userObject["score"] = getCurrentScore();
             userObject["username"] = user->username;
             gameData["top_score"] = userObject;
