@@ -709,7 +709,7 @@ void GameScene3::answerClicked(int answer){
     choiceC->hide();
 
     if(answer == questions[description->text()]){
-        if (office->currentReputation + office->levels[office->level]["incrementReputation"] < office->levels[office->level]["maxReputation"]) {
+        if (false) {
             office->currentReputation += office->levels[office->level]["incrementReputation"];
         } else {
             office->currentReputation = office->levels[office->level]["maxReputation"];

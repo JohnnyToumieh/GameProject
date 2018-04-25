@@ -41,7 +41,7 @@ Aquarium::Aquarium(int level, int currentCleanliness, int currentTime, int score
 void Aquarium::setUpLevels() {
     this->levels[1] = setUpLevelsHelper(300000,
                                           10, 1,
-                                          4,
+                                          1,
                                           3000, 33, 33, 33, 200, 200, 200,
                                           3000, 50, 50, 400, 400,
                                           0, 0, 0, 0, 0, 0, 0);

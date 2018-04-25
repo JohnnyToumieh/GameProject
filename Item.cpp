@@ -119,31 +119,31 @@ void Item::checkGameState() {
 
                 int steps = aquarium->levels[aquarium->level]["stepsPerImmunity"];
                 if (isHealthy && spongeBob->unchangeableImmunityLevel == false) {
-                    if(!(degree > steps && spongeBob->immunityLevel==3)){
+                    if(spongeBob->immunityLevel < 3){
                         degree=spongeBob->immunityLevelDegree++;
-                        if (spongeBob->immunityLevel == 2) {
+                        if (spongeBob->immunityLevel == 1) {
                             spongeBob->needle->setRotation(spongeBob->needle->rotation() + 80 / steps);
                         } else {
                             spongeBob->needle->setRotation(spongeBob->needle->rotation() + 48 / steps);
                         }
                     }
 
-                    if(degree >= steps && (spongeBob->immunityLevel==1 || spongeBob->immunityLevel==2)){
+                    if(degree >= steps && (spongeBob->immunityLevel==0 || spongeBob->immunityLevel==1 || spongeBob->immunityLevel==2)){
                        spongeBob->immunityLevelDegree = 1;
 
                        spongeBob->immunityLevel++;
                     }
                 } else if (!isHealthy && spongeBob->unchangeableImmunityLevel == false) {
-                    if(!(degree==1 && spongeBob->immunityLevel==1)){
+                    if(!(degree==1 && spongeBob->immunityLevel==0)){
                         degree=spongeBob->immunityLevelDegree--;
-                        if ((spongeBob->immunityLevel == 2 && degree > 1) || (spongeBob->immunityLevel == 3 && degree == 1)) {
+                        if ((spongeBob->immunityLevel == 1 && degree > 1) || (spongeBob->immunityLevel == 2 && degree == 1)) {
                             spongeBob->needle->setRotation(spongeBob->needle->rotation() - 80 / steps);
                         } else {
                             spongeBob->needle->setRotation(spongeBob->needle->rotation() - 48 / steps);
                         }
                     }
 
-                    if(degree==1 && (spongeBob->immunityLevel==2 || spongeBob->immunityLevel==3)){
+                    if(degree==1 && (spongeBob->immunityLevel==1 || spongeBob->immunityLevel==2 || spongeBob->immunityLevel==3)){
                        spongeBob->immunityLevelDegree = steps;
 
                        spongeBob->immunityLevel--;

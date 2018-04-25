@@ -25,7 +25,7 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
 
     vulnerable=false;
 
-    this->immunityLevel=1;
+    this->immunityLevel=0;
     this->savedImmunityLevel=-1;
     this->savedImmunityLevelDegree=-1;
     this->unchangeableImmunityLevel=false;
@@ -69,7 +69,7 @@ void SpongeBob::reset() {
     // Not resetting numCollisionsWithBacterias
 
     this->vulnerable=false;
-    this->immunityLevel=1;
+    this->immunityLevel=0;
     this->savedImmunityLevel=-1;
     this->savedImmunityLevelDegree=-1;
     this->unchangeableImmunityLevel=false;
@@ -89,19 +89,19 @@ void SpongeBob::reset() {
  *
  */
 void SpongeBob::changeGlow(){
+    if(immunityLevel==0){
+        imageName = ":spongeBob0";
+    }
+    if(immunityLevel==1){
+        imageName = ":spongeBob1";
+    }
+    if(immunityLevel==2){
+        imageName = ":spongeBob2";
+    }
+    if(immunityLevel==3){
+        imageName = ":spongeBob3";
+    }
     if (canCollide) {
-        if(immunityLevel==0){
-            imageName = ":spongeBob0";
-        }
-        if(immunityLevel==1){
-            imageName = ":spongeBob1";
-        }
-        if(immunityLevel==2){
-            imageName = ":spongeBob2";
-        }
-        if(immunityLevel==3){
-            imageName = ":spongeBob3";
-        }
         setPixmap((QPixmap(imageName)).scaled(this->aquarium->width / 12.5, this->aquarium->width / 12.5));
     }
 }
@@ -224,7 +224,7 @@ void SpongeBob::setVulnerable(int type) {
 
         vulnerableTimer->start(5000);
     } else if (type == 2) {
-        immunityLevel = 1;
+        immunityLevel = 0;
         immunityLevelDegree = 0;
 
         needle->setRotation(0);
