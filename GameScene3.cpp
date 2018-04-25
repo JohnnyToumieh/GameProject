@@ -1163,6 +1163,24 @@ void GameScene3::gameOver(bool result) {
         office->score += (office->levels[office->level]["endTime"] - office->levels[office->level]["startTime"]) / ((time->elapsed() + pausedTime) / office->levels[office->level]["minuteInMilliSeconds"]) - 1;
     }
 
+    patientBox->hide();
+    aquariumBox->hide();
+    reputationBox->hide();
+
+    accept->hide();
+    reject->hide();
+    cleanAquarium->hide();
+    cancelAquarium->hide();
+    choiceA->hide();
+    choiceB->hide();
+    choiceC->hide();
+    useReputation->hide();
+    cancelReputation->hide();
+
+    description->hide();
+    aquariumDescription->hide();
+    reputationDescription->hide();
+
     greyForeground->setStyleSheet("background-color: rgba(0, 0, 0, 255);");
     greyForeground->show();
 
