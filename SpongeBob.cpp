@@ -25,7 +25,7 @@ SpongeBob::SpongeBob(Aquarium* aquarium, QGraphicsPixmapItem *needle, QGraphicsP
 
     vulnerable=false;
 
-    this->immunityLevel=0;
+    this->immunityLevel=1;
     this->savedImmunityLevel=-1;
     this->savedImmunityLevelDegree=-1;
     this->unchangeableImmunityLevel=false;
@@ -69,7 +69,7 @@ void SpongeBob::reset() {
     // Not resetting numCollisionsWithBacterias
 
     this->vulnerable=false;
-    this->immunityLevel=0;
+    this->immunityLevel=1;
     this->savedImmunityLevel=-1;
     this->savedImmunityLevelDegree=-1;
     this->unchangeableImmunityLevel=false;
@@ -224,7 +224,7 @@ void SpongeBob::setVulnerable(int type) {
 
         vulnerableTimer->start(5000);
     } else if (type == 2) {
-        immunityLevel = 0;
+        immunityLevel = 1;
         immunityLevelDegree = 0;
 
         needle->setRotation(0);
